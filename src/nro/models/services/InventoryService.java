@@ -38,7 +38,7 @@ public class InventoryService {
     }
 
     private void __________________Tìm_kiếm_item_____________________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public Item findItem(List<Item> list, int tempId) {
@@ -86,7 +86,7 @@ public class InventoryService {
     }
 
     private void __________________Sao_chép_danh_sách_item__________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public List<Item> copyList(List<Item> items) {
@@ -110,7 +110,7 @@ public class InventoryService {
     }
 
     private void __________________Vứt_bỏ_item______________________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public void throwItem(Player player, int where, int index) {
@@ -140,7 +140,7 @@ public class InventoryService {
     }
 
     private void __________________Xoá_bỏ_item______________________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public void removeItem(List<Item> items, int index) {
@@ -183,7 +183,7 @@ public class InventoryService {
     }
 
     private void __________________Giảm_số_lượng_item_______________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public void subQuantityItemsBag(Player player, Item item, int quantity) {
@@ -213,7 +213,7 @@ public class InventoryService {
     }
 
     private void __________________Sắp_xếp_danh_sách_item___________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public void sortItems(List<Item> list) {
@@ -261,7 +261,7 @@ public class InventoryService {
     }
 
     private void __________________Thao_tác_tháo_mặc_item___________________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     private Item putItemBag(Player player, Item item) {
@@ -313,7 +313,8 @@ public class InventoryService {
         if (item.getId() == 691 || item.getId() == 692 || item.getId() == 693) {
             List<Item> itemsBody = player.inventory.itemsBody;
             if (itemsBody.get(0).isNotNullItem() && itemsBody.get(5).isNotNullItem()) {
-                Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Vui lòng cởi áo để có thể sử dụng!");
+                Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player,
+                        "Vui lòng cởi áo để có thể sử dụng!");
                 return sItem;
             }
         }
@@ -358,7 +359,7 @@ public class InventoryService {
             case 36:
                 index = player.isPet ? 7 : 10;
                 break;
-                   case 25:
+            case 25:
                 index = 11;
                 break;
         }
@@ -499,6 +500,7 @@ public class InventoryService {
                             done = true;
 
                             sendItemBody(player);
+                            sendItemBox(player);
                             Service.gI().point(player);
                             Service.gI().Send_Caitrang(player);
                         }
@@ -513,6 +515,7 @@ public class InventoryService {
                         player.inventory.itemsBox.set(index, sItem);
                     }
                     sendItemBags(player);
+                    sendItemBox(player);
                 }
             }
         }
@@ -525,14 +528,14 @@ public class InventoryService {
         }
         Item item = player.inventory.itemsBag.get(index);
         if (item != null && item.isNotNullItem()) {
-           if (item.template.id == 457 
-        || item.template.id == 1716     || item.template.id == 1869
-        || item.template.id == 529
-        || item.template.id == 530
-        || item.template.id == 531
-        || item.template.id == 534
-        || item.template.id == 535
-        || item.template.id == 536) {
+            if (item.template.id == 457
+                    || item.template.id == 1716 || item.template.id == 1869
+                    || item.template.id == 529
+                    || item.template.id == 530
+                    || item.template.id == 531
+                    || item.template.id == 534
+                    || item.template.id == 535
+                    || item.template.id == 536) {
                 Service.gI().sendThongBao(player, "srcnrofree.online");
                 return;
             }
@@ -566,7 +569,7 @@ public class InventoryService {
     }
 
     private void __________________Gửi_danh_sách_item_cho_người_chơi________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public void sendItemBags(Player player) {
@@ -585,7 +588,7 @@ public class InventoryService {
                 msg.writer().writeInt(item.quantity);
                 msg.writer().writeUTF(item.getInfo());
                 msg.writer().writeUTF(item.getContent());
-                msg.writer().writeByte(item.itemOptions.size()); //options
+                msg.writer().writeByte(item.itemOptions.size()); // options
                 for (int j = 0; j < item.itemOptions.size(); j++) {
                     if (item.itemOptions.get(j).optionTemplate.id == 213) {
                         int opId = 213;
@@ -693,7 +696,6 @@ public class InventoryService {
             msg.cleanup();
         } catch (Exception e) {
         }
-        this.openBox(player);
     }
 
     public void openBox(Player player) {
@@ -708,11 +710,11 @@ public class InventoryService {
     }
 
     private void __________________Thêm_vật_phẩm_vào_danh_sách______________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     private boolean addItemSpecial(Player player, Item item) {
-        //bùa
+        // bùa
         if (item.template.type == 13) {
             int min = 0;
             try {
@@ -731,10 +733,10 @@ public class InventoryService {
         }
 
         switch (item.template.id) {
-            case 453: //tàu tennis
+            case 453: // tàu tennis
                 player.haveTennisSpaceShip = true;
                 return true;
-            case 74: //đùi gà nướng
+            case 74: // đùi gà nướng
                 player.nPoint.setFullHpMp();
                 PlayerService.gI().sendInfoHpMp(player);
                 return true;
@@ -743,20 +745,21 @@ public class InventoryService {
     }
 
     public boolean addItemBag(Player player, Item item) {
-        //ngọc rồng đen
+        // ngọc rồng đen
         if (ItemMapService.gI().isBlackBall(item.template.id)) {
             return BlackBallWarService.gI().pickBlackBall(player, item);
         }
 
-        //ngọc rồng namek
-        if (ItemMapService.gI().isNamecBall(item.template.id) || ItemMapService.gI().isNamecBallStone(item.template.id)) {
+        // ngọc rồng namek
+        if (ItemMapService.gI().isNamecBall(item.template.id)
+                || ItemMapService.gI().isNamecBallStone(item.template.id)) {
             return NgocRongNamecService.gI().pickNamekBall(player, item);
         }
         if (addItemSpecial(player, item)) {
             return true;
         }
 
-        //gold, gem, ruby
+        // gold, gem, ruby
         switch (item.template.type) {
             case 9:
                 if (player.inventory.gold + item.quantity <= Inventory.LIMIT_GOLD) {
@@ -788,7 +791,7 @@ public class InventoryService {
                 return true;
         }
 
-        //mở rộng hành trang - rương đồ
+        // mở rộng hành trang - rương đồ
         if (item.template.id == 517) {
             if (player.inventory.itemsBag.size() < Inventory.MAX_ITEMS_BAG) {
                 player.inventory.itemsBag.add(ItemService.gI().createItemNull());
@@ -827,19 +830,20 @@ public class InventoryService {
     public boolean addItemBox(Player player, Item item) {
         return addItemList(player.inventory.itemsBox, item);
     }
-public int getOptionParamInBody(Player player, int optionId) {
-    int total = 0;
-    for (Item item : player.inventory.itemsBody) {
-        if (item != null && item.isNotNullItem()) {
-            for (Item.ItemOption op : item.itemOptions) {
-                if (op.optionTemplate.id == optionId) {
-                    total += op.param;
+
+    public int getOptionParamInBody(Player player, int optionId) {
+        int total = 0;
+        for (Item item : player.inventory.itemsBody) {
+            if (item != null && item.isNotNullItem()) {
+                for (Item.ItemOption op : item.itemOptions) {
+                    if (op.optionTemplate.id == optionId) {
+                        total += op.param;
+                    }
                 }
             }
         }
+        return total;
     }
-    return total;
-}
 
     public boolean addItemList(List<Item> items, Item itemAdd) {
         if (itemAdd.itemOptions.isEmpty()) {
@@ -862,11 +866,14 @@ public int getOptionParamInBody(Player player, int optionId) {
         }
         if (itemAdd.template.isUpToUp) {
             for (Item it : items) {
-                if (!it.isNotNullItem() || it.template.id != itemAdd.template.id || (!checkListsEqual(it.itemOptions, itemAdd.itemOptions) && itemAdd.template.id != 2074 && !itemAdd.isDaNangCap() && !itemAdd.isManhTS()) || it.quantity >= 100_000_000) {
+                if (!it.isNotNullItem() || it.template.id != itemAdd.template.id
+                        || (!checkListsEqual(it.itemOptions, itemAdd.itemOptions) && itemAdd.template.id != 2074
+                                && !itemAdd.isDaNangCap() && !itemAdd.isManhTS())
+                        || it.quantity >= 100_000_000) {
                     continue;
                 }
 
-                //========================ITEM TĂNG SỐ LƯỢNG========================
+                // ========================ITEM TĂNG SỐ LƯỢNG========================
                 if ((itemAdd.template.id >= 1066 && itemAdd.template.id <= 1070) || itemAdd.template.id == 457
                         || itemAdd.template.id == 610 || itemAdd.template.type == 14 || itemAdd.template.id == 2048
                         || itemAdd.template.id > 2049 && itemAdd.template.id < 2056 || itemAdd.template.id == 821
@@ -890,7 +897,7 @@ public int getOptionParamInBody(Player player, int optionId) {
             }
         }
 
-        //add item vào ô mới
+        // add item vào ô mới
         if (itemAdd.quantity > 0) {
             for (int i = 0; i < items.size(); i++) {
                 if (!items.get(i).isNotNullItem()) {
@@ -909,7 +916,8 @@ public int getOptionParamInBody(Player player, int optionId) {
         }
 
         for (int i = 0; i < list1.size(); i++) {
-            if (list1.get(i).optionTemplate.id != list2.get(i).optionTemplate.id || list1.get(i).param != list2.get(i).param) {
+            if (list1.get(i).optionTemplate.id != list2.get(i).optionTemplate.id
+                    || list1.get(i).param != list2.get(i).param) {
                 return false;
             }
         }
@@ -918,7 +926,7 @@ public int getOptionParamInBody(Player player, int optionId) {
     }
 
     private void __________________Kiểm_tra_điều_kiện_vật_phẩm______________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     /**
@@ -931,16 +939,16 @@ public int getOptionParamInBody(Player player, int optionId) {
         for (Item.ItemOption io : item.itemOptions) {
             switch (io.optionTemplate.id) {
                 case 1:
-                    return new int[]{io.optionTemplate.id, io.param};
+                    return new int[] { io.optionTemplate.id, io.param };
                 case 31:
-                    return new int[]{io.optionTemplate.id, io.param};
+                    return new int[] { io.optionTemplate.id, io.param };
             }
         }
-        return new int[]{-1, -1};
+        return new int[] { -1, -1 };
     }
 
     private void __________________Kiểm_tra_danh_sách_còn_chỗ_trống_________() {
-        //**********************************************************************
+        // **********************************************************************
     }
 
     public byte getCountEmptyBag(Player player) {
@@ -1028,6 +1036,7 @@ public int getOptionParamInBody(Player player, int optionId) {
         }
         return false;
     }
+
     public boolean findItemBongTaiCap3(Player player) {
         for (Item item : player.inventory.itemsBag) {
             if (item.isNotNullItem() && item.template.id == 1819) {
@@ -1136,7 +1145,12 @@ public int getOptionParamInBody(Player player, int optionId) {
     }
 
     public boolean x99ThucAn(Player player) {
-        Item doAn = player.inventory.itemsBag.stream().filter(it -> it != null && it.template != null && (it.template.id == 663 || it.template.id == 664 || it.template.id == 665 || it.template.id == 666 || it.template.id == 667) && it.quantity >= 99).findFirst().orElse(null);
+        Item doAn = player.inventory.itemsBag.stream()
+                .filter(it -> it != null && it.template != null
+                        && (it.template.id == 663 || it.template.id == 664 || it.template.id == 665
+                                || it.template.id == 666 || it.template.id == 667)
+                        && it.quantity >= 99)
+                .findFirst().orElse(null);
         return doAn != null;
     }
 
@@ -1176,7 +1190,7 @@ public int getOptionParamInBody(Player player, int optionId) {
                 int option210Index = i;
                 item.itemOptions.remove(i);
                 int numberOfOptionsToAdd = io.param;
-                int[] allOptions = {8, 14, 108, 94, 108, 16, 80, 81, 97, 100, 101, 104, 106};
+                int[] allOptions = { 8, 14, 108, 94, 108, 16, 80, 81, 97, 100, 101, 104, 106 };
                 List<Integer> selectedOptions = new ArrayList<>();
                 while (selectedOptions.size() < numberOfOptionsToAdd && selectedOptions.size() < allOptions.length) {
                     int randomIndex = (int) (Math.random() * allOptions.length);
@@ -1190,7 +1204,8 @@ public int getOptionParamInBody(Player player, int optionId) {
                     int newParam = 0;
                     if (option == 8 || option == 14 || option == 108 || option == 94 || option == 108) {
                         newParam = 3 + (int) (Math.random() * 3);
-                    } else if (option == 16 || option == 80 || option == 81 || option == 97 || option == 100 || option == 101 || option == 104) {
+                    } else if (option == 16 || option == 80 || option == 81 || option == 97 || option == 100
+                            || option == 101 || option == 104) {
                         newParam = 10 + (int) (Math.random() * 16);
                     } else if (option == 106) {
                         newParam = 0;
@@ -1224,7 +1239,7 @@ public int getOptionParamInBody(Player player, int optionId) {
                 item.itemOptions.remove(i);
                 double randomValue = Math.random();
                 if (randomValue <= 0.99) {
-                    int[] validParams = {3, 7, 15, 21};
+                    int[] validParams = { 3, 7, 15, 21 };
                     int selectedParam = validParams[(int) (Math.random() * validParams.length)];
                     item.itemOptions.add(new Item.ItemOption(93, selectedParam));
                 }
