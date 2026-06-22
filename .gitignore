@@ -1,0 +1,6 @@
+/dist
+/build
+*.class
+*.exe
+/.vs
+/data
