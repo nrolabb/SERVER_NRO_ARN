@@ -142,6 +142,7 @@ package nro.models.npc_list;
 import nro.models.consts.ConstNpc;
 import nro.models.npc.Npc;
 import nro.models.player.Player;
+import nro.models.shop.ShopService;
 
 public class GiuMaDauBo extends Npc {
 
@@ -153,16 +154,16 @@ public class GiuMaDauBo extends Npc {
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             this.createOtherMenu(player, ConstNpc.BASE_MENU,
-                     "• Nếu ngươi có Bông Tai Porata:\n"
-                    + "  - Có thể úp được Mảnh Vỡ Bông Tai Cấp 2\n"
-                    + "  - Có thể úp được Mảnh Hồn Bông Tai\n"
-                    + "  - Đôi khi còn rơi cả Đá Xanh Lam\n\n"
-                    + "• Nếu ngươi có Bông Tai Porata Cấp 2:\n"
-                    + "  - Có thể úp thêm Mảnh Vỡ Bông Tai Cấp 3\n\n"
-                        + "• Nếu ngươi có Cải trang Bulma Sexy:\n"
-                    + "  - Tỉ lệ úp sẽ là x1.5\n"
-                    + "Hãy chuẩn bị kỹ trước khi tham gia thử thách!",
-                    "Chúc\nMay mắn", "Đóng");
+                    "• Nếu ngươi có Bông Tai Porata:\n"
+                            + "  - Có thể úp được Mảnh Vỡ Bông Tai Cấp 2\n"
+                            + "  - Có thể úp được Mảnh Hồn Bông Tai\n"
+                            + "  - Đôi khi còn rơi cả Đá Xanh Lam\n\n"
+                            + "• Nếu ngươi có Bông Tai Porata Cấp 2:\n"
+                            + "  - Có thể úp thêm Mảnh Vỡ Bông Tai Cấp 3\n\n"
+                            + "• Nếu ngươi có Cải trang Bulma Sexy:\n"
+                            + "  - Tỉ lệ úp sẽ là x1.5\n"
+                            + "Hãy chuẩn bị kỹ trước khi tham gia thử thách!",
+                    "Chúc\nMay mắn", "Cửa hàng\nbang", "Đóng");
         }
     }
 
@@ -171,6 +172,8 @@ public class GiuMaDauBo extends Npc {
         if (!canOpenNpc(player)) {
             return;
         }
-        // Chỉ là NPC hướng dẫn, không cần xử lý gì thêm
+        if (select == 1) {
+            ShopService.gI().opendShop(player, "SHOP_CLAN", false);
+        }
     }
 }

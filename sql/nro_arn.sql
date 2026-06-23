@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 22, 2026 at 02:58 PM
+-- Generation Time: Jun 23, 2026 at 03:15 PM
 -- Server version: 9.5.0
 -- PHP Version: 8.3.28
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `account` (
   `id` int NOT NULL,
-  `username` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,19 +38,19 @@ CREATE TABLE `account` (
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `last_time_login` timestamp NOT NULL DEFAULT '2002-07-30 17:00:00',
   `last_time_logout` timestamp NOT NULL DEFAULT '2002-07-30 17:00:00',
-  `ip_address` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ip_address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `thoi_vang` int NOT NULL DEFAULT '0',
   `server_login` int NOT NULL DEFAULT '-1',
   `bd_player` double DEFAULT '1',
   `is_gift_box` tinyint(1) DEFAULT '0',
-  `gift_time` varchar(255) COLLATE utf8mb4_general_ci DEFAULT '0',
-  `reward` longtext COLLATE utf8mb4_general_ci,
+  `gift_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '0',
+  `reward` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `vnd` int NOT NULL DEFAULT '0',
   `tongnap` int NOT NULL DEFAULT '0',
-  `token` text COLLATE utf8mb4_general_ci NOT NULL,
-  `xsrf_token` text COLLATE utf8mb4_general_ci NOT NULL,
-  `newpass` text COLLATE utf8mb4_general_ci NOT NULL,
+  `token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `xsrf_token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `newpass` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `luotquay` int NOT NULL DEFAULT '0',
   `vang` bigint NOT NULL DEFAULT '0',
   `event_point` int NOT NULL DEFAULT '0',
@@ -70,7 +70,7 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`id`, `username`, `password`, `email`, `create_time`, `update_time`, `ban`, `is_admin`, `last_time_login`, `last_time_logout`, `ip_address`, `active`, `thoi_vang`, `server_login`, `bd_player`, `is_gift_box`, `gift_time`, `reward`, `vnd`, `tongnap`, `token`, `xsrf_token`, `newpass`, `luotquay`, `vang`, `event_point`, `vip`, `tichdiem`, `point_post`, `last_post`, `gioithieu`, `xacnhan_gioitheu`, `baiviet`, `xacminh`, `admin`) VALUES
-(1, '1', '1', '', '2026-05-02 08:10:04', '2026-05-02 08:10:04', 0, 1, '2026-06-22 14:55:39', '2026-06-22 07:55:47', '127.0.0.1', 1, 0, -1, 1, 0, '0', NULL, 5419999, 10499999, '', '', '', 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0),
+(1, '1', '1', '', '2026-05-02 08:10:04', '2026-05-02 08:10:04', 0, 1, '2026-06-23 15:10:56', '2026-06-23 08:09:05', '127.0.0.1', 1, 0, -1, 1, 0, '0', NULL, 5419999, 10499999, '', '', '', 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0),
 (3, '11', '1', '', '2026-05-02 08:10:04', '2026-05-02 08:10:04', 0, 1, '2026-06-22 14:34:22', '2026-06-22 07:34:33', '127.0.0.1', 1, 0, -1, 1, 0, '0', NULL, 270000, 500000, '', '', '', 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0),
 (4, '111', '1', '', '2026-05-03 03:45:03', '2026-05-03 03:45:03', 0, 1, '2026-06-10 14:16:56', '2026-06-10 14:25:14', '127.0.0.1', 1, 0, -1, 1, 0, '0', NULL, 0, 0, '', '', '', 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0),
 (5, '2', '1', '', '2026-05-02 08:10:04', '2026-05-02 08:10:04', 0, 1, '2026-05-19 08:09:13', '2026-05-19 08:09:53', '127.0.0.1', 1, 0, -1, 1, 0, '0', NULL, 5419999, 10499999, '', '', '', 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0);
@@ -83,8 +83,8 @@ INSERT INTO `account` (`id`, `username`, `password`, `email`, `create_time`, `up
 
 CREATE TABLE `achievement_template` (
   `id` int NOT NULL,
-  `info1` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `info2` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `info1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `info2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `money` int NOT NULL,
   `max_count` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -122,24 +122,24 @@ INSERT INTO `achievement_template` (`id`, `info1`, `info2`, `money`, `max_count`
 --
 
 CREATE TABLE `adminpanel` (
-  `domain` text COLLATE utf8mb4_general_ci,
-  `title` text COLLATE utf8mb4_general_ci,
-  `tenmaychu` text COLLATE utf8mb4_general_ci,
-  `logo` text COLLATE utf8mb4_general_ci,
-  `trangthai` text COLLATE utf8mb4_general_ci NOT NULL,
-  `android` text COLLATE utf8mb4_general_ci,
-  `iphone` text COLLATE utf8mb4_general_ci,
-  `windows` text COLLATE utf8mb4_general_ci,
-  `java` text COLLATE utf8mb4_general_ci,
-  `apikey` text COLLATE utf8mb4_general_ci,
+  `domain` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `tenmaychu` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `logo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `trangthai` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `android` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `iphone` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `windows` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `java` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `apikey` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `giatri` int NOT NULL DEFAULT '1',
-  `userlogin` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `stk` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sessionId` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `deviceId` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `userlogin` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `stk` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sessionId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `deviceId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `time` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -158,7 +158,7 @@ INSERT INTO `adminpanel` (`domain`, `title`, `tenmaychu`, `logo`, `trangthai`, `
 
 CREATE TABLE `array_head_2_frames` (
   `id` int NOT NULL,
-  `data` text COLLATE utf8mb4_general_ci NOT NULL
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -227,12 +227,12 @@ INSERT INTO `array_head_2_frames` (`id`, `data`) VALUES
 
 CREATE TABLE `bank_transfers` (
   `id` int NOT NULL,
-  `transaction_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `transaction_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `amount` decimal(15,2) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `status` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `sender_bank_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `sender_bank_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `is_credited` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
@@ -862,29 +862,30 @@ INSERT INTO `bg_item_template` (`id`, `image_id`, `layer`, `dx`, `dy`) VALUES
 
 CREATE TABLE `clan` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `NAME_2` varchar(4) COLLATE utf8mb4_general_ci NOT NULL,
-  `slogan` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME_2` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `slogan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `img_id` int NOT NULL DEFAULT '0',
   `power_point` bigint NOT NULL DEFAULT '0',
   `max_member` smallint NOT NULL DEFAULT '10',
   `clan_point` int NOT NULL DEFAULT '0',
   `LEVEL` int NOT NULL DEFAULT '1',
-  `members` text COLLATE utf8mb4_general_ci NOT NULL,
-  `tops` text COLLATE utf8mb4_general_ci NOT NULL,
+  `members` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `tops` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `thanhTichBDKB` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0]',
-  `thongTinLeader` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0,0]'
+  `thanhTichBDKB` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0]',
+  `thongTinLeader` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0,0]',
+  `items_clan_box` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `clan`
 --
 
-INSERT INTO `clan` (`id`, `NAME`, `NAME_2`, `slogan`, `img_id`, `power_point`, `max_member`, `clan_point`, `LEVEL`, `members`, `tops`, `create_time`, `thanhTichBDKB`, `thongTinLeader`) VALUES
-(0, '1', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":1875,\\\"join_time\\\":1776080994,\\\"leg\\\":1876,\\\"head\\\":1874,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"11111\\\",\\\"clan_point\\\":0,\\\"id\\\":11353,\\\"donate\\\":0,\\\"power\\\":5557555}\"]', 'cc', '2026-04-13 11:49:54', '[0,0]', '[11353,11111,1874,1875,1876]'),
-(1, '1', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":16,\\\"join_time\\\":1777731685,\\\"leg\\\":17,\\\"head\\\":6,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"12341\\\",\\\"clan_point\\\":0,\\\"id\\\":2,\\\"donate\\\":0,\\\"power\\\":72040}\"]', 'cc', '2026-05-02 14:21:25', '[0,0]', '[2,12341,6,16,17]'),
-(2, '1', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":1960,\\\"join_time\\\":1777781403,\\\"leg\\\":1961,\\\"head\\\":1959,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"12345\\\",\\\"clan_point\\\":0,\\\"id\\\":1,\\\"donate\\\":0,\\\"power\\\":17999999999}\"]', 'cc', '2026-05-03 04:10:03', '[0,0]', '[1,12345,1959,1960,1961]');
+INSERT INTO `clan` (`id`, `NAME`, `NAME_2`, `slogan`, `img_id`, `power_point`, `max_member`, `clan_point`, `LEVEL`, `members`, `tops`, `create_time`, `thanhTichBDKB`, `thongTinLeader`, `items_clan_box`) VALUES
+(0, 'top one', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":1875,\\\"join_time\\\":1776080994,\\\"leg\\\":1876,\\\"head\\\":1874,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"11111\\\",\\\"clan_point\\\":0,\\\"id\\\":11353,\\\"donate\\\":0,\\\"power\\\":5557555}\"]', 'cc', '2026-04-13 11:49:54', '[0,0]', '[11353,11111,1874,1875,1876]', '[]'),
+(1, 'top two', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":16,\\\"join_time\\\":1777731685,\\\"leg\\\":17,\\\"head\\\":6,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"12341\\\",\\\"clan_point\\\":0,\\\"id\\\":2,\\\"donate\\\":0,\\\"power\\\":72040}\"]', 'cc', '2026-05-02 14:21:25', '[0,0]', '[2,12341,6,16,17]', '[]'),
+(2, 'top three', '', '', 0, 0, 20, 0, 1, '[\"{\\\"role\\\":0,\\\"receive_donate\\\":0,\\\"member_point\\\":0,\\\"body\\\":1960,\\\"join_time\\\":1777781403,\\\"leg\\\":1961,\\\"head\\\":1959,\\\"ask_pea_time\\\":0,\\\"name\\\":\\\"12345\\\",\\\"clan_point\\\":0,\\\"id\\\":1,\\\"donate\\\":0,\\\"power\\\":17999999999}\"]', 'cc', '2026-05-03 04:10:03', '[0,0]', '[1,12345,1959,1960,1961]', '[]');
 
 -- --------------------------------------------------------
 
@@ -894,12 +895,12 @@ INSERT INTO `clan` (`id`, `NAME`, `NAME_2`, `slogan`, `img_id`, `power_point`, `
 
 CREATE TABLE `clan_task_template` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv3` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv4` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv5` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv4` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -976,13 +977,13 @@ INSERT INTO `clan_task_template` (`id`, `NAME`, `max_count_lv1`, `max_count_lv2`
 CREATE TABLE `comments` (
   `id` int NOT NULL,
   `post_id` int NOT NULL,
-  `nguoidung` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `traloi` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nguoidung` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `traloi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `gender` int NOT NULL DEFAULT '0',
   `admin` int NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `binhluan` int NOT NULL DEFAULT '0',
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `server` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -1030,8 +1031,8 @@ INSERT INTO `data_badges` (`id`, `idEffect`, `idItem`, `NAME`, `Options`) VALUES
 
 CREATE TABLE `flag_bag` (
   `id` int NOT NULL,
-  `icon_data` varchar(1000) COLLATE utf8mb4_general_ci NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'flag_bag',
+  `icon_data` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'flag_bag',
   `gold` int NOT NULL DEFAULT '-1',
   `gem` int NOT NULL DEFAULT '-1',
   `icon_id` int NOT NULL DEFAULT '0'
@@ -1745,14 +1746,14 @@ INSERT INTO `head_avatar` (`head_id`, `avatar_id`) VALUES
 
 CREATE TABLE `history_transaction` (
   `id` int NOT NULL,
-  `player_1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `player_2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `item_player_1` text COLLATE utf8mb4_general_ci NOT NULL,
-  `item_player_2` text COLLATE utf8mb4_general_ci NOT NULL,
-  `bag_1_before_tran` text COLLATE utf8mb4_general_ci NOT NULL,
-  `bag_2_before_tran` text COLLATE utf8mb4_general_ci NOT NULL,
-  `bag_1_after_tran` text COLLATE utf8mb4_general_ci NOT NULL,
-  `bag_2_after_tran` text COLLATE utf8mb4_general_ci NOT NULL,
+  `player_1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `player_2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `item_player_1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `item_player_2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `bag_1_before_tran` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `bag_2_before_tran` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `bag_1_after_tran` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `bag_2_after_tran` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `time_tran` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -1764,7 +1765,7 @@ CREATE TABLE `history_transaction` (
 
 CREATE TABLE `img_by_name` (
   `id` int NOT NULL,
-  `NAME` varchar(55) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `n_frame` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -1928,7 +1929,7 @@ INSERT INTO `img_by_name` (`id`, `NAME`, `n_frame`) VALUES
 
 CREATE TABLE `intrinsic` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `param_from_1` int NOT NULL DEFAULT '0',
   `param_to_1` int NOT NULL DEFAULT '0',
   `param_from_2` int NOT NULL DEFAULT '0',
@@ -1975,7 +1976,7 @@ INSERT INTO `intrinsic` (`id`, `NAME`, `param_from_1`, `param_to_1`, `param_from
 
 CREATE TABLE `item_option_template` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -4545,8 +4546,8 @@ CREATE TABLE `item_template` (
   `id` int NOT NULL,
   `TYPE` int NOT NULL,
   `gender` smallint NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` varchar(75) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `level` int NOT NULL DEFAULT '0',
   `icon_id` int NOT NULL,
   `part` int NOT NULL,
@@ -6576,18 +6577,18 @@ INSERT INTO `item_template` (`id`, `TYPE`, `gender`, `NAME`, `description`, `lev
 
 CREATE TABLE `map_template` (
   `id` int NOT NULL,
-  `NAME` varchar(55) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `zones` int NOT NULL DEFAULT '1',
   `max_player` int NOT NULL DEFAULT '15',
-  `data` varchar(1000) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `data` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
   `type` int NOT NULL DEFAULT '1',
   `planet_id` int NOT NULL DEFAULT '1',
   `bg_type` int NOT NULL DEFAULT '1',
   `tile_id` int NOT NULL DEFAULT '1',
   `bg_id` int NOT NULL DEFAULT '1',
-  `waypoints` text COLLATE utf8mb4_general_ci NOT NULL,
-  `mobs` text COLLATE utf8mb4_general_ci NOT NULL,
-  `npcs` text COLLATE utf8mb4_general_ci NOT NULL,
+  `waypoints` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mobs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `npcs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `is_map_double` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -6601,7 +6602,7 @@ INSERT INTO `map_template` (`id`, `NAME`, `zones`, `max_player`, `data`, `type`,
 (2, 'Thung lũng tre', 10, 15, '[0,0,0,1,0]', 0, 0, 0, 1, 0, '[\"[\"Đồi hoa cúc\",0,336,24,360,0,0,1,1476,360]\",\"[\"Rừng nấm\",1224,264,1248,288,0,0,3,60,408]\",\"[\"Trạm tàu vũ trụ\",552,360,624,384,1,0,24,235,336]\"]', '[\"[4,3,500,348,408]\",\"[1,2,200,996,288]\",\"[1,2,200,876,336]\",\"[4,3,500,756,336]\"]', '[[6,180,360]]', 0),
 (3, 'Rừng nấm', 10, 15, '[0,0,0,2,1]', 0, 0, 0, 2, 1, '[\"[\"Thung lũng tre\",0,384,24,408,0,0,2,1188,288]\",\"[\"Rừng xương\",1608,312,1632,336,0,0,4,60,312]\",\"[\"Rừng Bamboo\",1344,312,1416,336,1,0,27,60,192]\"]', '[\"[1,2,200,372,408]\",\"[1,2,200,540,408]\",\"[1,2,200,732,408]\",\"[4,3,500,1140,336]\",\"[7,4,600,444,288]\",\"[7,4,600,708,288]\",\"[7,4,600,924,240]\",\"[7,4,600,1188,240]\"]', '[[6,204,408]]', 0),
 (4, 'Rừng xương', 10, 15, '[0,0,0,2,1]', 0, 0, 0, 2, 1, '[\"[\"Rừng nấm\",0,288,24,312,0,0,3,1572,336]\",\"[\"Đảo Kamê\",1608,312,1632,336,0,0,5,60,288]\"]', '[\"[4,3,500,1044,360]\",\"[4,3,500,684,360]\",\"[7,4,600,444,264]\",\"[7,4,600,852,240]\",\"[7,4,600,1260,288]\",\"[10,5,1000,612,144]\",\"[10,5,1000,1092,144]\"]', '[[6,180,312]]', 0),
-(5, 'Đảo Kamê', 10, 15, '[0,0,0,3,2]', 0, 0, 0, 3, 2, '[\"[\"Rừng xương\",0,264,24,288,0,0,4,1572,336]\",\"[\"Đông Karin\",1704,264,1728,288,0,0,6,60,336]\",\"[\"Nam Kamê\",792,384,864,408,1,0,29,732,360]\"]', '[[13,1,2000,420,288],[13,1,2000,540,384],[13,1,2000,1548,408]]', '[[39,984,408],[13,1068,408],[21,1205,408],[81,240,288]]', 0),
+(5, 'Đảo Kamê', 10, 15, '[0,0,0,3,2]', 0, 0, 0, 3, 2, '[\"[\"Rừng xương\",0,264,24,288,0,0,4,1572,336]\",\"[\"Đông Karin\",1704,264,1728,288,0,0,6,60,336]\",\"[\"Nam Kamê\",792,384,864,408,1,0,29,732,360]\"]', '[[13,1,2000,420,288],[13,1,2000,540,384],[13,1,2000,1548,408]]', '[[39,984,408],[13,1068,408],[21,1205,408],[81,240,288],[47,360,288]]', 0),
 (6, 'Đông Karin', 10, 15, '[0,0,0,4,3]', 0, 0, 0, 4, 3, '[\"[\"Đảo Kamê\",0,312,24,336,0,0,5,1660,288]\"]', '[\"[19,8,12000,228,336]\",\"[19,8,12000,396,336]\",\"[19,8,12000,564,336]\",\"[25,8,20000,780,168]\"]', '[[6,1092,336]]', 0),
 (7, 'Làng Mori', 10, 15, '[0,1,4,5,0]', 0, 1, 4, 5, 0, '[\"[\"Đồi nấm tím\",1224,408,1248,432,0,0,8,60,432]\",\"[\"Nhà Moori\",384,408,456,432,1,1,22,207,336]\",\"[\"Vách núi Moori\",0,384,24,408,0,0,43,1380,432]\"]', '[\"[0,1,100,708,432]\",\"[0,1,100,804,432]\",\"[0,1,100,900,432]\",\"[0,1,100,996,432]\"]', '[[6,564,432],[8,300,432],[74,607,432],[84,853,432]]', 0),
 (8, 'Đồi nấm tím', 10, 15, '[0,1,4,5,0]', 0, 1, 4, 5, 0, '[\"[\"Làng Mori\",0,408,24,432,0,0,7,1188,432]\",\"[\"Thị trấn Moori\",1224,384,1248,408,0,0,9,60,216]\"]', '[\"[2,2,200,276,384]\",\"[2,2,200,444,336]\",\"[2,2,200,636,288]\",\"[2,2,200,852,360]\"]', '[[6,1020,408]]', 0),
@@ -6776,7 +6777,7 @@ INSERT INTO `map_template` (`id`, `NAME`, `zones`, `max_player`, `data`, `type`,
 CREATE TABLE `mob_template` (
   `id` int NOT NULL,
   `TYPE` int NOT NULL,
-  `NAME` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `hp` int NOT NULL,
   `range_move` smallint NOT NULL,
   `speed` smallint NOT NULL,
@@ -6918,13 +6919,13 @@ INSERT INTO `mob_template` (`id`, `TYPE`, `NAME`, `hp`, `range_move`, `speed`, `
 
 CREATE TABLE `napthe` (
   `id` int NOT NULL,
-  `user_nap` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `telco` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `serial` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_nap` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `telco` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `serial` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `amount` int NOT NULL,
   `status` int NOT NULL,
-  `request_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `request_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -6948,7 +6949,7 @@ CREATE TABLE `notify` (
 
 CREATE TABLE `npc_template` (
   `id` int NOT NULL,
-  `NAME` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `head` int NOT NULL,
   `body` int NOT NULL,
   `leg` int NOT NULL,
@@ -7063,7 +7064,7 @@ INSERT INTO `npc_template` (`id`, `NAME`, `head`, `body`, `leg`, `avatar`) VALUE
 CREATE TABLE `part` (
   `id` int NOT NULL,
   `TYPE` int NOT NULL,
-  `DATA` text COLLATE utf8mb4_general_ci NOT NULL
+  `DATA` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9184,20 +9185,20 @@ INSERT INTO `part` (`id`, `TYPE`, `DATA`) VALUES
 
 CREATE TABLE `payments` (
   `id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `refNo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `refNo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date` datetime NOT NULL,
-  `card_serial` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `card_pin` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `card_serial` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `card_pin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `declared_amount` int NOT NULL,
   `api_declared_value` int DEFAULT NULL,
   `detected_value` int DEFAULT NULL,
   `received_amount_from_api` int DEFAULT NULL,
   `final_credited_amount` int DEFAULT '0',
-  `status_text` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `api_status_code` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `api_message` text COLLATE utf8mb4_general_ci,
-  `card_telco` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `api_status_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `api_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `card_telco` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_credited` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -9210,7 +9211,7 @@ CREATE TABLE `payments` (
 CREATE TABLE `phongchat` (
   `id` int NOT NULL,
   `id_user` int DEFAULT NULL,
-  `noidung` text COLLATE utf8mb4_general_ci NOT NULL,
+  `noidung` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `ngaytao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -9223,73 +9224,73 @@ CREATE TABLE `phongchat` (
 CREATE TABLE `player` (
   `id` int NOT NULL,
   `account_id` int DEFAULT NULL,
-  `name` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `head` int NOT NULL DEFAULT '102',
   `gender` int NOT NULL,
   `have_tennis_space_ship` tinyint(1) DEFAULT '0',
   `clan_id` int NOT NULL DEFAULT '-1',
-  `data_inventory` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_location` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_point` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_magic_tree` text COLLATE utf8mb4_general_ci NOT NULL,
-  `items_body` text COLLATE utf8mb4_general_ci NOT NULL,
-  `items_bag` text COLLATE utf8mb4_general_ci NOT NULL,
-  `items_box` text COLLATE utf8mb4_general_ci NOT NULL,
-  `items_box_lucky_round` text COLLATE utf8mb4_general_ci NOT NULL,
-  `items_daban` text COLLATE utf8mb4_general_ci NOT NULL,
-  `friends` text COLLATE utf8mb4_general_ci NOT NULL,
-  `enemies` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_intrinsic` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_item_time` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_task` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_mabu_egg` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_charm` text COLLATE utf8mb4_general_ci NOT NULL,
-  `skills` text COLLATE utf8mb4_general_ci NOT NULL,
-  `skills_shortcut` text COLLATE utf8mb4_general_ci NOT NULL,
-  `pet` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_black_ball` text COLLATE utf8mb4_general_ci NOT NULL,
-  `data_side_task` text COLLATE utf8mb4_general_ci NOT NULL,
+  `data_inventory` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_location` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_point` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_magic_tree` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `items_body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `items_bag` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `items_box` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `items_box_lucky_round` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `items_daban` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `friends` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `enemies` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_intrinsic` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_item_time` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_task` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_mabu_egg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_charm` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `skills` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `skills_shortcut` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `pet` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_black_ball` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `data_side_task` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `notify` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `baovetaikhoan` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '[]',
-  `captcha` varchar(1000) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
-  `data_card` varchar(10000) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `captcha` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `data_card` varchar(10000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
   `lasttimepkcommeson` bigint NOT NULL DEFAULT '0',
-  `bandokhobau` varchar(250) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `bandokhobau` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
   `doanhtrai` bigint NOT NULL DEFAULT '0',
-  `conduongrandoc` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
-  `masterDoesNotAttack` text COLLATE utf8mb4_general_ci NOT NULL,
-  `nhanthoivang` varchar(200) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
-  `ruonggo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
-  `sieuthanthuy` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `conduongrandoc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `masterDoesNotAttack` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nhanthoivang` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `ruonggo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `sieuthanthuy` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
   `vodaisinhtu` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '[]',
   `rongxuong` bigint NOT NULL DEFAULT '0',
-  `data_item_event` varchar(1000) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `data_item_event` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
   `data_luyentap` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `data_clan_task` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
-  `data_vip` text COLLATE utf8mb4_general_ci,
+  `data_clan_task` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[]',
+  `data_vip` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `rank` int NOT NULL DEFAULT '0',
-  `data_achievement` text COLLATE utf8mb4_general_ci NOT NULL,
-  `giftcode` text COLLATE utf8mb4_general_ci NOT NULL,
+  `data_achievement` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `giftcode` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `event_point` int NOT NULL DEFAULT '0',
-  `data_event` text COLLATE utf8mb4_general_ci,
-  `dataBadges` text COLLATE utf8mb4_general_ci,
-  `dataTaskBadges` text COLLATE utf8mb4_general_ci,
+  `data_event` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `dataBadges` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `dataTaskBadges` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `firstTimeLogin` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `BoughtSkill` text COLLATE utf8mb4_general_ci,
-  `LearnSkill` text COLLATE utf8mb4_general_ci,
-  `dailyGift` text COLLATE utf8mb4_general_ci NOT NULL,
+  `BoughtSkill` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `LearnSkill` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `dailyGift` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `point_sukien` int NOT NULL DEFAULT '0',
   `thachdauwhis` int NOT NULL DEFAULT '0',
   `point_sukien1` int NOT NULL DEFAULT '0',
   `point_maydam` int NOT NULL DEFAULT '0',
   `total_damage_maydam` bigint NOT NULL,
-  `data_duahau_egg` text COLLATE utf8mb4_general_ci NOT NULL,
-  `checkNhanQua` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[1,1,"1970-01-01T00:00:00"]',
-  `thanhTichBang` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
-  `thanhTichKhiGas` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
-  `thanhTichCDRD` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
-  `nhiem_vu_kol` text COLLATE utf8mb4_general_ci NOT NULL,
+  `data_duahau_egg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `checkNhanQua` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[1,1,"1970-01-01T00:00:00"]',
+  `thanhTichBang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
+  `thanhTichKhiGas` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
+  `thanhTichCDRD` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0]',
+  `nhiem_vu_kol` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `point_sukien2` int NOT NULL DEFAULT '0',
   `lucky_round_point` int DEFAULT '0',
   `reward_100` tinyint DEFAULT '0',
@@ -9310,7 +9311,7 @@ CREATE TABLE `player` (
 --
 
 INSERT INTO `player` (`id`, `account_id`, `name`, `head`, `gender`, `have_tennis_space_ship`, `clan_id`, `data_inventory`, `data_location`, `data_point`, `data_magic_tree`, `items_body`, `items_bag`, `items_box`, `items_box_lucky_round`, `items_daban`, `friends`, `enemies`, `data_intrinsic`, `data_item_time`, `data_task`, `data_mabu_egg`, `data_charm`, `skills`, `skills_shortcut`, `pet`, `data_black_ball`, `data_side_task`, `create_time`, `notify`, `baovetaikhoan`, `captcha`, `data_card`, `lasttimepkcommeson`, `bandokhobau`, `doanhtrai`, `conduongrandoc`, `masterDoesNotAttack`, `nhanthoivang`, `ruonggo`, `sieuthanthuy`, `vodaisinhtu`, `rongxuong`, `data_item_event`, `data_luyentap`, `data_clan_task`, `data_vip`, `rank`, `data_achievement`, `giftcode`, `event_point`, `data_event`, `dataBadges`, `dataTaskBadges`, `firstTimeLogin`, `BoughtSkill`, `LearnSkill`, `dailyGift`, `point_sukien`, `thachdauwhis`, `point_sukien1`, `point_maydam`, `total_damage_maydam`, `data_duahau_egg`, `checkNhanQua`, `thanhTichBang`, `thanhTichKhiGas`, `thanhTichCDRD`, `nhiem_vu_kol`, `point_sukien2`, `lucky_round_point`, `reward_100`, `reward_200`, `reward_300`, `reward_500`, `reward_700`, `reward_1000`, `point_2207`, `reward_100_2207`, `reward_200_2207`, `reward_300_2207`, `reward_500_2207`) VALUES
-(1, 1, '12345', 9, 1, 0, 2, '[35955224374,498269,0,0,0]', '[84,466,336]', '[0,17683817451,17991293268,1000,1000,999999,99999999,999999999,100,1,0,0,1000019,91000038]', '[5,13,0,1777712858999,1777709565878]', '[\"[1,1,\\\"[\\\\\\\"[47,2]\\\\\\\"]\\\",1777709565878]\",\"[7,1,\\\"[\\\\\\\"[6,20]\\\\\\\"]\\\",1777709565878]\",\"[-1,0,\\\"[]\\\",1782140139356]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711488537]\",\"[-1,0,\\\"[]\\\",1782140139356]\",\"[1870,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1778951111477]\",\"[1869,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794117562]\",\"[-1,0,\\\"[]\\\",1782140139356]\",\"[-1,0,\\\"[]\\\",1782140139356]\",\"[-1,0,\\\"[]\\\",1782140139356]\",\"[-1,0,\\\"[]\\\",1782140139356]\"]', '[\"[63,7,\\\"[\\\\\\\"[2,8]\\\\\\\"]\\\",1777709565878]\",\"[1813,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777736932392]\",\"[1731,1,\\\"[\\\\\\\"[50,33]\\\\\\\",\\\\\\\"[103,29]\\\\\\\",\\\\\\\"[5,18]\\\\\\\",\\\\\\\"[14,15]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[231,0]\\\\\\\"]\\\",1777738636623]\",\"[1784,1,\\\"[\\\\\\\"[50,33]\\\\\\\",\\\\\\\"[77,33]\\\\\\\",\\\\\\\"[5,18]\\\\\\\",\\\\\\\"[14,15]\\\\\\\",\\\\\\\"[30,1]\\\\\\\",\\\\\\\"[231,1]\\\\\\\"]\\\",1777738639136]\",\"[1698,1,\\\"[\\\\\\\"[50,26]\\\\\\\",\\\\\\\"[77,25]\\\\\\\",\\\\\\\"[103,25]\\\\\\\",\\\\\\\"[114,45]\\\\\\\",\\\\\\\"[94,15]\\\\\\\",\\\\\\\"[236,15]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[231,0]\\\\\\\"]\\\",1777738648601]\",\"[1863,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738718103]\",\"[1862,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738720241]\",\"[1864,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738714449]\",\"[1867,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794114877]\",\"[1865,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738711101]\",\"[1860,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738725402]\",\"[194,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777780512587]\",\"[454,1,\\\"[\\\\\\\"[30,0]\\\\\\\"]\\\",1777781038616]\",\"[921,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777781040857]\",\"[1787,1,\\\"[\\\\\\\"[30,1]\\\\\\\"]\\\",1777781144855]\",\"[611,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777781396200]\",\"[1861,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738723345]\",\"[1866,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738705738]\",\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\",\\\\\\\"[131,0]\\\\\\\",\\\\\\\"[143,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[107,1]\\\\\\\"]\\\",1777711497528]\",\"[457,9000,\\\"[\\\\\\\"[86,1]\\\\\\\"]\\\",1779024385972]\",\"[1950,1,\\\"[\\\\\\\"[21,2]\\\\\\\"]\\\",1779178238497]\",\"[1868,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794110242]\",\"[1814,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777736934984]\",\"[1900,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777737562428]\",\"[1229,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779268338703]\",\"[992,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779268430885]\",\"[521,1,\\\"[\\\\\\\"[1,110]\\\\\\\"]\\\",1779268936600]\",\"[281,1,\\\"[\\\\\\\"[107,0]\\\\\\\",\\\\\\\"[14,12]\\\\\\\"]\\\",1779269443396]\",\"[16,2,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779269444405]\",\"[-1,0,\\\"[]\\\",1782140139358]\"]', '[\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\"]\\\",1777709565878]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\",\"[-1,0,\\\"[]\\\",1782140139358]\"]', '[]', '[\"[28,1,\\\"[\\\\\\\"[7,15]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711534592]\",\"[41,1,\\\"[\\\\\\\"[47,4]\\\\\\\",\\\\\\\"[233,0]\\\\\\\",\\\\\\\"[234,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711531119]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711523890]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711521149]\",\"[28,1,\\\"[\\\\\\\"[7,15]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711526642]\",\"[57,1,\\\"[\\\\\\\"[14,2]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711529388]\"]', '[]', '[\"[2,\\\"12341\\\",6,16,58,0,85375]\"]', '[23,286,0,0,false,27,6000,1781099943337]', '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]', '[25,0,0,0]', '[]', '[1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879]', '[\"[2,1,1779269569997,0]\",\"[3,0,0,0]\",\"[7,0,0,0]\",\"[11,0,0,0]\",\"[12,0,0,0]\",\"[17,1,1778951598114,0]\",\"[18,0,0,0]\",\"[19,1,1778772261816,0]\",\"[27,2,1782140013631,0]\"]', '[2,-1,-1,-1,27,-1,-1,-1,-1,-1]', '[\"[0,2,\\\"$Đệ tử\\\",0,0,3]\",\"[0,1977,0,1000,1000,2040,960,35,19,2,2040,960]\",\"[\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782140139358]\\\"]\",\"[\\\"[4,1,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\"]\"]', '[\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\"]', '[-1,0,0,0,10,0,0]', '2026-05-02 08:12:45', 'null', '[0,false,1777711475458]', '[]', '[]', 0, '[0,1777711475458]', 0, '[false,0,false,false]', '0', '[false,0]', '[0,50000000,100,1777711475458,0]', '[false,0,false]', '[false,0,0,0]', 0, '[0,0,0,0,0,0]', '[0,false,-1,10946,1782140147342,0,0,0,0,0]', '[-1,0,0,0,5,0]', '[0,0,false,false,false,0,0,0]', 2, '[\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[1150,false]\",\"[7,false]\",\"[0,false]\",\"[35401000,false]\",\"[0,false]\",\"[0,false]\",\"[10499999,false]\",\"[0,false]\",\"[15,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[7,false]\"]', '[]', 19003, '[0,0,0,0,0,0,false,false,false,false]', '[]', '[{\"id\":\"1\",\"count\":\"0\",\"countMax\":\"1000000\",\"idBadgesReward\":\"218\"},{\"id\":\"2\",\"count\":\"0\",\"countMax\":\"100\",\"idBadgesReward\":\"219\"},{\"id\":\"3\",\"count\":\"0\",\"countMax\":\"300\",\"idBadgesReward\":\"220\"},{\"id\":\"4\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"221\"},{\"id\":\"5\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"222\"},{\"id\":\"6\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"223\"},{\"id\":\"7\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"1286\"},{\"id\":\"8\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"1287\"},{\"id\":\"9\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"224\"},{\"id\":\"10\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"225\"},{\"id\":\"11\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"1300\"},{\"id\":\"12\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"240\"},{\"id\":\"13\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"242\"},{\"id\":\"14\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"243\"},{\"id\":\"15\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"247\"},{\"id\":\"16\",\"count\":\"0\",\"countMax\":\"2000000\",\"idBadgesReward\":\"253\"},{\"id\":\"17\",\"count\":\"0\",\"countMax\":\"7\",\"idBadgesReward\":\"256\"},{\"id\":\"18\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"226\"}]', '2026-06-22 21:55:33', '[2,1956]', '[-1,-1,0]', '[{\"id\":\"0\",\"daNhan\":\"false\"},{\"id\":\"1\",\"daNhan\":\"false\"}]', 1, 0, 0, 0, 287135831, '[]', '[1,1,null]', '[0,0,0,0]', '[0,0,0,0]', '[0,0,0,0]', '{\"kolQuestStage\":1,\"kolVIPQuestStage\":1,\"destronGas70CompletionCount\":0,\"martialArtsTournamentWins\":0,\"dailySuperHardQuestCompletionCount\":0,\"bossBabyDefeatParticipationCount\":0,\"monsterKillCountAutoTrain\":362}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 1, '12345', 9, 1, 0, 2, '[35935224374,497765,0,0,0]', '[5,361,288]', '[0,17683817459,17991293276,1000,1000,999999,99999999,999999999,100,1,0,0,770615,81000294]', '[6,15,0,1782227104716,1782227102527]', '[\"[1,1,\\\"[\\\\\\\"[47,2]\\\\\\\"]\\\",1777709565878]\",\"[7,1,\\\"[\\\\\\\"[6,20]\\\\\\\"]\\\",1777709565878]\",\"[-1,0,\\\"[]\\\",1782227302290]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711488537]\",\"[-1,0,\\\"[]\\\",1782227302290]\",\"[1868,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794110242]\",\"[1869,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794117562]\",\"[-1,0,\\\"[]\\\",1782227302291]\",\"[1813,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777736932392]\",\"[-1,0,\\\"[]\\\",1782227302291]\",\"[-1,0,\\\"[]\\\",1782227302291]\"]', '[\"[63,7,\\\"[\\\\\\\"[2,8]\\\\\\\"]\\\",1777709565878]\",\"[1731,1,\\\"[\\\\\\\"[50,33]\\\\\\\",\\\\\\\"[103,29]\\\\\\\",\\\\\\\"[5,18]\\\\\\\",\\\\\\\"[14,15]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[231,0]\\\\\\\"]\\\",1777738636623]\",\"[1784,1,\\\"[\\\\\\\"[50,33]\\\\\\\",\\\\\\\"[77,33]\\\\\\\",\\\\\\\"[5,18]\\\\\\\",\\\\\\\"[14,15]\\\\\\\",\\\\\\\"[30,1]\\\\\\\",\\\\\\\"[231,1]\\\\\\\"]\\\",1777738639136]\",\"[1698,1,\\\"[\\\\\\\"[50,26]\\\\\\\",\\\\\\\"[77,25]\\\\\\\",\\\\\\\"[103,25]\\\\\\\",\\\\\\\"[114,45]\\\\\\\",\\\\\\\"[94,15]\\\\\\\",\\\\\\\"[236,15]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[231,0]\\\\\\\"]\\\",1777738648601]\",\"[1863,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738718103]\",\"[1862,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738720241]\",\"[1864,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738714449]\",\"[1870,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1778951111477]\",\"[1865,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738711101]\",\"[1860,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738725402]\",\"[194,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777780512587]\",\"[454,1,\\\"[\\\\\\\"[30,0]\\\\\\\"]\\\",1777781038616]\",\"[921,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777781040857]\",\"[1787,1,\\\"[\\\\\\\"[30,1]\\\\\\\"]\\\",1777781144855]\",\"[611,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777781396200]\",\"[1861,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738723345]\",\"[1866,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777738705738]\",\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\",\\\\\\\"[131,0]\\\\\\\",\\\\\\\"[143,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\",\\\\\\\"[107,1]\\\\\\\"]\\\",1777711497528]\",\"[457,9000,\\\"[\\\\\\\"[86,1]\\\\\\\"]\\\",1779024385972]\",\"[1950,1,\\\"[\\\\\\\"[21,2]\\\\\\\"]\\\",1779178238497]\",\"[1867,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777794114877]\",\"[1814,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777736934984]\",\"[1900,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777737562428]\",\"[1229,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779268338703]\",\"[992,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779268430885]\",\"[521,1,\\\"[\\\\\\\"[1,110]\\\\\\\"]\\\",1779268936600]\",\"[281,1,\\\"[\\\\\\\"[107,0]\\\\\\\",\\\\\\\"[14,12]\\\\\\\"]\\\",1779269443396]\",\"[16,2,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779269444405]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302296]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\"]', '[\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\"]\\\",1777709565878]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\",\"[-1,0,\\\"[]\\\",1782227302297]\"]', '[]', '[\"[28,1,\\\"[\\\\\\\"[7,15]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711534592]\",\"[41,1,\\\"[\\\\\\\"[47,4]\\\\\\\",\\\\\\\"[233,0]\\\\\\\",\\\\\\\"[234,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711531119]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711523890]\",\"[47,1,\\\"[\\\\\\\"[7,30]\\\\\\\",\\\\\\\"[28,6]\\\\\\\",\\\\\\\"[237,0]\\\\\\\",\\\\\\\"[238,0]\\\\\\\",\\\\\\\"[239,0]\\\\\\\",\\\\\\\"[240,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711521149]\",\"[28,1,\\\"[\\\\\\\"[7,15]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711526642]\",\"[57,1,\\\"[\\\\\\\"[14,2]\\\\\\\",\\\\\\\"[130,0]\\\\\\\",\\\\\\\"[142,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711529388]\"]', '[]', '[\"[2,\\\"12341\\\",6,16,58,0,85375]\"]', '[23,286,0,0,false,27,6000,1781099943337]', '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]', '[25,0,0,0]', '[]', '[1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879,1777709565879]', '[\"[2,1,1782227338638,0]\",\"[3,0,0,0]\",\"[7,0,0,0]\",\"[11,0,0,0]\",\"[12,0,0,0]\",\"[17,1,1778951598114,0]\",\"[18,0,0,0]\",\"[19,1,1778772261816,0]\",\"[27,2,1782140013631,0]\"]', '[2,-1,-1,-1,27,-1,-1,-1,-1,-1]', '[\"[0,2,\\\"$Đệ tử\\\",0,0,3]\",\"[0,1977,0,1000,1000,2040,960,35,19,2,2040,960]\",\"[\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782227302300]\\\"]\",\"[\\\"[4,1,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\"]\"]', '[\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\"]', '[-1,0,0,0,10,0,0]', '2026-05-02 08:12:45', 'null', '[0,false,1777711475458]', '[]', '[]', 0, '[0,1777711475458]', 0, '[false,0,false,false]', '0', '[false,0]', '[0,50000000,100,1777711475458,0]', '[false,0,false]', '[false,0,0,0]', 0, '[0,0,0,0,0,0]', '[0,false,-1,8098,1782227344699,0,0,0,0,0]', '[-1,0,0,0,5,0]', '[0,0,false,false,false,0,0,0]', 2, '[\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[1268,false]\",\"[7,false]\",\"[0,false]\",\"[37462000,false]\",\"[0,false]\",\"[0,false]\",\"[10499999,false]\",\"[0,false]\",\"[15,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[7,false]\"]', '[]', 19003, '[0,0,0,0,0,0,false,false,false,false]', '[]', '[{\"id\":\"1\",\"count\":\"0\",\"countMax\":\"1000000\",\"idBadgesReward\":\"218\"},{\"id\":\"2\",\"count\":\"0\",\"countMax\":\"100\",\"idBadgesReward\":\"219\"},{\"id\":\"3\",\"count\":\"0\",\"countMax\":\"300\",\"idBadgesReward\":\"220\"},{\"id\":\"4\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"221\"},{\"id\":\"5\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"222\"},{\"id\":\"6\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"223\"},{\"id\":\"7\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"1286\"},{\"id\":\"8\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"1287\"},{\"id\":\"9\",\"count\":\"4\",\"countMax\":\"500\",\"idBadgesReward\":\"224\"},{\"id\":\"10\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"225\"},{\"id\":\"11\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"1300\"},{\"id\":\"12\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"240\"},{\"id\":\"13\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"242\"},{\"id\":\"14\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"243\"},{\"id\":\"15\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"247\"},{\"id\":\"16\",\"count\":\"0\",\"countMax\":\"2000000\",\"idBadgesReward\":\"253\"},{\"id\":\"17\",\"count\":\"0\",\"countMax\":\"7\",\"idBadgesReward\":\"256\"},{\"id\":\"18\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"226\"}]', '2026-06-25 19:55:33', '[2,1956]', '[-1,-1,0]', '[{\"id\":\"0\",\"daNhan\":\"false\"},{\"id\":\"1\",\"daNhan\":\"false\"}]', 1, 0, 0, 0, 287143831, '[]', '[1,1,null]', '[0,0,0,0]', '[0,0,0,0]', '[0,0,0,0]', '{\"kolQuestStage\":1,\"kolVIPQuestStage\":1,\"destronGas70CompletionCount\":0,\"martialArtsTournamentWins\":0,\"dailySuperHardQuestCompletionCount\":0,\"bossBabyDefeatParticipationCount\":0,\"monsterKillCountAutoTrain\":370}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (2, 3, '12341', 6, 2, 0, 1, '[17726436612,1346,0,0,0]', '[5,974,408]', '[0,667495576,667495576,1000,1000,555555,100,99999999,0,0,0,0,797360,134]', '[1,5,0,1777710601943,1777709628365]', '[\"[2,1,\\\"[\\\\\\\"[47,3]\\\\\\\"]\\\",1777709628365]\",\"[-1,0,\\\"[]\\\",1782138862113]\",\"[23,1,\\\"[\\\\\\\"[0,5]\\\\\\\",\\\\\\\"[135,0]\\\\\\\",\\\\\\\"[138,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711415403]\",\"[29,1,\\\"[\\\\\\\"[7,10]\\\\\\\",\\\\\\\"[135,0]\\\\\\\",\\\\\\\"[138,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711282215]\",\"[57,1,\\\"[\\\\\\\"[14,2]\\\\\\\",\\\\\\\"[134,0]\\\\\\\",\\\\\\\"[137,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711236498]\",\"[-1,0,\\\"[]\\\",1782138862113]\",\"[529,1,\\\"[\\\\\\\"[9,1]\\\\\\\"]\\\",1779348057497]\",\"[1541,1,\\\"[\\\\\\\"[77,7]\\\\\\\",\\\\\\\"[103,7]\\\\\\\",\\\\\\\"[50,5]\\\\\\\",\\\\\\\"[94,5]\\\\\\\"]\\\",1779348071978]\",\"[1113,1,\\\"[\\\\\\\"[50,12]\\\\\\\",\\\\\\\"[77,15]\\\\\\\",\\\\\\\"[103,15]\\\\\\\",\\\\\\\"[94,5]\\\\\\\"]\\\",1779348063245]\",\"[-1,0,\\\"[]\\\",1782138862113]\",\"[1997,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779347614771]\",\"[1212,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779348039364]\"]', '[\"[63,4,\\\"[\\\\\\\"[2,8]\\\\\\\"]\\\",1777709628365]\",\"[13,5,\\\"[\\\\\\\"[48,100]\\\\\\\"]\\\",1777709696340]\",\"[49,1,\\\"[\\\\\\\"[47,5]\\\\\\\",\\\\\\\"[135,0]\\\\\\\",\\\\\\\"[138,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711187233]\",\"[29,1,\\\"[\\\\\\\"[7,10]\\\\\\\",\\\\\\\"[135,0]\\\\\\\",\\\\\\\"[138,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711202309]\",\"[8,1,\\\"[\\\\\\\"[6,20]\\\\\\\",\\\\\\\"[134,0]\\\\\\\",\\\\\\\"[137,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711205392]\",\"[53,1,\\\"[\\\\\\\"[0,8]\\\\\\\",\\\\\\\"[134,0]\\\\\\\",\\\\\\\"[137,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711208447]\",\"[55,1,\\\"[\\\\\\\"[7,20]\\\\\\\",\\\\\\\"[28,4]\\\\\\\",\\\\\\\"[134,0]\\\\\\\",\\\\\\\"[137,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711234651]\",\"[555,1,\\\"[\\\\\\\"[47,840]\\\\\\\",\\\\\\\"[207,5]\\\\\\\",\\\\\\\"[21,16]\\\\\\\"]\\\",1777711334685]\",\"[29,1,\\\"[\\\\\\\"[7,10]\\\\\\\",\\\\\\\"[134,0]\\\\\\\",\\\\\\\"[137,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711289591]\",\"[2,1,\\\"[\\\\\\\"[47,3]\\\\\\\",\\\\\\\"[241,0]\\\\\\\",\\\\\\\"[242,0]\\\\\\\",\\\\\\\"[243,0]\\\\\\\",\\\\\\\"[244,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711295607]\",\"[457,451,\\\"[\\\\\\\"[86,1]\\\\\\\"]\\\",1777711315944]\",\"[1787,99,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1777711406433]\",\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\",\\\\\\\"[135,0]\\\\\\\",\\\\\\\"[138,0]\\\\\\\",\\\\\\\"[30,0]\\\\\\\"]\\\",1777711413548]\",\"[1635,1,\\\"[\\\\\\\"[30,1]\\\\\\\"]\\\",1777733810430]\",\"[14,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1778504557828]\",\"[194,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1778504607251]\",\"[8,1,\\\"[\\\\\\\"[6,20]\\\\\\\"]\\\",1777709628365]\",\"[16,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779269351558]\",\"[521,1,\\\"[\\\\\\\"[1,5]\\\\\\\"]\\\",1779269394690]\",\"[1978,99,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779336235776]\",\"[1987,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779337676027]\",\"[454,1,\\\"[\\\\\\\"[30,0]\\\\\\\"]\\\",1779347440502]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\"]', '[\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\",\"[-1,0,\\\"[]\\\",1782138862114]\"]', '[]', '[\"[1044,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1779348034095]\"]', '[]', '[\"[1,\\\"12345\\\",1980,1981,1982,0,17683817451]\"]', '[0,0,0,0,false,27,6000,1782138855199]', '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]', '[25,4,0,0]', '[]', '[1781933921680,1777709628366,1777709628366,1777709628366,1777709628366,1777709628366,1777709628366,1777709628366,1784526356960,1781934374260]', '[\"[4,1,1779348206234,0]\",\"[5,0,0,0]\",\"[8,0,0,0]\",\"[13,0,0,0]\",\"[14,0,0,0]\",\"[21,0,0,0]\",\"[23,0,0,0]\",\"[19,0,0,0]\",\"[27,5,1782138742625,0]\"]', '[4,-1,-1,-1,27,-1,-1,-1,-1,-1]', '[\"[0,1,\\\"$Đệ tử\\\",0,0,0]\",\"[0,555557555,2635,1000,1000,4140,4080,179,105,1,2242,1800]\",\"[\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782138862114]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782138862114]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782138862114]\\\",\\\"[-1,0,\\\\\\\"[]\\\\\\\",1782138862114]\\\",\\\"[12,1,\\\\\\\"[\\\\\\\\\\\\\\\"[14,1]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[135,0]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[138,0]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[30,0]\\\\\\\\\\\\\\\"]\\\\\\\",1777711293780]\\\",\\\"[1566,1,\\\\\\\"[\\\\\\\\\\\\\\\"[106,0]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[101,13]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[104,24]\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"[94,5]\\\\\\\\\\\\\\\"]\\\\\\\",1779347693485]\\\",\\\"[529,1,\\\\\\\"[\\\\\\\\\\\\\\\"[9,0]\\\\\\\\\\\\\\\"]\\\\\\\",1779347716102]\\\",\\\"[1997,1,\\\\\\\"[\\\\\\\\\\\\\\\"[73,0]\\\\\\\\\\\\\\\"]\\\\\\\",1779347616815]\\\"]\",\"[\\\"[4,1,0,0]\\\",\\\"[3,1,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\",\\\"[-1,0,0,0]\\\"]\"]', '[\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\"]', '[-1,0,0,0,10,0,0]', '2026-05-02 08:13:48', 'null', '[0,false,1777709629127]', '[]', '[]', 0, '[0,1777709629127]', 0, '[false,0,false,false]', '0', '[false,0]', '[0,50000000,100,1777709629127,0]', '[false,0,false]', '[false,0,0,0]', 0, '[0,0,0,0,0,0]', '[0,false,-1,11468,1782138873130,0,0,0,0,0]', '[-1,0,0,0,5,0]', '[0,0,false,false,false,0,0,0]', 1, '[\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[904,false]\",\"[40,false]\",\"[0,false]\",\"[19386000,false]\",\"[0,false]\",\"[0,false]\",\"[500000,false]\",\"[0,false]\",\"[24,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[6,false]\"]', '[]', 0, '[0,0,0,0,0,0,false,false,false,false]', '[{\"idBadGes\":\"222\",\"timeofUseBadges\":\"1784730835908\",\"isUse\":\"true\"},{\"idBadGes\":\"222\",\"timeofUseBadges\":\"1784730835908\",\"isUse\":\"true\"}]', '[{\"id\":\"1\",\"count\":\"0\",\"countMax\":\"1000000\",\"idBadgesReward\":\"218\"},{\"id\":\"2\",\"count\":\"0\",\"countMax\":\"100\",\"idBadgesReward\":\"219\"},{\"id\":\"3\",\"count\":\"0\",\"countMax\":\"300\",\"idBadgesReward\":\"220\"},{\"id\":\"4\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"221\"},{\"id\":\"5\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"222\"},{\"id\":\"6\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"223\"},{\"id\":\"7\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"1286\"},{\"id\":\"8\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"1287\"},{\"id\":\"9\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"224\"},{\"id\":\"10\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"225\"},{\"id\":\"11\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"1300\"},{\"id\":\"12\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"240\"},{\"id\":\"13\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"242\"},{\"id\":\"14\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"243\"},{\"id\":\"15\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"247\"},{\"id\":\"16\",\"count\":\"0\",\"countMax\":\"2000000\",\"idBadgesReward\":\"253\"},{\"id\":\"17\",\"count\":\"0\",\"countMax\":\"7\",\"idBadgesReward\":\"256\"},{\"id\":\"18\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"226\"}]', '2026-06-23 11:33:55', '[4,1961,1962,1963,1964]', '[-1,-1,0]', '[{\"id\":\"0\",\"daNhan\":\"false\"},{\"id\":\"1\",\"daNhan\":\"false\"}]', 0, 0, 0, 4990, 10043526171, '[]', '[1,1,null]', '[0,0,0,0]', '[0,0,0,0]', '[0,0,0,0]', '{\"kolQuestStage\":0,\"kolVIPQuestStage\":0,\"destronGas70CompletionCount\":0,\"martialArtsTournamentWins\":0,\"dailySuperHardQuestCompletionCount\":0,\"bossBabyDefeatParticipationCount\":0,\"monsterKillCountAutoTrain\":283}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (4, 4, '11111', 64, 0, 1, -1, '[495000,312,0,0,0]', '[5,509,384]', '[0,61113230,60518230,1000,1000,200,9999999,110,0,0,0,0,322,13700001]', '[1,5,0,1778941777499,1778941777499]', '[\"[0,1,\\\"[\\\\\\\"[47,2]\\\\\\\"]\\\",1778941777499]\",\"[6,1,\\\"[\\\\\\\"[6,30]\\\\\\\"]\\\",1778941777499]\",\"[-1,0,\\\"[]\\\",1781101016551]\",\"[-1,0,\\\"[]\\\",1781101016551]\",\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\"]\\\",1778941777499]\",\"[1566,1,\\\"[\\\\\\\"[97,20]\\\\\\\",\\\\\\\"[80,14]\\\\\\\",\\\\\\\"[8,5]\\\\\\\",\\\\\\\"[16,16]\\\\\\\"]\\\",1781101095322]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\"]', '[\"[63,7,\\\"[\\\\\\\"[2,8]\\\\\\\"]\\\",1778941777499]\",\"[194,1,\\\"[\\\\\\\"[73,0]\\\\\\\"]\\\",1778941973918]\",\"[1950,8,\\\"[\\\\\\\"[21,2]\\\\\\\"]\\\",1781092515321]\",\"[-1,0,\\\"[]\\\",1781101104674]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\",\"[-1,0,\\\"[]\\\",1781101016552]\"]', '[\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016553]\",\"[-1,0,\\\"[]\\\",1781101016554]\",\"[-1,0,\\\"[]\\\",1781101016554]\",\"[-1,0,\\\"[]\\\",1781101016554]\",\"[-1,0,\\\"[]\\\",1781101016554]\",\"[-1,0,\\\"[]\\\",1781101016554]\",\"[-1,0,\\\"[]\\\",1781101016554]\"]', '[]', '[]', '[]', '[]', '[0,0,0,0,false,27,120000,1781101038751]', '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]', '[20,0,0,0]', '[]', '[1778941777500,1778941777500,1778941777500,1778941777500,1778941777500,1778941777500,1778941777500,1778941777500,1778941777500,1778941777500]', '[\"[0,1,1781093061971,0]\",\"[1,0,1781093062471,0]\",\"[6,0,1781093062471,0]\",\"[9,1,1781093061971,0]\",\"[10,0,1781093062471,0]\",\"[20,0,1781093062471,0]\",\"[22,0,1781093062471,0]\",\"[19,0,1781093062471,0]\",\"[27,1,1781101039020,0]\"]', '[0,-1,-1,9,27,-1,-1,-1,-1,-1]', '[]', '[\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\"]', '[-1,0,0,0,10,0,0]', '2026-05-16 14:29:37', 'null', '[0,false,1778941778197]', '[]', '[]', 0, '[0,1778941778197]', 0, '[false,0,false,false]', '0', '[false,0]', '[0,50000000,100,1778941778197,0]', '[false,0,false]', '[false,0,0,0]', 0, '[0,0,0,0,0,0]', '[0,false,-1,667,1781101514064,0,0,0,0,0]', '[-1,0,0,0,5,0]', '[0,0,false,false,false,0,0,0]', 3, '[\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[372,false]\",\"[0,false]\",\"[0,false]\",\"[3681000,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[1,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\"]', '[]', 0, '[0,0,0,0,0,0,false,false,false,false]', '[]', '[{\"id\":\"1\",\"count\":\"0\",\"countMax\":\"1000000\",\"idBadgesReward\":\"218\"},{\"id\":\"2\",\"count\":\"0\",\"countMax\":\"100\",\"idBadgesReward\":\"219\"},{\"id\":\"3\",\"count\":\"0\",\"countMax\":\"300\",\"idBadgesReward\":\"220\"},{\"id\":\"4\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"221\"},{\"id\":\"5\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"222\"},{\"id\":\"6\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"223\"},{\"id\":\"7\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"1286\"},{\"id\":\"8\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"1287\"},{\"id\":\"9\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"224\"},{\"id\":\"10\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"225\"},{\"id\":\"11\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"1300\"},{\"id\":\"12\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"240\"},{\"id\":\"13\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"242\"},{\"id\":\"14\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"243\"},{\"id\":\"15\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"247\"},{\"id\":\"16\",\"count\":\"0\",\"countMax\":\"2000000\",\"idBadgesReward\":\"253\"},{\"id\":\"17\",\"count\":\"0\",\"countMax\":\"7\",\"idBadgesReward\":\"256\"},{\"id\":\"18\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"226\"}]', '2026-06-10 11:46:27', '[0]', '[-1,-1,0]', '[{\"id\":\"0\",\"daNhan\":\"false\"},{\"id\":\"1\",\"daNhan\":\"false\"}]', 0, 0, 0, 0, 367, '[]', '[1,1,null]', '[0,0,0,0]', '[0,0,0,0]', '[0,0,0,0]', '{\"kolQuestStage\":0,\"kolVIPQuestStage\":0,\"destronGas70CompletionCount\":0,\"martialArtsTournamentWins\":0,\"dailySuperHardQuestCompletionCount\":0,\"bossBabyDefeatParticipationCount\":0,\"monsterKillCountAutoTrain\":0}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (5, 5, '111111', 28, 2, 0, -1, '[485000,500,0,0,0]', '[14,869,408]', '[0,2402959,2402959,1000,1000,100,100,15,0,0,0,0,108,80]', '[1,5,0,1779177962916,1779177654968]', '[\"[2,1,\\\"[\\\\\\\"[47,3]\\\\\\\"]\\\",1779177654968]\",\"[8,1,\\\"[\\\\\\\"[6,20]\\\\\\\"]\\\",1779177654968]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[12,1,\\\"[\\\\\\\"[14,1]\\\\\\\"]\\\",1779177654968]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\"]', '[\"[63,9,\\\"[\\\\\\\"[2,8]\\\\\\\"]\\\",1779177654968]\",\"[13,5,\\\"[\\\\\\\"[48,100]\\\\\\\"]\\\",1779177662806]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\"]', '[\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\",\"[-1,0,\\\"[]\\\",1779178153131]\"]', '[]', '[]', '[]', '[]', '[0,0,0,0,false,0,0,0]', '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]', '[1,0,3,0]', '[]', '[1779177654969,1779177654969,1779177654969,1779177654969,1779177654969,1779177654969,1779177654969,1779177654969,1779177654969,1779177654969]', '[\"[4,1,1779178178877,0]\",\"[5,0,0,0]\",\"[8,0,0,0]\",\"[13,0,0,0]\",\"[14,0,0,0]\",\"[21,0,0,0]\",\"[23,0,0,0]\",\"[19,0,0,0]\",\"[27,1,0,0]\"]', '[4,-1,-1,-1,27,-1,-1,-1,-1,-1]', '[]', '[\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\",\"[0,0,0]\"]', '[-1,0,0,0,10,0]', '2026-05-19 08:00:54', 'null', '[0,false,1779177655765]', '[]', '[]', 0, '[0,1779177655765]', 0, '[false,0,false,false]', '0', '[false,0]', '[0,50000000,100,1779177655765,0]', '[false,0,false]', '[false,0,0,0]', 0, '[0,0,0,0,0,0]', '[0,false,-1,14100,1779178193934,0,0,0,0,0]', '[-1,0,0,0,5,0]', '[0,0,false,false,false,0,0,0]', 4, '[\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[3,false]\",\"[930000,false]\",\"[0,false]\",\"[0,false]\",\"[10499999,false]\",\"[0,false]\",\"[3,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\",\"[0,false]\"]', '[]', 0, '[0,0,0,0,0,0,false,false,false,false]', '[]', '[{\"id\":\"1\",\"count\":\"0\",\"countMax\":\"1000000\",\"idBadgesReward\":\"218\"},{\"id\":\"2\",\"count\":\"0\",\"countMax\":\"100\",\"idBadgesReward\":\"219\"},{\"id\":\"3\",\"count\":\"0\",\"countMax\":\"300\",\"idBadgesReward\":\"220\"},{\"id\":\"4\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"221\"},{\"id\":\"5\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"222\"},{\"id\":\"6\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"223\"},{\"id\":\"7\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"1286\"},{\"id\":\"8\",\"count\":\"0\",\"countMax\":\"5\",\"idBadgesReward\":\"1287\"},{\"id\":\"9\",\"count\":\"10\",\"countMax\":\"500\",\"idBadgesReward\":\"224\"},{\"id\":\"10\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"225\"},{\"id\":\"11\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"1300\"},{\"id\":\"12\",\"count\":\"0\",\"countMax\":\"10\",\"idBadgesReward\":\"240\"},{\"id\":\"13\",\"count\":\"0\",\"countMax\":\"20\",\"idBadgesReward\":\"242\"},{\"id\":\"14\",\"count\":\"0\",\"countMax\":\"30\",\"idBadgesReward\":\"243\"},{\"id\":\"15\",\"count\":\"0\",\"countMax\":\"500\",\"idBadgesReward\":\"247\"},{\"id\":\"16\",\"count\":\"0\",\"countMax\":\"2000000\",\"idBadgesReward\":\"253\"},{\"id\":\"17\",\"count\":\"0\",\"countMax\":\"7\",\"idBadgesReward\":\"256\"},{\"id\":\"18\",\"count\":\"0\",\"countMax\":\"1\",\"idBadgesReward\":\"226\"}]', '2026-05-19 08:00:54', '[4]', '[-1,-1,0]', '[{\"id\":\"0\",\"daNhan\":\"false\"},{\"id\":\"1\",\"daNhan\":\"false\"}]', 0, 0, 0, 0, 2453, '[]', '[1,1,\"1970-01-01T00:00\"]', '[0,0,0,0]', '[0,0,0,0]', '[0,0,0,0]', '{\"kolQuestStage\":0,\"kolVIPQuestStage\":0,\"destronGas70CompletionCount\":0,\"martialArtsTournamentWins\":0,\"dailySuperHardQuestCompletionCount\":0,\"bossBabyDefeatParticipationCount\":0,\"monsterKillCountAutoTrain\":14}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -9323,13 +9324,13 @@ INSERT INTO `player` (`id`, `account_id`, `name`, `head`, `gender`, `have_tennis
 
 CREATE TABLE `posts` (
   `id` int NOT NULL,
-  `tieude` varchar(75) COLLATE utf8mb4_general_ci NOT NULL,
-  `noidung` text COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `tieude` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `noidung` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `theloai` int NOT NULL DEFAULT '0',
   `ghimbai` int NOT NULL DEFAULT '0',
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `trangthai` int NOT NULL DEFAULT '0',
   `tinhtrang` int NOT NULL DEFAULT '0',
   `like` int NOT NULL DEFAULT '0'
@@ -9362,10 +9363,10 @@ CREATE TABLE `radar` (
   `max` int DEFAULT '60',
   `type` int DEFAULT '0',
   `mob_id` int DEFAULT '1',
-  `body` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '[]',
-  `name` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `info` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `options` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT '[]',
+  `body` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '[]',
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `info` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `options` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '[]',
   `require` int DEFAULT '-1',
   `require_level` int DEFAULT '0',
   `aura_id` smallint DEFAULT '-1'
@@ -9405,24 +9406,24 @@ INSERT INTO `radar` (`id`, `iconId`, `rank`, `max`, `type`, `mob_id`, `body`, `n
 --
 
 CREATE TABLE `settings` (
-  `Title` varchar(100) COLLATE utf8mb4_general_ci DEFAULT 'Nguyen Duc Kien',
-  `Description` longtext COLLATE utf8mb4_general_ci,
-  `Keywords` longtext COLLATE utf8mb4_general_ci,
-  `SiteKey` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `SecretKey` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ServerName` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Fanpage` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Group` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Zalo` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `EmailSupport` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `AccountBank` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `PasswordBank` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Nguyen Duc Kien',
+  `Description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `Keywords` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `SiteKey` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `SecretKey` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ServerName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Fanpage` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Group` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Zalo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `EmailSupport` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `AccountBank` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `PasswordBank` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `NumberBank` int DEFAULT NULL,
-  `NameBank` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Android` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Windows` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `IPhone` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Java` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `NameBank` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Android` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Windows` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `IPhone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Java` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9441,7 +9442,7 @@ INSERT INTO `settings` (`Title`, `Description`, `Keywords`, `SiteKey`, `SecretKe
 CREATE TABLE `shop` (
   `id` int NOT NULL,
   `npc_id` int NOT NULL,
-  `tag_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tag_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `type_shop` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
@@ -9520,12 +9521,12 @@ INSERT INTO `shop_ky_gui` (`id`, `player_id`, `tab`, `item_id`, `gold`, `gem`, `
 
 CREATE TABLE `side_task_template` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv1` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv2` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv3` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv4` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `max_count_lv5` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv4` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_count_lv5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9602,14 +9603,14 @@ INSERT INTO `side_task_template` (`id`, `NAME`, `max_count_lv1`, `max_count_lv2`
 CREATE TABLE `skill_template` (
   `nclass_id` int NOT NULL,
   `id` int NOT NULL,
-  `NAME` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `max_point` smallint NOT NULL DEFAULT '7',
   `mana_use_type` smallint NOT NULL,
   `TYPE` smallint NOT NULL,
   `icon_id` int NOT NULL,
-  `dam_info` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `dam_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `slot` int NOT NULL DEFAULT '7',
-  `skills` text COLLATE utf8mb4_general_ci NOT NULL
+  `skills` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9657,15 +9658,15 @@ INSERT INTO `skill_template` (`nclass_id`, `id`, `NAME`, `max_point`, `mana_use_
 CREATE TABLE `super_rank` (
   `id` int NOT NULL,
   `player_id` int NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `rank` int NOT NULL,
   `last_pk_time` bigint NOT NULL,
   `last_reward_time` bigint NOT NULL,
   `ticket` int NOT NULL,
   `win` int NOT NULL,
   `lose` int NOT NULL,
-  `history` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `info` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `history` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9674,7 +9675,7 @@ CREATE TABLE `super_rank` (
 
 INSERT INTO `super_rank` (`id`, `player_id`, `name`, `rank`, `last_pk_time`, `last_reward_time`, `ticket`, `win`, `lose`, `history`, `info`) VALUES
 (3, 2, '12341', 1, 1782138835365, 1782138835633, 3, 0, 0, '[]', '{\"head\":6,\"def\":3,\"hp\":797360,\"dame\":105840004,\"body\":16,\"leg\":58}'),
-(4, 1, '12345', 2, 1782140133281, 1782140133631, 3, 0, 0, '[]', '{\"head\":1980,\"def\":402,\"hp\":1000019,\"dame\":500000000,\"body\":1981,\"leg\":1982}'),
+(4, 1, '12345', 2, 1782223097457, 1782223097751, 3, 0, 0, '[]', '{\"head\":1977,\"def\":402,\"hp\":1000019,\"dame\":500000000,\"body\":1978,\"leg\":1979}'),
 (5, 4, '11111', 3, 1781091987070, 1781091987575, 3, 0, 0, '[]', '{\"head\":2099,\"def\":2,\"hp\":322,\"dame\":110,\"body\":2143,\"leg\":2144}'),
 (6, 5, '111111', 4, 1779177655768, 1779177655781, 3, 0, 0, '[]', '{\"head\":28,\"def\":3,\"hp\":120,\"dame\":15,\"body\":16,\"leg\":17}');
 
@@ -9687,7 +9688,7 @@ INSERT INTO `super_rank` (`id`, `player_id`, `name`, `rank`, `last_pk_time`, `la
 CREATE TABLE `tab_shop` (
   `id` int NOT NULL,
   `shop_id` int NOT NULL,
-  `NAME` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9800,8 +9801,8 @@ INSERT INTO `task_badges_template` (`id`, `NAME`, `maxCount`, `idBadgesReward`) 
 
 CREATE TABLE `task_main_template` (
   `id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `detail` varchar(500) COLLATE utf8mb4_general_ci NOT NULL
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `detail` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
@@ -9848,9 +9849,9 @@ INSERT INTO `task_main_template` (`id`, `NAME`, `detail`) VALUES
 
 CREATE TABLE `task_sub_template` (
   `task_main_id` int NOT NULL,
-  `NAME` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `max_count` int NOT NULL DEFAULT '-1',
-  `notify` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `notify` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
   `npc_id` int NOT NULL DEFAULT '-1',
   `map` int NOT NULL,
   `ducvupro` int NOT NULL

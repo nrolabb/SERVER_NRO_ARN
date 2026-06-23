@@ -60,6 +60,7 @@ import nro.models.task.BadgesTaskTemplate;
 import nro.models.task.ClanTaskTemplate;
 import nro.models.utils.FileIO;
 import nro.models.utils.Util;
+import nro.models.services.ItemService;
 
 /**
  *
@@ -431,6 +432,40 @@ public final class Manager {
                 // Long.parseLong(String.valueOf(dataArray.get(1)));
                 // }
                 dataArray.clear();
+
+                try {
+                    String itemsClanBoxStr = rs.getString("items_clan_box");
+                    if (itemsClanBoxStr != null && !itemsClanBoxStr.isEmpty()) {
+                        dataArray = (JSONArray) JSONValue.parse(itemsClanBoxStr);
+                        if (dataArray != null) {
+                            for (int i = 0; i < dataArray.size(); i++) {
+                                Item item;
+                                JSONArray dataItem = (JSONArray) JSONValue.parse(dataArray.get(i).toString());
+                                short tempId = Short.parseShort(String.valueOf(dataItem.get(0)));
+                                if (tempId != -1) {
+                                    item = ItemService.gI().createNewItem(tempId, Integer.parseInt(String.valueOf(dataItem.get(1))));
+                                    JSONArray options = (JSONArray) JSONValue.parse(String.valueOf(dataItem.get(2)).replaceAll("\"", ""));
+                                    for (int j = 0; j < options.size(); j++) {
+                                        JSONArray opt = (JSONArray) JSONValue.parse(String.valueOf(options.get(j)));
+                                        item.itemOptions.add(new Item.ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
+                                                Integer.parseInt(String.valueOf(opt.get(1)))));
+                                    }
+                                    item.createTime = Long.parseLong(String.valueOf(dataItem.get(3)));
+                                    if (ItemService.gI().isOutOfDateTime(item)) {
+                                        item = ItemService.gI().createItemNull();
+                                    }
+                                } else {
+                                    item = ItemService.gI().createItemNull();
+                                }
+                                clan.itemsBox.add(item);
+                            }
+                            dataArray.clear();
+                        }
+                    }
+                } catch (Exception e) {
+                    Logger.logException(Manager.class, e, "Lỗi load items_clan_box của clan " + clan.name);
+                }
+
                 CLANS.add(clan);
             }
 

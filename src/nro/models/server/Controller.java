@@ -405,24 +405,21 @@ public class Controller implements IMessageHandler {
                     MySession mySession = (MySession) _session;
                     String ip = mySession.ipAddress;
 
-                   
                     // byte[] token = new byte[40];
                     // try {
-                    //     _msg.reader().readFully(token);
+                    // _msg.reader().readFully(token);
                     // } catch (Exception e) {
-                    //     Logger.warning("[BLOCK] " + ip + " gửi packet -74 thiếu token → kick");
-                    //     _session.disconnect();
-                    //     break;
+                    // Logger.warning("[BLOCK] " + ip + " gửi packet -74 thiếu token → kick");
+                    // _session.disconnect();
+                    // break;
                     // }
 
-              
                     // if (!ClientVerifier.verify(token)) {
-                    //     Logger.warning("[BLOCK] " + ip + " token không hợp lệ → kick");
-                    //     _session.disconnect();
-                    //     break;
+                    // Logger.warning("[BLOCK] " + ip + " token không hợp lệ → kick");
+                    // _session.disconnect();
+                    // break;
                     // }
 
-              
                     long now = System.currentTimeMillis();
                     if (mySession.firstDataRequestTime == 0) {
                         mySession.firstDataRequestTime = now;
@@ -436,12 +433,11 @@ public class Controller implements IMessageHandler {
                             break;
                         }
                     } else {
-                    
+
                         mySession.dataRequestCount = 1;
                         mySession.firstDataRequestTime = now;
                     }
 
-                   
                     Logger.warning("Địa chỉ " + ip + " đang tải dữ liệu\n");
                     byte type = _msg.reader().readByte();
                     if (type == 1) {
@@ -571,6 +567,11 @@ public class Controller implements IMessageHandler {
                 case -57:
                     if (player != null) {
                         ClanService.gI().clanInvite(player, _msg);
+                    }
+                    break;
+                case -58:
+                    if (player != null) {
+                        ClanService.gI().clanBox(player, _msg);
                     }
                     break;
                 case -40:
