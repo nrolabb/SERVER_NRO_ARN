@@ -142,6 +142,7 @@ package nro.models.npc_list;
 import nro.models.consts.ConstNpc;
 import nro.models.npc.Npc;
 import nro.models.player.Player;
+import nro.models.services.ClanService;
 import nro.models.shop.ShopService;
 
 public class GiuMaDauBo extends Npc {
@@ -174,6 +175,7 @@ public class GiuMaDauBo extends Npc {
         }
         if (select == 1) {
             ShopService.gI().opendShop(player, "SHOP_CLAN", false);
+            ClanService.gI().sendClanBox(player);
         }
     }
 }
