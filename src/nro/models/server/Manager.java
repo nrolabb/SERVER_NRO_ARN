@@ -474,6 +474,7 @@ public final class Manager {
                             dataArray.clear();
                         }
                     }
+                    clan.ensureClanBoxCapacity();
                 } catch (Exception e) {
                     Logger.logException(Manager.class, e, "Lỗi load items_clan_box của clan " + clan.name);
                 }

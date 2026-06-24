@@ -145,9 +145,7 @@ public class DrDrief extends Npc {
                                         }
                                         String npcSay = "Cần " + Util.formatNumber(ClanService.gI().capsule(clan)) + " capsule bang [đang có " + Util.formatNumber(clan.capsuleClan) + " capsule bang] để nâng cấp bang hội lên cấp " + (level + 1);
                                         npcSay += "\n+1 tối đa số lượng thành viên";
-                                        if (level > 1) {
-                                            npcSay += "\n+1 ô trống tối đa rương bang.";
-                                        }
+                                        npcSay += "\n+Rương bang: cấp 1 có 30 ô, mỗi cấp tăng 6 ô.";
                                         npcSay += "\n+Mở bán bùa bang cấp " + (level + 1);
                                         createOtherMenu(player, ConstNpc.MENU_CLAN_UP, npcSay, "Đồng ý", "Từ chối");
                                     }
@@ -171,6 +169,7 @@ public class DrDrief extends Npc {
                                     clan.capsuleClan -= capsuleCan;
                                     clan.level++;
                                     clan.maxMember++;
+                                    clan.ensureClanBoxCapacity();
                                     Service.gI().sendThongBao(player, "Chúc mừng bang hội của bạn đã lên cấp " + (clan.level));
                                     for (ClanMember cm : player.clan.getMembers()) {
                                         Player pl = Client.gI().getPlayer(cm.id);

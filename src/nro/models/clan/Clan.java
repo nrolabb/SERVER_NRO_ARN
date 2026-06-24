@@ -8,6 +8,7 @@ import java.util.List;
 import nro.models.player.Player;
 import nro.models.server.Client;
 import nro.models.services.Service;
+import nro.models.services.ItemService;
 import nro.models.network.Message;
 import nro.models.database.MrBlue;
 import nro.models.utils.Logger;
@@ -86,6 +87,17 @@ public class Clan {
         this.members = new ArrayList<>();
         this.membersInGame = new ArrayList<>();
         this.clanMessages = new ArrayList<>();
+    }
+
+    public int getClanBoxCapacity() {
+        return 30 + Math.max(0, this.level - 1) * 6;
+    }
+
+    public void ensureClanBoxCapacity() {
+        int capacity = getClanBoxCapacity();
+        while (this.itemsBox.size() < capacity) {
+            this.itemsBox.add(ItemService.gI().createItemNull());
+        }
     }
 
     public boolean canUpdateClan(Player player) {

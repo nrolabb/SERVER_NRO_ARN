@@ -22,6 +22,7 @@ import nro.models.server.Manager;
 import nro.models.map.service.NpcService;
 import nro.models.utils.Logger;
 import nro.models.utils.Util;
+import nro.models.services.InventoryService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
@@ -279,6 +280,7 @@ public class ClanService {
      */
     public void sendClanBox(Player player) {
         if (player.clan == null) return;
+        player.clan.ensureClanBoxCapacity();
         Message msgBox = null;
         try {
             msgBox = new Message(-58);
@@ -319,6 +321,19 @@ public class ClanService {
                 msgBox.cleanup();
             }
         }
+    }
+
+    public boolean addItemClanBox(Clan clan, Item item) {
+        if (clan == null || item == null || !item.isNotNullItem()) {
+            return false;
+        }
+
+        clan.ensureClanBoxCapacity();
+        boolean added = InventoryService.gI().addItemList(clan.itemsBox, item);
+        if (added) {
+            clan.update();
+        }
+        return added;
     }
 
     public void clanBox(Player player, Message msg) {
@@ -404,7 +419,7 @@ public class ClanService {
                 }
                 
                 if (totalQuantity == item.quantity) {
-                    player.clan.itemsBox.remove(index);
+                    player.clan.itemsBox.set(index, ItemService.gI().createItemNull());
                 } else {
                     item.quantity -= totalQuantity;
                 }
@@ -427,8 +442,9 @@ public class ClanService {
                     Service.gI().sendThongBao(player, "Vật phẩm không hợp lệ!");
                     return;
                 }
-                Item item = player.clan.itemsBox.remove(index);
-                if (item != null) {
+                Item item = player.clan.itemsBox.get(index);
+                if (item != null && item.isNotNullItem()) {
+                    player.clan.itemsBox.set(index, ItemService.gI().createItemNull());
                     Service.gI().sendThongBao(player, "Đã vứt bỏ " + item.template.name + " khỏi rương bang.");
                     player.clan.update();
                     for (Player pl : player.clan.membersInGame) {

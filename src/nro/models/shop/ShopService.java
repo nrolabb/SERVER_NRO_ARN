@@ -21,6 +21,7 @@ import nro.models.player_badges.BadgesData;
 import nro.models.player_badges.BadgesService;
 import nro.models.player_badges.BagesTemplate;
 import nro.models.services.AchievementService;
+import nro.models.services.ClanService;
 import nro.models.services.ItemService;
 import nro.models.services.Service;
 import nro.models.services_func.Input;
@@ -46,7 +47,6 @@ public class ShopService {
     private static final byte NORMAL_SHOP = 0;
     private static final byte SPEC_SHOP = 3;
     private static final byte KINANG_SHOP = 1;
-    private static final byte MAX_CLAN_BOX = 60;
     private int eventPointPrice;
 
     private static ShopService I;
@@ -909,15 +909,14 @@ public class ShopService {
                 return;
             }
 
-            if (player.clan.itemsBox.size() >= MAX_CLAN_BOX) {
+            Item item = ItemService.gI().createItemFromItemShop(is);
+            if (!ClanService.gI().addItemClanBox(player.clan, item)) {
                 Service.gI().sendThongBao(player, "Kho bang đã đầy, không thể chứa thêm!");
                 return;
             }
 
             player.clan.capsuleClan -= capsuleClanPointPrice;
-
-            Item item = ItemService.gI().createItemFromItemShop(is);
-            player.clan.itemsBox.add(item);
+            ClanService.gI().sendClanBox(player);
 
             Service.gI().sendThongBao(player,
                     "Đã đổi " + is.temp.name + " bằng " + capsuleClanPointPrice + " điểm Capsule Bang của bang hội.");
