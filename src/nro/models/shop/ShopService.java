@@ -917,6 +917,8 @@ public class ShopService {
 
             player.clan.capsuleClan -= capsuleClanPointPrice;
             ClanService.gI().sendClanBoxUpdate(player);
+            player.clan.sendMyClanForAllMember();
+            player.clan.update();
 
             Service.gI().sendThongBao(player,
                     "Đã đổi " + is.temp.name + " bằng " + capsuleClanPointPrice + " điểm Capsule Bang của bang hội.");
