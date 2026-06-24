@@ -46,6 +46,7 @@ public class ShopService {
     private static final byte NORMAL_SHOP = 0;
     private static final byte SPEC_SHOP = 3;
     private static final byte KINANG_SHOP = 1;
+    private static final byte MAX_CLAN_BOX = 60;
     private int eventPointPrice;
 
     private static ShopService I;
@@ -908,7 +909,7 @@ public class ShopService {
                 return;
             }
 
-            if (player.clan.itemsBox.size() >= 30) {
+            if (player.clan.itemsBox.size() >= MAX_CLAN_BOX) {
                 Service.gI().sendThongBao(player, "Kho bang đã đầy, không thể chứa thêm!");
                 return;
             }

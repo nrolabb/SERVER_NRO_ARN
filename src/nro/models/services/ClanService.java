@@ -277,45 +277,166 @@ public class ClanService {
     /**
      * Mời vào bang
      */
+    public void sendClanBox(Player player) {
+        if (player.clan == null) return;
+        Message msgBox = null;
+        try {
+            msgBox = new Message(-58);
+            msgBox.writer().writeByte(0); // action
+            msgBox.writer().writeByte(player.clan.itemsBox.size()); // size of box
+            for (nro.models.item.Item item : player.clan.itemsBox) {
+                msgBox.writer().writeShort(item.isNotNullItem() ? item.template.id : -1);
+                if (item.isNotNullItem()) {
+                    msgBox.writer().writeInt(item.quantity);
+                    msgBox.writer().writeUTF(item.getInfo());
+                    msgBox.writer().writeUTF(item.getContent());
+                    msgBox.writer().writeByte(item.itemOptions.size());
+                    for (nro.models.item.Item.ItemOption option : item.itemOptions) {
+                        if (option.optionTemplate.id == 213) {
+                            int opId = 213;
+                            int param = option.param;
+                            if (param > 1_000_000) {
+                                opId = 223;
+                                param /= 1_000_000;
+                            } else if (param > 1000) {
+                                opId = 222;
+                                param /= 1000;
+                            }
+                            msgBox.writer().writeByte(opId);
+                            msgBox.writer().writeShort(param);
+                        } else {
+                            msgBox.writer().writeByte(option.optionTemplate.id);
+                            msgBox.writer().writeShort(option.param);
+                        }
+                    }
+                }
+            }
+            player.sendMessage(msgBox);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (msgBox != null) {
+                msgBox.cleanup();
+            }
+        }
+    }
+
     public void clanBox(Player player, Message msg) {
         try {
             byte action = msg.reader().readByte();
             if (action == 0) {
-                // Open clan box
+                sendClanBox(player);
+            } else if (action == 1) {
                 if (player.clan == null) return;
-
-                Message msgBox = new Message(-58);
-                msgBox.writer().writeByte(0); // action
-                msgBox.writer().writeByte(player.clan.itemsBox.size()); // size of box
-                for (nro.models.item.Item item : player.clan.itemsBox) {
-                    msgBox.writer().writeShort(item.isNotNullItem() ? item.template.id : -1);
-                    if (item.isNotNullItem()) {
-                        msgBox.writer().writeInt(item.quantity);
-                        msgBox.writer().writeUTF(item.getInfo());
-                        msgBox.writer().writeUTF(item.getContent());
-                        msgBox.writer().writeByte(item.itemOptions.size());
-                        for (nro.models.item.Item.ItemOption option : item.itemOptions) {
-                            if (option.optionTemplate.id == 213) {
-                                int opId = 213;
-                                int param = option.param;
-                                if (param > 1_000_000) {
-                                    opId = 223;
-                                    param /= 1_000_000;
-                                } else if (param > 1000) {
-                                    opId = 222;
-                                    param /= 1000;
-                                }
-                                msgBox.writer().writeByte(opId);
-                                msgBox.writer().writeShort(param);
+                if (player.clan.getRole(player) != Clan.LEADER && player.clan.getRole(player) != Clan.DEPUTY) {
+                    Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có quyền phân phối rương bang!");
+                    return;
+                }
+                byte index = msg.reader().readByte();
+                byte numTargets = msg.reader().readByte();
+                if (index < 0 || index >= player.clan.itemsBox.size()) {
+                    Service.gI().sendThongBao(player, "Vật phẩm không hợp lệ!");
+                    return;
+                }
+                Item item = player.clan.itemsBox.get(index);
+                if (item == null || !item.isNotNullItem()) {
+                    Service.gI().sendThongBao(player, "Vật phẩm rỗng!");
+                    return;
+                }
+                
+                int totalQuantity = 0;
+                class DistTarget {
+                    int playerId;
+                    int quantity;
+                    DistTarget(int id, int q) { this.playerId = id; this.quantity = q; }
+                }
+                List<DistTarget> targets = new ArrayList<>();
+                for (int i = 0; i < numTargets; i++) {
+                    int pId = msg.reader().readInt();
+                    int qty = msg.reader().readInt();
+                    if (qty > 0) {
+                        targets.add(new DistTarget(pId, qty));
+                        totalQuantity += qty;
+                    }
+                }
+                
+                if (totalQuantity > item.quantity) {
+                    Service.gI().sendThongBao(player, "Tổng số lượng phân phối vượt quá số lượng vật phẩm hiện có!");
+                    return;
+                }
+                
+                for (DistTarget target : targets) {
+                    Player receiver = Client.gI().getPlayer(target.playerId);
+                    Item itemClone = ItemService.gI().createNewItem(item.template.id, target.quantity);
+                    itemClone.itemOptions.addAll(item.itemOptions);
+                    
+                    if (receiver != null) {
+                        if (InventoryService.gI().getCountEmptyBag(receiver) > 0) {
+                            if (InventoryService.gI().addItemBag(receiver, itemClone)) {
+                                InventoryService.gI().sendItemBags(receiver);
+                                Service.gI().sendThongBao(receiver, "Bạn được phân phối " + itemClone.template.name + " x" + target.quantity + " từ rương bang hội.");
+                            }
+                        } else {
+                            if (InventoryService.gI().addItemBox(receiver, itemClone)) {
+                                InventoryService.gI().sendItemBox(receiver);
+                                Service.gI().sendThongBao(receiver, "Hành trang đầy, " + itemClone.template.name + " x" + target.quantity + " từ rương bang được gửi vào rương cá nhân.");
                             } else {
-                                msgBox.writer().writeByte(option.optionTemplate.id);
-                                msgBox.writer().writeShort(option.param);
+                                Service.gI().sendThongBao(receiver, "Hành trang và rương cá nhân đều đầy, không thể nhận " + itemClone.template.name);
+                                Service.gI().sendThongBao(player, receiver.name + " hành trang và rương đều đầy!");
+                            }
+                        }
+                    } else {
+                        Player offlinePlayer = MrBlue.loadById(target.playerId);
+                        if (offlinePlayer != null) {
+                            if (InventoryService.gI().getCountEmptyBag(offlinePlayer) > 0) {
+                                if (InventoryService.gI().addItemBag(offlinePlayer, itemClone)) {
+                                    offlinePlayer.notify = "Bạn được phân phối " + itemClone.template.name + " x" + target.quantity + " từ rương bang hội.";
+                                    PlayerDAO.updatePlayer(offlinePlayer);
+                                }
+                            } else {
+                                if (InventoryService.gI().addItemBox(offlinePlayer, itemClone)) {
+                                    offlinePlayer.notify = "Hành trang đầy, " + itemClone.template.name + " x" + target.quantity + " từ rương bang được gửi vào rương cá nhân.";
+                                    PlayerDAO.updatePlayer(offlinePlayer);
+                                }
                             }
                         }
                     }
                 }
-                player.sendMessage(msgBox);
-                msgBox.cleanup();
+                
+                if (totalQuantity == item.quantity) {
+                    player.clan.itemsBox.remove(index);
+                } else {
+                    item.quantity -= totalQuantity;
+                }
+                
+                player.clan.update();
+                
+                for (Player pl : player.clan.membersInGame) {
+                    if (pl != null) {
+                        sendClanBox(pl);
+                    }
+                }
+            } else if (action == 2) {
+                if (player.clan == null) return;
+                if (player.clan.getRole(player) != Clan.LEADER && player.clan.getRole(player) != Clan.DEPUTY) {
+                    Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có quyền vứt bỏ vật phẩm trong rương bang!");
+                    return;
+                }
+                byte index = msg.reader().readByte();
+                if (index < 0 || index >= player.clan.itemsBox.size()) {
+                    Service.gI().sendThongBao(player, "Vật phẩm không hợp lệ!");
+                    return;
+                }
+                Item item = player.clan.itemsBox.remove(index);
+                if (item != null) {
+                    Service.gI().sendThongBao(player, "Đã vứt bỏ " + item.template.name + " khỏi rương bang.");
+                    player.clan.update();
+                    for (Player pl : player.clan.membersInGame) {
+                        if (pl != null) {
+                            sendClanBox(pl);
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             Logger.logException(ClanService.class, e, "Lỗi clanBox");
