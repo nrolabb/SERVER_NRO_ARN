@@ -383,6 +383,18 @@ public final class Manager {
             Logger.success(
                     Logger.PURPLE + "Successfully loaded arr head 2 frames (" + ARR_HEAD_2_FRAMES.size() + ")\n");
 
+            // load item option template before loading clan box items
+            ps = ConnectionDatabase.prepareStatement("select id, name from item_option_template order by id");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ItemOptionTemplate optionTemp = new ItemOptionTemplate();
+                optionTemp.id = rs.getInt("id");
+                optionTemp.name = rs.getString("name");
+                ITEM_OPTION_TEMPLATES.add(optionTemp);
+            }
+            Logger.success(Logger.PURPLE + "Successfully loaded map item option template ("
+                    + ITEM_OPTION_TEMPLATES.size() + ")\n");
+
             // load clan
             ps = ConnectionDatabase.prepareStatement("select * from clan");
             rs = ps.executeQuery();
@@ -695,7 +707,7 @@ public final class Manager {
 
             try {
                 while (true) {
-                    ps = ConnectionDatabase.prepareStatement("SELECT * FROM item_template LIMIT ? OFFSET ?");
+                    ps = ConnectionDatabase.prepareStatement("SELECT * FROM item_template ORDER BY id LIMIT ? OFFSET ?");
                     ps.setInt(1, batchSize);
                     ps.setInt(2, offset);
                     rs = ps.executeQuery();
@@ -742,18 +754,6 @@ public final class Manager {
                     Logger.error("Error closing resources: " + e.getMessage());
                 }
             }
-
-            // load item option template
-            ps = ConnectionDatabase.prepareStatement("select id, name from item_option_template");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                ItemOptionTemplate optionTemp = new ItemOptionTemplate();
-                optionTemp.id = rs.getInt("id");
-                optionTemp.name = rs.getString("name");
-                ITEM_OPTION_TEMPLATES.add(optionTemp);
-            }
-            Logger.success(Logger.PURPLE + "Successfully loaded map item option template ("
-                    + ITEM_OPTION_TEMPLATES.size() + ")\n");
 
             // load shop
             SHOPS = ShopDAO.getShops(ConnectionDatabase);

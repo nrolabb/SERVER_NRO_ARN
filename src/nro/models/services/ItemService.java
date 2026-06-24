@@ -354,11 +354,43 @@ public class ItemService {
     }
 
     public ItemOptionTemplate getItemOptionTemplate(int id) {
-        return Manager.ITEM_OPTION_TEMPLATES.get(id);
+        for (ItemOptionTemplate template : Manager.ITEM_OPTION_TEMPLATES) {
+            if (template != null && template.id == id) {
+                return template;
+            }
+        }
+
+        ItemOptionTemplate fallback = new ItemOptionTemplate();
+        fallback.id = id;
+        fallback.name = "unknown_option_" + id;
+        return fallback;
     }
 
     public Template.ItemTemplate getTemplate(int id) {
-        return Manager.ITEM_TEMPLATES.get(id);
+        for (Template.ItemTemplate template : Manager.ITEM_TEMPLATES) {
+            if (template != null && template.id == id) {
+                return template;
+            }
+        }
+
+        Template.ItemTemplate fallback = new Template.ItemTemplate();
+        fallback.id = (short) id;
+        fallback.type = 0;
+        fallback.gender = 0;
+        fallback.name = "Unknown item " + id;
+        fallback.description = "Missing item template";
+        fallback.level = 0;
+        fallback.iconID = 0;
+        fallback.part = 0;
+        fallback.isUpToUp = false;
+        fallback.strRequire = 0;
+        fallback.gold = 0;
+        fallback.gem = 0;
+        fallback.ruby = 0;
+        fallback.head = 0;
+        fallback.body = 0;
+        fallback.leg = 0;
+        return fallback;
     }
 
     public int getPercentTrainArmor(Item item) {
