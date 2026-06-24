@@ -279,13 +279,21 @@ public class ClanService {
      * Mời vào bang
      */
     public void sendClanBox(Player player) {
+        sendClanBox(player, (byte) 0);
+    }
+
+    public void sendClanBoxUpdate(Player player) {
+        sendClanBox(player, (byte) 1);
+    }
+
+    private void sendClanBox(Player player, byte action) {
         if (player.clan == null) return;
         player.clan.ensureClanBoxCapacity();
         Message msgBox = null;
         try {
             msgBox = new Message(-58);
-            msgBox.writer().writeByte(0); // action
-            msgBox.writer().writeByte(player.clan.itemsBox.size()); // size of box
+            msgBox.writer().writeByte(action);
+            msgBox.writer().writeByte(player.clan.itemsBox.size());
             for (nro.models.item.Item item : player.clan.itemsBox) {
                 msgBox.writer().writeShort(item.isNotNullItem() ? item.template.id : -1);
                 if (item.isNotNullItem()) {
@@ -329,7 +337,7 @@ public class ClanService {
         }
 
         clan.ensureClanBoxCapacity();
-        boolean added = InventoryService.gI().addItemList(clan.itemsBox, item);
+        boolean added = InventoryService.gI().addItemList(clan.itemsBox, item, true);
         if (added) {
             clan.update();
         }
@@ -428,7 +436,7 @@ public class ClanService {
                 
                 for (Player pl : player.clan.membersInGame) {
                     if (pl != null) {
-                        sendClanBox(pl);
+                        sendClanBoxUpdate(pl);
                     }
                 }
             } else if (action == 2) {
@@ -449,7 +457,7 @@ public class ClanService {
                     player.clan.update();
                     for (Player pl : player.clan.membersInGame) {
                         if (pl != null) {
-                            sendClanBox(pl);
+                            sendClanBoxUpdate(pl);
                         }
                     }
                 }

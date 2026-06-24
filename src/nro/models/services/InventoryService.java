@@ -846,6 +846,10 @@ public class InventoryService {
     }
 
     public boolean addItemList(List<Item> items, Item itemAdd) {
+        return addItemList(items, itemAdd, false);
+    }
+
+    public boolean addItemList(List<Item> items, Item itemAdd, boolean ignoreUpToUp) {
         if (itemAdd.itemOptions.isEmpty()) {
             itemAdd.itemOptions.add(new Item.ItemOption(73, 0));
         }
@@ -864,7 +868,7 @@ public class InventoryService {
                 }
             }
         }
-        if (itemAdd.template.isUpToUp) {
+        if (ignoreUpToUp || itemAdd.template.isUpToUp) {
             for (Item it : items) {
                 if (!it.isNotNullItem() || it.template.id != itemAdd.template.id
                         || (!checkListsEqual(it.itemOptions, itemAdd.itemOptions) && itemAdd.template.id != 2074
