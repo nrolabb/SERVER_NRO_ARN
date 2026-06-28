@@ -4,6 +4,7 @@ import nro.models.radar.Card;
 import nro.models.radar.OptionCard;
 import nro.models.consts.ConstPlayer;
 import nro.models.consts.ConstRatio;
+import nro.models.clan.ClanIntrinsicTemplate;
 import nro.models.intrinsic.Intrinsic;
 import nro.models.item.Item;
 import nro.models.item.Item.ItemOption;
@@ -11,6 +12,7 @@ import nro.models.skill.Skill;
 import nro.models.server.Manager;
 import nro.models.services.EffectSkillService;
 import nro.models.services.ItemService;
+import nro.models.services.ClanIntrinsicService;
 import nro.models.map.service.MapService;
 import nro.models.services.PlayerService;
 import nro.models.services.Service;
@@ -922,6 +924,11 @@ public class NPoint {
             }
         }
 
+        int clanIntrinsicHp = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_HP);
+        if (clanIntrinsicHp > 0) {
+            hpMax += (hpMax * clanIntrinsicHp / 100L);
+        }
+
         if (hpMax > 2_147_483_647) {
             hpMax = 2_147_483_647;
         }
@@ -1033,6 +1040,11 @@ public class NPoint {
             if (opt.optionTemplate.id == 103) {
                 mpMax += (mpMax * opt.param / 100L);
             }
+        }
+
+        int clanIntrinsicMp = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_MP);
+        if (clanIntrinsicMp > 0) {
+            mpMax += (mpMax * clanIntrinsicMp / 100L);
         }
 
         if (mpMax
@@ -1195,6 +1207,10 @@ public class NPoint {
                 dame += (dame * percent / 100L);
             }
         }
+        int clanIntrinsicDame = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_DAME);
+        if (clanIntrinsicDame > 0) {
+            dame += (dame * clanIntrinsicDame / 100L);
+        }
         int totalPercent = 0;
         for (Item.ItemOption opt : options) {
             if (opt.optionTemplate.id == 117) {
@@ -1236,6 +1252,10 @@ public class NPoint {
 
         if (this.player.itemTime != null && this.player.itemTime.isUseNuocMia3) {
             this.def += this.def * 10 / 100;
+        }
+        int clanIntrinsicDef = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_DEF);
+        if (clanIntrinsicDef > 0) {
+            this.def += this.def * clanIntrinsicDef / 100;
         }
     }
 

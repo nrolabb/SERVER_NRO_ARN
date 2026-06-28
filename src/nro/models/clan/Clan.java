@@ -4,7 +4,9 @@ import nro.models.data.LocalManager;
 import nro.models.map.phoban.RedRibbonHQ;
 import nro.models.services.ClanService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import nro.models.player.Player;
 import nro.models.server.Client;
 import nro.models.services.Service;
@@ -45,6 +47,7 @@ public class Clan {
     public boolean active;
     public int capsuleClan;
     public List<Item> itemsBox = new ArrayList<>();
+    public Map<Byte, Byte> clanIntrinsics = new HashMap<>();
 
     public long lastTimeOpenDoanhTrai;
     public boolean haveGoneDoanhTrai;
@@ -98,6 +101,27 @@ public class Clan {
         while (this.itemsBox.size() < capacity) {
             this.itemsBox.add(ItemService.gI().createItemNull());
         }
+    }
+
+    public byte getClanIntrinsicLevel(byte intrinsicId) {
+        Byte level = this.clanIntrinsics.get(intrinsicId);
+        return level == null ? 0 : level;
+    }
+
+    public void setClanIntrinsicLevel(byte intrinsicId, byte level) {
+        this.clanIntrinsics.put(intrinsicId, level);
+    }
+
+    public String getClanIntrinsicsData() {
+        JSONArray dataArray = new JSONArray();
+        for (Map.Entry<Byte, Byte> entry : this.clanIntrinsics.entrySet()) {
+            JSONArray data = new JSONArray();
+            data.add(entry.getKey());
+            data.add(entry.getValue());
+            dataArray.add(data.toJSONString());
+            data.clear();
+        }
+        return dataArray.toJSONString();
     }
 
     public boolean canUpdateClan(Player player) {
@@ -352,8 +376,8 @@ public class Clan {
         PreparedStatement ps = null;
         try (Connection con = LocalManager.getConnection();) {
             ps = con.prepareStatement(
-                    "insert into clan (id, name, name_2, slogan, img_id, power_point, max_member, clan_point, level, members, tops, thanhTichBDKB, thongTinLeader) "
-                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    "insert into clan (id, name, name_2, slogan, img_id, power_point, max_member, clan_point, level, members, tops, thanhTichBDKB, thongTinLeader, clan_intrinsics) "
+                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, this.id);
             ps.setString(2, this.name);
             ps.setString(3, this.name2);
@@ -367,6 +391,7 @@ public class Clan {
             ps.setString(11, top);
             ps.setString(12, topBanDoKhoBau);
             ps.setString(13, thongTinLeader);
+            ps.setString(14, getClanIntrinsicsData());
             ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
@@ -439,7 +464,7 @@ public class Clan {
         try (Connection con = LocalManager.getConnection();) {
             ps = con.prepareStatement(
                     "update clan set slogan = ?, img_id = ?, power_point = ?, max_member = ?, clan_point = ?, "
-                            + "level = ?, members = ?, name_2 = ?, tops = ?, thanhTichBDKB = ?, thongTinLeader = ?, items_clan_box = ? where id = ? limit 1");
+                            + "level = ?, members = ?, name_2 = ?, tops = ?, thanhTichBDKB = ?, thongTinLeader = ?, items_clan_box = ?, clan_intrinsics = ? where id = ? limit 1");
             ps.setString(1, this.slogan);
             ps.setInt(2, this.imgId);
             ps.setLong(3, this.powerPoint);
@@ -452,7 +477,8 @@ public class Clan {
             ps.setString(10, topBanDoKhoBau);
             ps.setString(11, thongTinLeader);
             ps.setString(12, itemsBoxStr);
-            ps.setInt(13, this.id);
+            ps.setString(13, getClanIntrinsicsData());
+            ps.setInt(14, this.id);
             ps.executeUpdate();
             ps.close();
         } catch (Exception e) {

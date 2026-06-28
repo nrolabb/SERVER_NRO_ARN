@@ -461,6 +461,11 @@ public class ClanService {
                         }
                     }
                 }
+            } else if (action == 3) {
+                ClanIntrinsicService.gI().sendClanIntrinsics(player, (byte) 3);
+            } else if (action == 4) {
+                byte intrinsicId = msg.reader().readByte();
+                ClanIntrinsicService.gI().upgradeClanIntrinsic(player, intrinsicId);
             }
         } catch (Exception e) {
             Logger.logException(ClanService.class, e, "Lỗi clanBox");

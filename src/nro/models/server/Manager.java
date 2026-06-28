@@ -395,6 +395,8 @@ public final class Manager {
             Logger.success(Logger.PURPLE + "Successfully loaded map item option template ("
                     + ITEM_OPTION_TEMPLATES.size() + ")\n");
 
+            ensureClanIntrinsicColumn(ConnectionDatabase);
+
             // load clan
             ps = ConnectionDatabase.prepareStatement("select * from clan");
             rs = ps.executeQuery();
@@ -444,6 +446,26 @@ public final class Manager {
                 // Long.parseLong(String.valueOf(dataArray.get(1)));
                 // }
                 dataArray.clear();
+
+                try {
+                    String clanIntrinsicStr = rs.getString("clan_intrinsics");
+                    if (clanIntrinsicStr != null && !clanIntrinsicStr.isEmpty()) {
+                        dataArray = (JSONArray) JSONValue.parse(clanIntrinsicStr);
+                        if (dataArray != null) {
+                            for (int i = 0; i < dataArray.size(); i++) {
+                                JSONArray data = (JSONArray) JSONValue.parse(String.valueOf(dataArray.get(i)));
+                                if (data != null && data.size() >= 2) {
+                                    clan.setClanIntrinsicLevel(
+                                            Byte.parseByte(String.valueOf(data.get(0))),
+                                            Byte.parseByte(String.valueOf(data.get(1))));
+                                }
+                            }
+                            dataArray.clear();
+                        }
+                    }
+                } catch (Exception e) {
+                    Logger.logException(Manager.class, e, "Lỗi load clan_intrinsics của clan " + clan.name);
+                }
 
                 try {
                     String itemsClanBoxStr = rs.getString("items_clan_box");
@@ -1101,6 +1123,19 @@ public final class Manager {
         }
 
         return tops;
+    }
+
+    private void ensureClanIntrinsicColumn(Connection connection) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "ALTER TABLE clan ADD COLUMN clan_intrinsics TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL AFTER items_clan_box")) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getMessage() == null || !e.getMessage().toLowerCase().contains("duplicate")) {
+                Logger.logException(Manager.class, e, "Không thể tự thêm cột clan_intrinsics");
+            }
+        } catch (Exception e) {
+            Logger.logException(Manager.class, e, "Không thể tự thêm cột clan_intrinsics");
+        }
     }
 
     public void loadProperties() throws IOException {
