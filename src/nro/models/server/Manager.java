@@ -2,6 +2,7 @@ package nro.models.server;
 
 import nro.models.radar.OptionCard;
 import nro.models.services.RadarService;
+import nro.models.services.ClanIntrinsicService;
 import nro.models.radar.RadarCard;
 import nro.models.data.LocalManager;
 import nro.models.consts.ConstPlayer;
@@ -395,7 +396,7 @@ public final class Manager {
             Logger.success(Logger.PURPLE + "Successfully loaded map item option template ("
                     + ITEM_OPTION_TEMPLATES.size() + ")\n");
 
-            ensureClanIntrinsicColumn(ConnectionDatabase);
+            ClanIntrinsicService.gI();
 
             // load clan
             ps = ConnectionDatabase.prepareStatement("select * from clan");
@@ -1123,19 +1124,6 @@ public final class Manager {
         }
 
         return tops;
-    }
-
-    private void ensureClanIntrinsicColumn(Connection connection) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "ALTER TABLE clan ADD COLUMN clan_intrinsics TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL AFTER items_clan_box")) {
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            if (e.getMessage() == null || !e.getMessage().toLowerCase().contains("duplicate")) {
-                Logger.logException(Manager.class, e, "Không thể tự thêm cột clan_intrinsics");
-            }
-        } catch (Exception e) {
-            Logger.logException(Manager.class, e, "Không thể tự thêm cột clan_intrinsics");
-        }
     }
 
     public void loadProperties() throws IOException {

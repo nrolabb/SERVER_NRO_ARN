@@ -6,6 +6,7 @@ public class ClanIntrinsicTemplate {
     public static final byte EFFECT_MP = 2;
     public static final byte EFFECT_DAME = 3;
     public static final byte EFFECT_DEF = 4;
+    public static final byte EFFECT_CRIT = 5;
 
     public final byte id;
     public final String name;
@@ -14,8 +15,10 @@ public class ClanIntrinsicTemplate {
     public final byte maxLevel;
     public final byte effectType;
     public final short valuePerLevel;
+    public final int upgradeCostBase;
 
-    public ClanIntrinsicTemplate(byte id, String name, String description, short icon, byte maxLevel, byte effectType, short valuePerLevel) {
+    public ClanIntrinsicTemplate(byte id, String name, String description, short icon, byte maxLevel,
+            byte effectType, short valuePerLevel, int upgradeCostBase) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -23,6 +26,7 @@ public class ClanIntrinsicTemplate {
         this.maxLevel = maxLevel;
         this.effectType = effectType;
         this.valuePerLevel = valuePerLevel;
+        this.upgradeCostBase = upgradeCostBase;
     }
 
     public int getValue(byte level) {
@@ -37,6 +41,6 @@ public class ClanIntrinsicTemplate {
         if (level >= maxLevel) {
             return 0;
         }
-        return (level + 1) * 100;
+        return (level + 1) * upgradeCostBase;
     }
 }

@@ -1,24 +1,28 @@
 package nro.models.services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import nro.models.clan.Clan;
 import nro.models.clan.ClanIntrinsicTemplate;
+import nro.models.data.LocalManager;
 import nro.models.network.Message;
 import nro.models.player.Player;
 import nro.models.utils.Logger;
 
 public class ClanIntrinsicService {
 
+    private static final String TABLE_NAME = "clan_intrinsic_template";
+
     private static ClanIntrinsicService instance;
 
     private final List<ClanIntrinsicTemplate> templates = new ArrayList<>();
 
     private ClanIntrinsicService() {
-        templates.add(new ClanIntrinsicTemplate((byte) 1, "Sinh lực bang", "Tăng HP tối đa cho thành viên bang", (short) 20, (byte) 10, ClanIntrinsicTemplate.EFFECT_HP, (short) 1));
-        templates.add(new ClanIntrinsicTemplate((byte) 2, "Khí lực bang", "Tăng KI tối đa cho thành viên bang", (short) 21, (byte) 10, ClanIntrinsicTemplate.EFFECT_MP, (short) 1));
-        templates.add(new ClanIntrinsicTemplate((byte) 3, "Sức mạnh bang", "Tăng sức đánh cho thành viên bang", (short) 22, (byte) 10, ClanIntrinsicTemplate.EFFECT_DAME, (short) 1));
-        templates.add(new ClanIntrinsicTemplate((byte) 4, "Phòng thủ bang", "Tăng giáp cho thành viên bang", (short) 23, (byte) 10, ClanIntrinsicTemplate.EFFECT_DEF, (short) 1));
+        loadTemplates();
     }
 
     public static ClanIntrinsicService gI() {
@@ -26,6 +30,103 @@ public class ClanIntrinsicService {
             instance = new ClanIntrinsicService();
         }
         return instance;
+    }
+
+    private void loadTemplates() {
+        templates.clear();
+        try (Connection con = LocalManager.getConnection()) {
+            ensureTable(con);
+            ensureUpgradeCostBaseColumn(con);
+            seedDefaultTemplates(con);
+            try (PreparedStatement ps = con.prepareStatement(
+                    "SELECT id, name, description, icon_id, max_level, effect_type, value_per_level, upgrade_cost_base "
+                    + "FROM " + TABLE_NAME + " ORDER BY id");
+                    ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    templates.add(new ClanIntrinsicTemplate(
+                            rs.getByte("id"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getShort("icon_id"),
+                            rs.getByte("max_level"),
+                            rs.getByte("effect_type"),
+                            rs.getShort("value_per_level"),
+                            rs.getInt("upgrade_cost_base")));
+                }
+            }
+        } catch (Exception e) {
+            Logger.logException(ClanIntrinsicService.class, e, "Không thể load nội tại bang từ DB");
+        }
+
+        if (templates.isEmpty()) {
+            loadFallbackTemplates();
+        }
+    }
+
+    private void ensureTable(Connection con) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
+                + "id TINYINT NOT NULL,"
+                + "name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,"
+                + "description VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,"
+                + "icon_id SMALLINT NOT NULL DEFAULT 0,"
+                + "max_level TINYINT NOT NULL DEFAULT 10,"
+                + "effect_type TINYINT NOT NULL DEFAULT 1,"
+                + "value_per_level SMALLINT NOT NULL DEFAULT 1,"
+                + "upgrade_cost_base INT NOT NULL DEFAULT 100,"
+                + "PRIMARY KEY (id)"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC")) {
+            ps.executeUpdate();
+        }
+    }
+
+    private void ensureUpgradeCostBaseColumn(Connection con) {
+        try (PreparedStatement ps = con.prepareStatement(
+                "ALTER TABLE " + TABLE_NAME + " ADD COLUMN upgrade_cost_base INT NOT NULL DEFAULT 100 AFTER value_per_level")) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getMessage() == null || !e.getMessage().toLowerCase().contains("duplicate")) {
+                Logger.logException(ClanIntrinsicService.class, e, "Không thể tự thêm cột upgrade_cost_base");
+            }
+        } catch (Exception e) {
+            Logger.logException(ClanIntrinsicService.class, e, "Không thể tự thêm cột upgrade_cost_base");
+        }
+    }
+
+    private void seedDefaultTemplates(Connection con) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "INSERT IGNORE INTO " + TABLE_NAME
+                + " (id, name, description, icon_id, max_level, effect_type, value_per_level, upgrade_cost_base) VALUES "
+                + "(1, ?, ?, 20, 10, ?, 1, 100), "
+                + "(2, ?, ?, 21, 10, ?, 1, 100), "
+                + "(3, ?, ?, 22, 10, ?, 1, 100), "
+                + "(4, ?, ?, 23, 10, ?, 1, 100), "
+                + "(5, ?, ?, 24, 10, ?, 1, 100)")) {
+            ps.setString(1, "Sinh lực bang");
+            ps.setString(2, "Tăng HP tối đa cho thành viên bang");
+            ps.setByte(3, ClanIntrinsicTemplate.EFFECT_HP);
+            ps.setString(4, "Khí lực bang");
+            ps.setString(5, "Tăng KI tối đa cho thành viên bang");
+            ps.setByte(6, ClanIntrinsicTemplate.EFFECT_MP);
+            ps.setString(7, "Sức mạnh bang");
+            ps.setString(8, "Tăng sức đánh cho thành viên bang");
+            ps.setByte(9, ClanIntrinsicTemplate.EFFECT_DAME);
+            ps.setString(10, "Phòng thủ bang");
+            ps.setString(11, "Tăng giáp cho thành viên bang");
+            ps.setByte(12, ClanIntrinsicTemplate.EFFECT_DEF);
+            ps.setString(13, "Chí mạng bang");
+            ps.setString(14, "Tăng chí mạng cho thành viên bang");
+            ps.setByte(15, ClanIntrinsicTemplate.EFFECT_CRIT);
+            ps.executeUpdate();
+        }
+    }
+
+    private void loadFallbackTemplates() {
+        templates.add(new ClanIntrinsicTemplate((byte) 1, "Sinh lực bang", "Tăng HP tối đa cho thành viên bang", (short) 20, (byte) 10, ClanIntrinsicTemplate.EFFECT_HP, (short) 1, 100));
+        templates.add(new ClanIntrinsicTemplate((byte) 2, "Khí lực bang", "Tăng KI tối đa cho thành viên bang", (short) 21, (byte) 10, ClanIntrinsicTemplate.EFFECT_MP, (short) 1, 100));
+        templates.add(new ClanIntrinsicTemplate((byte) 3, "Sức mạnh bang", "Tăng sức đánh cho thành viên bang", (short) 22, (byte) 10, ClanIntrinsicTemplate.EFFECT_DAME, (short) 1, 100));
+        templates.add(new ClanIntrinsicTemplate((byte) 4, "Phòng thủ bang", "Tăng giáp cho thành viên bang", (short) 23, (byte) 10, ClanIntrinsicTemplate.EFFECT_DEF, (short) 1, 100));
+        templates.add(new ClanIntrinsicTemplate((byte) 5, "Chí mạng bang", "Tăng chí mạng cho thành viên bang", (short) 24, (byte) 10, ClanIntrinsicTemplate.EFFECT_CRIT, (short) 1, 100));
     }
 
     public ClanIntrinsicTemplate getTemplate(byte id) {

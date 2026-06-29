@@ -1263,6 +1263,11 @@ public class NPoint {
         this.crit = this.critg;
         this.crit += this.critAdd;
         this.crit += this.critdragon;
+
+        int clanIntrinsicCrit = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_CRIT);
+        if (clanIntrinsicCrit > 0) {
+            this.crit += clanIntrinsicCrit;
+        }
         //biến khỉ
         if (this.player.effectSkill.isMonkey) {
             this.crit = 110;
