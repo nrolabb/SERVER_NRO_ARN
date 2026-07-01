@@ -6,6 +6,7 @@ import nro.models.consts.ConstPlayer;
 import nro.models.consts.ConstRatio;
 import nro.models.clan.ClanIntrinsicTemplate;
 import nro.models.intrinsic.Intrinsic;
+import nro.models.intrinsic.PetIntrinsic;
 import nro.models.item.Item;
 import nro.models.item.Item.ItemOption;
 import nro.models.skill.Skill;
@@ -875,6 +876,12 @@ public class NPoint {
         if (this.player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             hpMax += this.player.pet.nPoint.hpMax;
         }
+        if (!this.player.isPet && isFusionWithPetIntrinsic(PetIntrinsic.FUSION_HP)) {
+            hpMax += (hpMax * this.player.pet.petIntrinsic.param / 100L);
+        }
+        if (this.player.isPet && hasPetIntrinsic(PetIntrinsic.HP)) {
+            hpMax += (hpMax * ((Pet) this.player).petIntrinsic.param / 100L);
+        }
 
         // Xử lý bổ huyết
         if (this.player.itemTime != null && this.player.itemTime.isUseBoHuyet && !this.player.itemTime.isUseBoHuyet2) {
@@ -1021,6 +1028,12 @@ public class NPoint {
         if (this.player.fusion.typeFusion
                 != 0) {
             mpMax += this.player.pet.nPoint.mpMax;
+        }
+        if (!this.player.isPet && isFusionWithPetIntrinsic(PetIntrinsic.FUSION_MP)) {
+            mpMax += (mpMax * this.player.pet.petIntrinsic.param / 100L);
+        }
+        if (this.player.isPet && hasPetIntrinsic(PetIntrinsic.MP)) {
+            mpMax += (mpMax * ((Pet) this.player).petIntrinsic.param / 100L);
         }
 
         // Xử lý bổ khí
@@ -1190,6 +1203,12 @@ public class NPoint {
         if (this.player.fusion.typeFusion != 0) {
             dame += this.player.pet.nPoint.dame;
         }
+        if (!this.player.isPet && isFusionWithPetIntrinsic(PetIntrinsic.FUSION_DAME)) {
+            dame += (dame * this.player.pet.petIntrinsic.param / 100L);
+        }
+        if (this.player.isPet && hasPetIntrinsic(PetIntrinsic.DAME)) {
+            dame += (dame * ((Pet) this.player).petIntrinsic.param / 100L);
+        }
 
         // Lấy tất cả option danh hiệu
         List<Item.ItemOption> options = BagesTemplate.sendListItemOption(player);
@@ -1263,6 +1282,12 @@ public class NPoint {
         this.crit = this.critg;
         this.crit += this.critAdd;
         this.crit += this.critdragon;
+        if (!this.player.isPet && isFusionWithPetIntrinsic(PetIntrinsic.FUSION_CRIT)) {
+            this.crit += this.player.pet.petIntrinsic.param;
+        }
+        if (this.player.isPet && hasPetIntrinsic(PetIntrinsic.CRIT)) {
+            this.crit += ((Pet) this.player).petIntrinsic.param;
+        }
 
         int clanIntrinsicCrit = ClanIntrinsicService.gI().getBonus(this.player.clan, ClanIntrinsicTemplate.EFFECT_CRIT);
         if (clanIntrinsicCrit > 0) {
@@ -1279,6 +1304,23 @@ public class NPoint {
         if (player.setClothes.thanVuTruKaio >= 1) {
             this.crit += 10 / 100;
         }
+    }
+
+    private boolean hasPetIntrinsic(byte type) {
+        return this.player.isPet
+                && ((Pet) this.player).petIntrinsic != null
+                && ((Pet) this.player).petIntrinsic.type == type
+                && ((Pet) this.player).petIntrinsic.param > 0;
+    }
+
+    private boolean isFusionWithPetIntrinsic(byte type) {
+        return this.player.pet != null
+                && this.player.fusion != null
+                && this.player.fusion.typeFusion != ConstPlayer.NON_FUSION
+                && this.player.pet.status == Pet.FUSION
+                && this.player.pet.petIntrinsic != null
+                && this.player.pet.petIntrinsic.type == type
+                && this.player.pet.petIntrinsic.param > 0;
     }
 
     private void resetPoint() {
@@ -1674,6 +1716,11 @@ public class NPoint {
                 }
                 if (((Pet) this.player).master.nPoint != null && ((Pet) this.player).master.nPoint.tlTNSMPet > 0) {
                     tiemNang += tn / 100 * (((Pet) this.player).master.nPoint.tlTNSMPet + 100);
+                }
+                if (((Pet) this.player).petIntrinsic != null
+                        && ((Pet) this.player).petIntrinsic.type == PetIntrinsic.EXP
+                        && ((Pet) this.player).petIntrinsic.param > 0) {
+                    tiemNang += ((long) tiemNang * ((Pet) this.player).petIntrinsic.param / 100);
                 }
             }
     

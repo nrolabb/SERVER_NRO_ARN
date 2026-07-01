@@ -7,6 +7,7 @@ import nro.models.player.Friend;
 import nro.models.player.Fusion;
 import nro.models.player.Inventory;
 import nro.models.player.Player;
+import nro.models.intrinsic.PetIntrinsic;
 import nro.models.skill.Skill;
 import nro.models.map.service.MapService;
 import nro.models.utils.Logger;
@@ -718,6 +719,7 @@ public class PlayerDAO {
                 String petPoint;
                 String petBody;
                 String petSkill;
+                String petIntrinsic;
 
                 //data pet
                 if (player.pet != null) {
@@ -792,10 +794,17 @@ public class PlayerDAO {
                     }
                     petSkill = petSkills.toJSONString();
 
+                    JSONArray petIntrinsicData = new JSONArray();
+                    PetIntrinsic petIntrinsicInfo = player.pet.petIntrinsic != null ? player.pet.petIntrinsic : new PetIntrinsic();
+                    petIntrinsicData.add(petIntrinsicInfo.type);
+                    petIntrinsicData.add(petIntrinsicInfo.param);
+                    petIntrinsic = petIntrinsicData.toJSONString();
+
                     dataArray.add(petInfo);
                     dataArray.add(petPoint);
                     dataArray.add(petBody);
                     dataArray.add(petSkill);
+                    dataArray.add(petIntrinsic);
 
                     pet = dataArray.toJSONString();
                 }

@@ -140,18 +140,18 @@ public class Player implements Runnable {
 
     public int timesPerDayBDKB = 0;
     public long lastTimeJoinBDKB;
-public int luckyRoundPoint = 0;
-public boolean reward100 = false;
-public boolean reward200 = false;
-public boolean reward300 = false;
-public boolean reward500 = false;
-public boolean reward700 = false;
-public boolean reward1000 = false;
-public int point_2207;
-public boolean reward_100_2207 = false;
-public boolean reward_200_2207 = false;
-public boolean reward_300_2207 = false;
-public boolean reward_500_2207 = false;
+    public int luckyRoundPoint = 0;
+    public boolean reward100 = false;
+    public boolean reward200 = false;
+    public boolean reward300 = false;
+    public boolean reward500 = false;
+    public boolean reward700 = false;
+    public boolean reward1000 = false;
+    public int point_2207;
+    public boolean reward_100_2207 = false;
+    public boolean reward_200_2207 = false;
+    public boolean reward_300_2207 = false;
+    public boolean reward_500_2207 = false;
     public boolean joinCDRD;
     public long lastTimeJoinCDRD;
     public boolean talkToThuongDe;
@@ -364,7 +364,7 @@ public boolean reward_500_2207 = false;
     public long lastChallengeGauTuongCuopTime;
     public long lastChallengeGauTuopCuopTime;
     public LocalDateTime lastCheckIn;
-public long lastTimeDoanhTrai;
+    public long lastTimeDoanhTrai;
 
     public Player() {
         LearnSkill = new LearnSkill();
@@ -400,7 +400,7 @@ public long lastTimeDoanhTrai;
         badges = new Badges();
     }
 
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
     public boolean isDie() {
         if (this.nPoint != null && this.nPoint.hp <= 0) {
             if (this.zone != null && MapService.gI().isMapTuongLai(this.zone.map.mapId) && !this.hasReducedPower) {
@@ -423,7 +423,8 @@ public long lastTimeDoanhTrai;
     }
 
     public boolean isPl() {
-        return isPlayer && !isBot && !isPet && !isBoss && !isNewPet && !isNewPet1 && !(this instanceof NonInteractiveNPC);
+        return isPlayer && !isBot && !isPet && !isBoss && !isNewPet && !isNewPet1
+                && !(this instanceof NonInteractiveNPC);
     }
 
     @Override
@@ -454,13 +455,17 @@ public long lastTimeDoanhTrai;
                         activeEffects.entrySet().removeIf(entry -> System.currentTimeMillis() >= entry.getValue());
                         this.spreadEffectToNearbyPlayers();
                     }
-                    if (this.isPl() && this.zone != null && this.zone.map.mapId == this.gender + 21 && (TaskService.gI().getIdTask(this) == ConstTask.TASK_0_0 || TaskService.gI().getIdTask(this) == ConstTask.TASK_0_1)) {
+                    if (this.isPl() && this.zone != null && this.zone.map.mapId == this.gender + 21
+                            && (TaskService.gI().getIdTask(this) == ConstTask.TASK_0_0
+                                    || TaskService.gI().getIdTask(this) == ConstTask.TASK_0_1)) {
                         this.playerTask.taskMain.index = 2;
                         TaskService.gI().sendTaskMain(this);
                     }
                 }
-                if ((this.zone != null && !MapService.gI().isHome(this.zone.map.mapId)) || (!this.isPl() && this.zone == null)) {
-                    if (isPl() && idMark != null && idMark.isBan() && Util.canDoWithTime(idMark.getLastTimeBan(), 5000)) {
+                if ((this.zone != null && !MapService.gI().isHome(this.zone.map.mapId))
+                        || (!this.isPl() && this.zone == null)) {
+                    if (isPl() && idMark != null && idMark.isBan()
+                            && Util.canDoWithTime(idMark.getLastTimeBan(), 5000)) {
                         Client.gI().kickSession(session);
                         return;
                     }
@@ -494,13 +499,16 @@ public long lastTimeDoanhTrai;
                     if (this.nPoint.timeXinbatoBuff + 10_000 < System.currentTimeMillis()) {
                         this.nPoint.tlNeDonBuffXinbato = 0;
                     }
-                    // if (this.isPl() && !this.isBot && !this.isDie() && this.effectSkill != null && !this.effectSkill.isChibi && Util.canDoWithTime(lastTimeChibi, 1000)) {
-                    //     if (Util.isTrue(20, 100) && !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
-                    //         EffectSkillService.gI().setChibi(this, 600000);
-                    //     }
-                    //     lastTimeChibi = System.currentTimeMillis();
+                    // if (this.isPl() && !this.isBot && !this.isDie() && this.effectSkill != null
+                    // && !this.effectSkill.isChibi && Util.canDoWithTime(lastTimeChibi, 1000)) {
+                    // if (Util.isTrue(20, 100) &&
+                    // !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
+                    // EffectSkillService.gI().setChibi(this, 600000);
                     // }
-                    if (this.isPl() && !this.isBot && !this.isDie() && this.effectSkill != null && this.effectSkill.isChibi && Util.canDoWithTime(lastTimeUpdateChibi, 1000)) {
+                    // lastTimeChibi = System.currentTimeMillis();
+                    // }
+                    if (this.isPl() && !this.isBot && !this.isDie() && this.effectSkill != null
+                            && this.effectSkill.isChibi && Util.canDoWithTime(lastTimeUpdateChibi, 1000)) {
                         if (this.typeChibi == 1) {
                             if (this.nPoint.mp < this.nPoint.mpMax) {
                                 if (this.nPoint.mpMax - this.nPoint.mp < this.nPoint.mpMax / 10) {
@@ -530,7 +538,8 @@ public long lastTimeDoanhTrai;
                         int hour = calendar.get(Calendar.HOUR_OF_DAY);
                         if (hour >= 22 && hour < 23) {
                             if (zone.map.mapId == 126) {
-                                //  ChangeMapService.gI().changeMapNonSpaceship(this, 19, 1000 + Util.nextInt(-100, 100), 360);
+                                // ChangeMapService.gI().changeMapNonSpaceship(this, 19, 1000 +
+                                // Util.nextInt(-100, 100), 360);
                             }
                         }
                         TaskService.gI().sendUpdateCountSubTask(this);
@@ -553,13 +562,15 @@ public long lastTimeDoanhTrai;
                         }
                     }
 
-                    if (this.zone != null && this.effectSkin != null && this.effectSkin.xHPKI > 1 && !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
+                    if (this.zone != null && this.effectSkin != null && this.effectSkin.xHPKI > 1
+                            && !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
                         this.effectSkin.xHPKI = 1;
                         this.nPoint.calPoint();
                         Service.gI().point(this);
                     }
 
-                    if (this.zone != null && this.effectSkin != null && this.effectSkin.xDame > 1 && !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
+                    if (this.zone != null && this.effectSkin != null && this.effectSkin.xDame > 1
+                            && !MapService.gI().isMapBlackBallWar(this.zone.map.mapId)) {
                         this.effectSkin.xDame = 1;
                         this.nPoint.calPoint();
                         Service.gI().point(this);
@@ -592,10 +603,12 @@ public long lastTimeDoanhTrai;
                             && this.joinCDRD && this.clan.ConDuongRanDoc.allMobsDead
                             && this.talkToThanMeo && this.zone.map.mapId == 47
                             && Util.canDoWithTime(timeChangeMap144, 5000)) {
-                        ChangeMapService.gI().changeMapYardrat(this, this.clan.ConDuongRanDoc.getMapById(144), 300 + Util.nextInt(-100, 100), 312);
+                        ChangeMapService.gI().changeMapYardrat(this, this.clan.ConDuongRanDoc.getMapById(144),
+                                300 + Util.nextInt(-100, 100), 312);
                         this.timeChangeMap144 = System.currentTimeMillis();
                     }
-                    if (this.isPl() && this.zone != null && !MapService.gI().isMapMaBu(this.zone.map.mapId) && (this.cFlag == 9 || this.cFlag == 10)) {
+                    if (this.isPl() && this.zone != null && !MapService.gI().isMapMaBu(this.zone.map.mapId)
+                            && (this.cFlag == 9 || this.cFlag == 10)) {
                         Service.gI().changeFlag(this, 0);
                     }
                     if (this.isPl()) {
@@ -609,7 +622,8 @@ public long lastTimeDoanhTrai;
                         }
                     }
 
-                    if (this.isPl() && this.zone != null && MapService.gI().isMapMaBu(this.zone.map.mapId) && this.cFlag != 9 && this.cFlag != 10) {
+                    if (this.isPl() && this.zone != null && MapService.gI().isMapMaBu(this.zone.map.mapId)
+                            && this.cFlag != 9 && this.cFlag != 10) {
                         Service.gI().changeFlag(this, Util.nextInt(9, 10));
                     }
                     if (dropItem != null) {
@@ -617,7 +631,8 @@ public long lastTimeDoanhTrai;
                     }
                     MajinBuuService.gI().update(this);
                     SuperDivineWaterService.gI().update(this);
-                    if (!isBoss && this.idMark != null && this.idMark.isGotoFuture() && Util.canDoWithTime(this.idMark.getLastTimeGoToFuture(), 60000)) {
+                    if (!isBoss && this.idMark != null && this.idMark.isGotoFuture()
+                            && Util.canDoWithTime(this.idMark.getLastTimeGoToFuture(), 60000)) {
                         ChangeMapService.gI().changeMapBySpaceShip(this, 102, -1, Util.nextInt(60, 200));
                         this.idMark.setGotoFuture(false);
                     }
@@ -649,41 +664,65 @@ public long lastTimeDoanhTrai;
         }
     }
 
+    public static class PorataTemplate {
+        public int masterItemId;
+        public int petItemId;
+        public short headId;
+        public short bodyId;
+        public short legId;
+
+        public PorataTemplate(int masterItemId, int petItemId, short headId, short bodyId, short legId) {
+            this.masterItemId = masterItemId;
+            this.petItemId = petItemId;
+            this.headId = headId;
+            this.bodyId = bodyId;
+            this.legId = legId;
+        }
+    }
+
+    public static List<PorataTemplate> specialPorataTemplates = new ArrayList<>();
+    static {
+        // ID bông tai sư phụ, đệ tử, head, body, leg (có thể thêm các dòng này cho
+        // nhiều cặp khác nhau)
+        // Ví dụ id: head=100, body=101, leg=102 (thay bằng id thật trong table part)
+        specialPorataTemplates.add(new PorataTemplate(1965, 1966, (short) 1254, (short) 1255, (short) 1256));
+    }
+
     private static final short[][] idOutfitFusion = {
-        {380, 381, 382},
-        {383, 384, 385},
-        {391, 392, 393},
-        {870, 871, 872},
-        {873, 874, 875},
-        {867, 868, 869},
-        {1866, 1859, 1860}, //td btc3
-        {1869, 1872, 1873}, //nm btc3
-        {1856, 1859, 1860} 
+            { 380, 381, 382 },
+            { 383, 384, 385 },
+            { 391, 392, 393 },
+            { 870, 871, 872 },
+            { 873, 874, 875 },
+            { 867, 868, 869 },
+            { 1866, 1859, 1860 }, // td btc3
+            { 1869, 1872, 1873 }, // nm btc3
+            { 1856, 1859, 1860 }
     };
 
     public static final short[][] idOutfitGod = {
-        {-1, 472, 473}, {-1, 476, 477}, {-1, 474, 475}
+            { -1, 472, 473 }, { -1, 476, 477 }, { -1, 474, 475 }
     };
 
     public static final short[][][] idOutfitHalloween = {
-        {
-            {545, 548, 549}, {547, 548, 549}, {546, 548, 549}
-        },
-        {
-            {2082, 2085, 2086}, {2084, 2085, 2086}, {2083, 2085, 2086}
-        },
-        {
-            {760, 761, 762}, {760, 761, 762}, {760, 761, 762}
-        },
-        {
-            {654, 655, 656}, {654, 655, 656}, {654, 655, 656}
-        },
-        {
-            {651, 652, 653}, {651, 652, 653}, {651, 652, 653}
-        }};
+            {
+                    { 545, 548, 549 }, { 547, 548, 549 }, { 546, 548, 549 }
+            },
+            {
+                    { 2082, 2085, 2086 }, { 2084, 2085, 2086 }, { 2083, 2085, 2086 }
+            },
+            {
+                    { 760, 761, 762 }, { 760, 761, 762 }, { 760, 761, 762 }
+            },
+            {
+                    { 654, 655, 656 }, { 654, 655, 656 }, { 654, 655, 656 }
+            },
+            {
+                    { 651, 652, 653 }, { 651, 652, 653 }, { 651, 652, 653 }
+            } };
 
     public static final short[][] idOutfitMafuba = {
-        {1218, 1219, 1220}, {1218, 1219, 1220}, {1218, 1219, 1220}
+            { 1218, 1219, 1220 }, { 1218, 1219, 1220 }, { 1218, 1219, 1220 }
     };
 
     public String percentGold(int type) {
@@ -763,8 +802,10 @@ public long lastTimeDoanhTrai;
             return -1;
         }
         for (Card card : this.Cards) {
-            if (card != null && (card.Id == 956 || card.Id == 1792 || card.Id == 1793 || card.Id == 1791 || card.Id == 1204 || card.Id == 1142) && card.Level > 1) {
-                RadarCard radarTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(r -> r.Id == card.Id).findFirst().orElse(null);
+            if (card != null && (card.Id == 956 || card.Id == 1792 || card.Id == 1793 || card.Id == 1791
+                    || card.Id == 1204 || card.Id == 1142) && card.Level > 1) {
+                RadarCard radarTemplate = RadarService.gI().RADAR_TEMPLATE.stream().filter(r -> r.Id == card.Id)
+                        .findFirst().orElse(null);
                 if (radarTemplate != null) {
                     return (byte) radarTemplate.AuraId;
                 }
@@ -830,19 +871,24 @@ public long lastTimeDoanhTrai;
                 break;
             }
         }
-        if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null && optionLevelNhan != null
+        if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null
+                && optionLevelNhan != null
                 && levelAo >= 8 && levelQuan >= 8 && levelGang >= 8 && levelGiay >= 8 && levelNhan >= 8) {
             return 8;
-        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null && optionLevelNhan != null
+        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null
+                && optionLevelGiay != null && optionLevelNhan != null
                 && levelAo >= 7 && levelQuan >= 7 && levelGang >= 7 && levelGiay >= 7 && levelNhan >= 7) {
             return 7;
-        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null && optionLevelNhan != null
+        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null
+                && optionLevelGiay != null && optionLevelNhan != null
                 && levelAo >= 6 && levelQuan >= 6 && levelGang >= 6 && levelGiay >= 6 && levelNhan >= 6) {
             return 6;
-        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null && optionLevelNhan != null
+        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null
+                && optionLevelGiay != null && optionLevelNhan != null
                 && levelAo >= 5 && levelQuan >= 5 && levelGang >= 5 && levelGiay >= 5 && levelNhan >= 5) {
             return 5;
-        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null && optionLevelGiay != null && optionLevelNhan != null
+        } else if (optionLevelAo != null && optionLevelQuan != null && optionLevelGang != null
+                && optionLevelGiay != null && optionLevelNhan != null
                 && levelAo >= 4 && levelQuan >= 4 && levelGang >= 4 && levelGiay >= 4 && levelNhan >= 4) {
             return 4;
         } else {
@@ -854,12 +900,31 @@ public long lastTimeDoanhTrai;
         if (isUseHero1BienHinh()) {
             return ConstPlayer.HERO1_BIEN_HINH_HEAD;
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
+                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
+            // Check special porata templates
+            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                Item itemSlot10 = inventory.itemsBody.get(10);
+                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                    for (PorataTemplate template : specialPorataTemplates) {
+                        if (itemSlot10.template.id == template.masterItemId
+                                && petItemSlot10.template.id == template.petItemId) {
+                            return template.headId;
+                        }
+                    }
+                }
+            }
+
             boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
             boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem() && item.template.id == petItem.template.id;
+            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                    && item.template.id == petItem.template.id;
             if (hasItem1 && hasItem2 && !sameItem) {
                 return 1578;
             }
@@ -886,9 +951,9 @@ public long lastTimeDoanhTrai;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][0];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-//                if (this.pet.typePet == 1) {
-//                    return idOutfitFusion[3 + this.gender][0];
-//                }
+                // if (this.pet.typePet == 1) {
+                // return idOutfitFusion[3 + this.gender][0];
+                // }
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][0];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
                 if (nPoint != null && nPoint.levelBT == 3) {
@@ -914,13 +979,32 @@ public long lastTimeDoanhTrai;
         if (isUseHero1BienHinh()) {
             return ConstPlayer.getHero1BienHinhBody(effectSkill.frameBienHinh);
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
+                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
 
+            // Check special porata templates
+            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                Item itemSlot10 = inventory.itemsBody.get(10);
+                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                    for (PorataTemplate template : specialPorataTemplates) {
+                        if (itemSlot10.template.id == template.masterItemId
+                                && petItemSlot10.template.id == template.petItemId) {
+                            return template.bodyId;
+                        }
+                    }
+                }
+            }
+
             boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
             boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem() && item.template.id == petItem.template.id;
+            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                    && item.template.id == petItem.template.id;
             if (hasItem1 && hasItem2 && !sameItem) {
                 return 1581;
             }
@@ -949,9 +1033,9 @@ public long lastTimeDoanhTrai;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][1];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-//                if (this.pet.typePet == 1) {
-//                    return idOutfitFusion[3 + this.gender][1];
-//                }
+                // if (this.pet.typePet == 1) {
+                // return idOutfitFusion[3 + this.gender][1];
+                // }
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][1];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
                 if (nPoint != null && nPoint.levelBT == 3) {
@@ -980,13 +1064,32 @@ public long lastTimeDoanhTrai;
         if (isUseHero1BienHinh()) {
             return ConstPlayer.HERO1_BIEN_HINH_LEG;
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2 || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
+                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
             Item item = inventory.itemsBody.get(5);
             Item petItem = pet.inventory.itemsBody.get(5);
 
+            // Check special porata templates
+            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                Item itemSlot10 = inventory.itemsBody.get(10);
+                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                    for (PorataTemplate template : specialPorataTemplates) {
+                        if (itemSlot10.template.id == template.masterItemId
+                                && petItemSlot10.template.id == template.petItemId) {
+                            return template.legId;
+                        }
+                    }
+                }
+            }
+
             boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
             boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem() && item.template.id == petItem.template.id;
+            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                    && item.template.id == petItem.template.id;
             if (hasItem1 && hasItem2 && !sameItem) {
                 return 1582;
             }
@@ -1015,9 +1118,9 @@ public long lastTimeDoanhTrai;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][2];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-//                if (this.pet.typePet == 1) {
-//                    return idOutfitFusion[3 + this.gender][2];
-//                }
+                // if (this.pet.typePet == 1) {
+                // return idOutfitFusion[3 + this.gender][2];
+                // }
                 return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][2];
             } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
                 if (nPoint != null && nPoint.levelBT == 3) {
@@ -1097,9 +1200,11 @@ public long lastTimeDoanhTrai;
                 setTemporaryEnemies(plAtt);
             }
 
-            if (plAtt != null && plAtt.playerSkill.skillSelect != null && !plAtt.isBoss && MapService.gI().isMapMaBu(this.zone.map.mapId)) {
+            if (plAtt != null && plAtt.playerSkill.skillSelect != null && !plAtt.isBoss
+                    && MapService.gI().isMapMaBu(this.zone.map.mapId)) {
                 switch (plAtt.playerSkill.skillSelect.template.id) {
-                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK, Skill.LIEN_HOAN, Skill.KAIOKEN ->
+                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK,
+                            Skill.LIEN_HOAN, Skill.KAIOKEN ->
                         damage = damage > this.nPoint.hpMax / 20 ? this.nPoint.hpMax / 20 : damage;
                 }
             }
@@ -1111,14 +1216,16 @@ public long lastTimeDoanhTrai;
                     && !Util.canDoWithTime(plAtt.effectSkill.lastTimeUpBinh, 3000)) {
                 return 0;
             }
-            if (plAtt != null && plAtt.isPl() && this.maBuHold != null && this.zone != null && this.zone.map.mapId == 128) {
+            if (plAtt != null && plAtt.isPl() && this.maBuHold != null && this.zone != null
+                    && this.zone.map.mapId == 128) {
                 this.precentMabuHold++;
                 damage = 1;
             }
             if (plAtt != null && plAtt.idNRNM != -1 && (this.isBoss || this.isNewPet)) {
                 return 1;
             }
-            if (plAtt != null && (plAtt.idNRNM != -1 || this.idNRNM != -1) && plAtt.clan != null && this.clan != null && plAtt.clan == this.clan) {
+            if (plAtt != null && (plAtt.idNRNM != -1 || this.idNRNM != -1) && plAtt.clan != null && this.clan != null
+                    && plAtt.clan == this.clan) {
                 Service.gI().chatJustForMe(plAtt, this, "Ê cùng bang mà");
                 return 0;
             }
@@ -1143,7 +1250,9 @@ public long lastTimeDoanhTrai;
 
             if (plAtt != null && !isMobAttack && plAtt.playerSkill.skillSelect != null) {
                 switch (plAtt.playerSkill.skillSelect.template.id) {
-                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK, Skill.LIEN_HOAN, Skill.KAIOKEN, Skill.QUA_CAU_KENH_KHI, Skill.MAKANKOSAPPO, Skill.DICH_CHUYEN_TUC_THOI ->
+                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK,
+                            Skill.LIEN_HOAN, Skill.KAIOKEN, Skill.QUA_CAU_KENH_KHI, Skill.MAKANKOSAPPO,
+                            Skill.DICH_CHUYEN_TUC_THOI ->
                         tlNeDon -= plAtt.nPoint.tlchinhxac;
                     default ->
                         tlNeDon = 0;
@@ -1203,7 +1312,9 @@ public long lastTimeDoanhTrai;
             boolean isUseGX = false;
             if (!piercing && plAtt != null && plAtt.playerSkill.skillSelect != null) {
                 switch (plAtt.playerSkill.skillSelect.template.id) {
-                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK, Skill.LIEN_HOAN, Skill.KAIOKEN, Skill.QUA_CAU_KENH_KHI, Skill.MAKANKOSAPPO, Skill.DICH_CHUYEN_TUC_THOI ->
+                    case Skill.KAMEJOKO, Skill.MASENKO, Skill.ANTOMIC, Skill.DRAGON, Skill.DEMON, Skill.GALICK,
+                            Skill.LIEN_HOAN, Skill.KAIOKEN, Skill.QUA_CAU_KENH_KHI, Skill.MAKANKOSAPPO,
+                            Skill.DICH_CHUYEN_TUC_THOI ->
                         isUseGX = true;
                 }
             }
@@ -1249,9 +1360,9 @@ public long lastTimeDoanhTrai;
             this.nPoint.subHP(damage);
             if ((plAtt != null || isMobAttack) && isDie() && !isBoss && !isNewPet && !isNewPet1) {
                 if (plAtt != null && this.isPl()) {
-                    //TaskService.gI().checkDoneTaskPK(plAtt);
+                    // TaskService.gI().checkDoneTaskPK(plAtt);
                     if (this.idMark != null && this.idMark.isHoldBlackBall()) {
-                        //   TaskService.gI().checkDoneTaskNRSD(plAtt);
+                        // TaskService.gI().checkDoneTaskNRSD(plAtt);
                     }
                 }
                 if (Util.isTrue(this.nPoint.tlBom, 100)) {
@@ -1281,33 +1392,30 @@ public long lastTimeDoanhTrai;
         this.setDie(null);
     }
 
-   protected void setDie(Player plAtt) {
+    protected void setDie(Player plAtt) {
 
-    // ===== RƠI 1 VÀNG KHI CHẾT =====
-   // ===== TẮT RƠI VÀNG KHI CHẾT =====
-if (false) {
-    int vang = 1;
+        // ===== RƠI 1 VÀNG KHI CHẾT =====
+        // ===== TẮT RƠI VÀNG KHI CHẾT =====
+        if (false) {
+            int vang = 1;
 
+            if (this.inventory != null && this.inventory.gold >= vang) {
+                // trừ đúng 1 vàng
+                this.inventory.gold -= vang;
+                Service.gI().sendMoney(this);
 
-        if (this.inventory != null && this.inventory.gold >= vang) {
-            // trừ đúng 1 vàng
-            this.inventory.gold -= vang;
-            Service.gI().sendMoney(this);
-
-            // rơi đúng 1 vàng ra map (ID 189 = vàng nhỏ)
-            Service.gI().dropItemMap(
-                this.zone,
-                new ItemMap(
-                    this.zone,
-                    189,                // ID vàng
-                    1,                  // số lượng = 1
-                    this.location.x,    // vị trí X
-                    this.location.y,    // vị trí Y
-                    this.id
-                )
-            );
+                // rơi đúng 1 vàng ra map (ID 189 = vàng nhỏ)
+                Service.gI().dropItemMap(
+                        this.zone,
+                        new ItemMap(
+                                this.zone,
+                                189, // ID vàng
+                                1, // số lượng = 1
+                                this.location.x, // vị trí X
+                                this.location.y, // vị trí Y
+                                this.id));
+            }
         }
-    }
         int mapid = this.zone.map.mapId;
         double PhanTramSucManhBiTru = 0.0;
         if (MapService.gI().isMapTuongLai(mapid)) {
@@ -1343,7 +1451,8 @@ if (false) {
             this.mobMe = null;
         }
         Service.gI().charDie(this);
-        if (!this.isPet && !this.isBot && !this.isNewPet && !this.isNewPet1 && !this.isBoss && plAtt != null && !plAtt.isPet && !plAtt.isNewPet && !plAtt.isNewPet1 && !plAtt.isBoss) {
+        if (!this.isPet && !this.isBot && !this.isNewPet && !this.isNewPet1 && !this.isBoss && plAtt != null
+                && !plAtt.isPet && !plAtt.isNewPet && !plAtt.isNewPet1 && !plAtt.isBoss) {
             if (!plAtt.itemTime.isUseAnDanh) {
                 FriendAndEnemyService.gI().addEnemy(this, plAtt);
             }
@@ -1375,7 +1484,8 @@ if (false) {
     }
 
     public boolean isActive() {
-        return (this.isPl() && this.session != null && this.session.actived) || (this.isPet && ((Pet) this).master.session != null && ((Pet) this).master.session.actived);
+        return (this.isPl() && this.session != null && this.session.actived)
+                || (this.isPet && ((Pet) this).master.session != null && ((Pet) this).master.session.actived);
     }
 
     public void sendNewPet() {
@@ -1883,11 +1993,11 @@ if (false) {
     }
 
     public String getLastChatMessage() {
-        return lastChatMessage;  // Trả về tin nhắn cuối cùng
+        return lastChatMessage; // Trả về tin nhắn cuối cùng
     }
 
     public void setLastChatMessage(String message) {
-        this.lastChatMessage = message;  // Cập nhật tin nhắn cuối cùng
+        this.lastChatMessage = message; // Cập nhật tin nhắn cuối cùng
     }
 
     public boolean hasEffect(Player player, int effectId) {
@@ -1925,7 +2035,8 @@ if (false) {
     public void sendTextTimeDaiLyGift() {
         if (Util.canDoWithTime(lastTimeSendTextTime, 300000)) {
             if (DailyGiftService.checkDailyGift(this, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
-                ItemTimeService.gI().sendTextTime(this, itemTime.TEXT_NHAN_BUA_MIEN_PHI, "Nhận ngẫu nhiên bùa 1h mỗi ngày tại Bà Hạt Mít ở vách núi", 30);
+                ItemTimeService.gI().sendTextTime(this, itemTime.TEXT_NHAN_BUA_MIEN_PHI,
+                        "Nhận ngẫu nhiên bùa 1h mỗi ngày tại Bà Hạt Mít ở vách núi", 30);
             }
             lastTimeSendTextTime = System.currentTimeMillis();
         }

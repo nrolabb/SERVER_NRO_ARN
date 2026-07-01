@@ -311,7 +311,7 @@ public class PetService {
         pet.nPoint.defg = data[3];
         pet.nPoint.critg = data[4];
 
-        int itemBodySize = 8;
+        int itemBodySize = 15;
         for (int i = 0; i < itemBodySize; i++) {
             pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
         }

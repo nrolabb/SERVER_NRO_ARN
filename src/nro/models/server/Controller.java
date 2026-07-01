@@ -2,6 +2,7 @@ package nro.models.server;
 
 import nro.models.services.PlayerService;
 import nro.models.services.IntrinsicService;
+import nro.models.services.PetIntrinsicService;
 import nro.models.database.SuperRankDAO;
 import nro.models.boss.Boss;
 import nro.models.boss.Boss_Manager.BossManager;
@@ -217,7 +218,12 @@ public class Controller implements IMessageHandler {
                     break;
                 case 112:
                     if (player != null) {
-                        IntrinsicService.gI().showMenu(player);
+                        byte intrinsicAction = _msg.reader().readByte();
+                        if (intrinsicAction == 1) {
+                            PetIntrinsicService.gI().openOrChange(player);
+                        } else {
+                            IntrinsicService.gI().showMenu(player);
+                        }
                     }
                     break;
                 case -34:

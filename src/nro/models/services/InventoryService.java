@@ -295,7 +295,7 @@ public class InventoryService {
 
         // Kiểm tra các loại item hợp lệ
         switch (item.template.type) {
-            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 36 -> {
+            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 36, 72 -> {
             }
             default -> {
                 Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Trang bị không phù hợp!1");
@@ -317,6 +317,16 @@ public class InventoryService {
                         "Vui lòng cởi áo để có thể sử dụng!");
                 return sItem;
             }
+        }
+
+        // Bông tai đặc biệt: 1965 cho sư phụ, 1966 cho đệ tử
+        if (item.template.id == 1965 && player.isPet) {
+            Service.gI().sendThongBaoOK(((Pet) player).master, "Bông tai này chỉ dành cho Sư Phụ!");
+            return sItem;
+        }
+        if (item.template.id == 1966 && !player.isPet) {
+            Service.gI().sendThongBaoOK(player, "Bông tai này chỉ dành cho Đệ Tử!");
+            return sItem;
         }
 
         // Kiểm tra yêu cầu sức mạnh
@@ -358,6 +368,9 @@ public class InventoryService {
                 break;
             case 36:
                 index = player.isPet ? 7 : 10;
+                break;
+            case 72:
+                index = 10;
                 break;
             case 25:
                 index = 11;

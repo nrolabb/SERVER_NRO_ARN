@@ -17,6 +17,7 @@ import nro.models.map.service.ChangeMapService;
 import nro.models.utils.TimeUtil;
 import java.util.List;
 import nro.models.consts.ConstAchievement;
+import nro.models.intrinsic.PetIntrinsic;
 import nro.models.services.AchievementService;
 import nro.models.services_func.UseItem;
 
@@ -45,6 +46,7 @@ public class Pet extends Player {
 
     public byte typePet;
     public boolean isTransform;
+    public PetIntrinsic petIntrinsic = new PetIntrinsic();
 
     public long lastTimeDie;
 

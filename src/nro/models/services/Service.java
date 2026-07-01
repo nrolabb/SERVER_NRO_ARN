@@ -1657,6 +1657,9 @@ public class Service {
                 msg.writer().writeInt(pl.pet.nPoint.dameg);
                 msg.writer().writeInt(pl.pet.nPoint.defg);
                 msg.writer().writeByte(pl.pet.nPoint.critg);
+                msg.writer().writeByte(pl.pet.petIntrinsic != null ? pl.pet.petIntrinsic.type : 0);
+                msg.writer().writeShort(pl.pet.petIntrinsic != null ? pl.pet.petIntrinsic.param : 0);
+                msg.writer().writeUTF(pl.pet.petIntrinsic != null ? pl.pet.petIntrinsic.getDisplayName() : "Chưa mở (Cần 20 tỷ SM)");
                 pl.sendMessage(msg);
                 msg.cleanup();
 

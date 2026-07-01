@@ -287,7 +287,8 @@ public class ClanService {
     }
 
     private void sendClanBox(Player player, byte action) {
-        if (player.clan == null) return;
+        if (player.clan == null)
+            return;
         player.clan.ensureClanBoxCapacity();
         Message msgBox = null;
         try {
@@ -350,9 +351,10 @@ public class ClanService {
             if (action == 0) {
                 sendClanBox(player);
             } else if (action == 1) {
-                if (player.clan == null) return;
+                if (player.clan == null)
+                    return;
                 if (player.clan.getRole(player) != Clan.LEADER && player.clan.getRole(player) != Clan.DEPUTY) {
-                    Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có quyền phân phối rương bang!");
+                    Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có quyền phân phát rương bang!");
                     return;
                 }
                 byte index = msg.reader().readByte();
@@ -366,12 +368,16 @@ public class ClanService {
                     Service.gI().sendThongBao(player, "Vật phẩm rỗng!");
                     return;
                 }
-                
+
                 int totalQuantity = 0;
                 class DistTarget {
                     int playerId;
                     int quantity;
-                    DistTarget(int id, int q) { this.playerId = id; this.quantity = q; }
+
+                    DistTarget(int id, int q) {
+                        this.playerId = id;
+                        this.quantity = q;
+                    }
                 }
                 List<DistTarget> targets = new ArrayList<>();
                 for (int i = 0; i < numTargets; i++) {
@@ -382,29 +388,33 @@ public class ClanService {
                         totalQuantity += qty;
                     }
                 }
-                
+
                 if (totalQuantity > item.quantity) {
-                    Service.gI().sendThongBao(player, "Tổng số lượng phân phối vượt quá số lượng vật phẩm hiện có!");
+                    Service.gI().sendThongBao(player, "Tổng số lượng phân phát vượt quá số lượng vật phẩm hiện có!");
                     return;
                 }
-                
+
                 for (DistTarget target : targets) {
                     Player receiver = Client.gI().getPlayer(target.playerId);
                     Item itemClone = ItemService.gI().createNewItem(item.template.id, target.quantity);
                     itemClone.itemOptions.addAll(item.itemOptions);
-                    
+
                     if (receiver != null) {
                         if (InventoryService.gI().getCountEmptyBag(receiver) > 0) {
                             if (InventoryService.gI().addItemBag(receiver, itemClone)) {
                                 InventoryService.gI().sendItemBags(receiver);
-                                Service.gI().sendThongBao(receiver, "Bạn được phân phối " + itemClone.template.name + " x" + target.quantity + " từ rương bang hội.");
+                                Service.gI().sendThongBao(receiver, "Bạn được phân phát " + itemClone.template.name
+                                        + " x" + target.quantity + " từ rương bang hội.");
                             }
                         } else {
                             if (InventoryService.gI().addItemBox(receiver, itemClone)) {
                                 InventoryService.gI().sendItemBox(receiver);
-                                Service.gI().sendThongBao(receiver, "Hành trang đầy, " + itemClone.template.name + " x" + target.quantity + " từ rương bang được gửi vào rương cá nhân.");
+                                Service.gI().sendThongBao(receiver, "Hành trang đầy, " + itemClone.template.name + " x"
+                                        + target.quantity + " từ rương bang được gửi vào rương cá nhân.");
                             } else {
-                                Service.gI().sendThongBao(receiver, "Hành trang và rương cá nhân đều đầy, không thể nhận " + itemClone.template.name);
+                                Service.gI().sendThongBao(receiver,
+                                        "Hành trang và rương cá nhân đều đầy, không thể nhận "
+                                                + itemClone.template.name);
                                 Service.gI().sendThongBao(player, receiver.name + " hành trang và rương đều đầy!");
                             }
                         }
@@ -413,36 +423,40 @@ public class ClanService {
                         if (offlinePlayer != null) {
                             if (InventoryService.gI().getCountEmptyBag(offlinePlayer) > 0) {
                                 if (InventoryService.gI().addItemBag(offlinePlayer, itemClone)) {
-                                    offlinePlayer.notify = "Bạn được phân phối " + itemClone.template.name + " x" + target.quantity + " từ rương bang hội.";
+                                    offlinePlayer.notify = "Bạn được phân phát " + itemClone.template.name + " x"
+                                            + target.quantity + " từ rương bang hội.";
                                     PlayerDAO.updatePlayer(offlinePlayer);
                                 }
                             } else {
                                 if (InventoryService.gI().addItemBox(offlinePlayer, itemClone)) {
-                                    offlinePlayer.notify = "Hành trang đầy, " + itemClone.template.name + " x" + target.quantity + " từ rương bang được gửi vào rương cá nhân.";
+                                    offlinePlayer.notify = "Hành trang đầy, " + itemClone.template.name + " x"
+                                            + target.quantity + " từ rương bang được gửi vào rương cá nhân.";
                                     PlayerDAO.updatePlayer(offlinePlayer);
                                 }
                             }
                         }
                     }
                 }
-                
+
                 if (totalQuantity == item.quantity) {
                     player.clan.itemsBox.set(index, ItemService.gI().createItemNull());
                 } else {
                     item.quantity -= totalQuantity;
                 }
-                
+
                 player.clan.update();
-                
+
                 for (Player pl : player.clan.membersInGame) {
                     if (pl != null) {
                         sendClanBoxUpdate(pl);
                     }
                 }
             } else if (action == 2) {
-                if (player.clan == null) return;
+                if (player.clan == null)
+                    return;
                 if (player.clan.getRole(player) != Clan.LEADER && player.clan.getRole(player) != Clan.DEPUTY) {
-                    Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có quyền vứt bỏ vật phẩm trong rương bang!");
+                    Service.gI().sendThongBao(player,
+                            "Chỉ bang chủ hoặc bang phó mới có quyền vứt bỏ vật phẩm trong rương bang!");
                     return;
                 }
                 byte index = msg.reader().readByte();

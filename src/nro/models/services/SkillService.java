@@ -7,6 +7,7 @@ import nro.models.boss.sieu_hang.Rival;
 import nro.models.boss.yardrat.Yardart;
 import nro.models.consts.ConstAchievement;
 import nro.models.intrinsic.Intrinsic;
+import nro.models.intrinsic.PetIntrinsic;
 import nro.models.mob.Mob;
 import nro.models.mob.MobMe;
 import nro.models.mob_bigboss.GauTuongCuop;
@@ -1196,6 +1197,13 @@ public class SkillService {
         }
         player.playerSkill.skillSelect.lastTimeUseThisSkill = System.currentTimeMillis() - 1;
         int coolDown = player.playerSkill.skillSelect.coolDown;
+        if (player.isPet && ((Pet) player).petIntrinsic != null
+                && ((Pet) player).petIntrinsic.type == PetIntrinsic.SKILL_2_SPEED
+                && ((Pet) player).petIntrinsic.param > 0
+                && player.playerSkill.skills.size() > 1
+                && player.playerSkill.skills.get(1) == player.playerSkill.skillSelect) {
+            subTimeParam += ((Pet) player).petIntrinsic.param;
+        }
         long lastTimeUseSkill = System.currentTimeMillis() - ((long) coolDown * subTimeParam / 100);
         if (subTimeParam != 0) {
             EffectSkillService.gI().setIntrinsic(player, skillId, coolDown, lastTimeUseSkill);

@@ -14,6 +14,7 @@ import nro.models.item.Item;
 import nro.models.item.ItemTime;
 import nro.models.npc.MabuEgg;
 import nro.models.npc.MagicTree;
+import nro.models.intrinsic.PetIntrinsic;
 import nro.models.player.Enemy;
 import nro.models.player.Friend;
 import nro.models.player.Fusion;
@@ -369,7 +370,7 @@ public class MrBlue {
                 }
                 player.inventory.itemsBody.add(item);
             }
-            if (player.inventory.itemsBody.size() == 10) {
+            while (player.inventory.itemsBody.size() < 15) {
                 player.inventory.itemsBody.add(ItemService.gI().createItemNull());
             }
             dataArray.clear();
@@ -873,7 +874,7 @@ public class MrBlue {
                     }
                     pet.inventory.itemsBody.add(item);
                 }
-                int requiredSize = 8;
+                int requiredSize = 15;
                 while (pet.inventory.itemsBody.size() < requiredSize) {
                     pet.inventory.itemsBody.add(ItemService.gI().createItemNull());
                 }
@@ -908,6 +909,15 @@ public class MrBlue {
                 }
                 while (pet.playerSkill.skills.size() > maxSkillCount) {
                     pet.playerSkill.skills.remove(pet.playerSkill.skills.size() - 1);
+                }
+
+                pet.petIntrinsic = new PetIntrinsic();
+                if (petData.size() > 4) {
+                    JSONArray petIntrinsicData = (JSONArray) JSONValue.parse(String.valueOf(petData.get(4)));
+                    if (petIntrinsicData != null && petIntrinsicData.size() >= 2) {
+                        pet.petIntrinsic.type = Byte.parseByte(String.valueOf(petIntrinsicData.get(0)));
+                        pet.petIntrinsic.param = Short.parseShort(String.valueOf(petIntrinsicData.get(1)));
+                    }
                 }
 
                 pet.nPoint.hp = hp;
