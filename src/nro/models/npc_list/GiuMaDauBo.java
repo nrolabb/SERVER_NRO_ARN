@@ -26,7 +26,7 @@ public class GiuMaDauBo extends Npc {
                             + "• Nếu ngươi có Cải trang Bulma Sexy:\n"
                             + "  - Tỉ lệ úp sẽ là x1.5\n"
                             + "Hãy chuẩn bị kỹ trước khi tham gia thử thách!",
-                    this.mapId != 153 ? "Về lãnh\nđịa bang" : null, "Cửa hàng\nbang", "Đóng");
+                    this.mapId != 153 ? "Về lãnh\nđịa bang" : "Chúc\nmay mắn!", "Cửa hàng\nbang", "Đóng");
         }
     }
 
