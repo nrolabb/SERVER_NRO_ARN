@@ -125,7 +125,8 @@ public class Mob {
                     if (this.point.hp == this.point.maxHp && damage >= this.point.hp) {
                         damage = this.point.hp - 1;
                     }
-                    if ((this.tempId == ConstMob.MOC_NHAN || this.tempId == ConstMob.BU_NHIN_MA_QUAI) && damage > this.point.maxHp / 10) {
+                    if ((this.tempId == ConstMob.MOC_NHAN || this.tempId == ConstMob.BU_NHIN_MA_QUAI)
+                            && damage > this.point.maxHp / 10) {
                         damage = this.point.maxHp / 10;
                     }
                 }
@@ -145,11 +146,13 @@ public class Mob {
                     }
                 }
             }
-            if (!dieWhenHpFull && !isBigBoss() && !MapService.gI().isMapPhoBan(this.zone.map.mapId) && this.lvMob > 0 && plAtt != null && plAtt.charms.tdOaiHung < System.currentTimeMillis()) {
+            if (!dieWhenHpFull && !isBigBoss() && !MapService.gI().isMapPhoBan(this.zone.map.mapId) && this.lvMob > 0
+                    && plAtt != null && plAtt.charms.tdOaiHung < System.currentTimeMillis()) {
                 damage = (int) ((this.point.maxHp <= 20_000_000 ? this.point.maxHp * 1 : 2) * (10.0 / 100));
                 this.mobAttackPlayer(plAtt);
             }
-            if (plAtt != null && plAtt.isBoss && this.tempId > 0 && Util.isTrue(1, 2) && Util.canDoWithTime(lastTimeAttackPlayer, 2500)) {
+            if (plAtt != null && plAtt.isBoss && this.tempId > 0 && Util.isTrue(1, 2)
+                    && Util.canDoWithTime(lastTimeAttackPlayer, 2500)) {
                 this.mobAttackPlayer(plAtt);
                 lastTimeAttackPlayer = System.currentTimeMillis();
             }
@@ -178,7 +181,8 @@ public class Mob {
                     this.zone.isbulon2Alive = false;
                 }
             } else {
-                this.sendMobStillAliveAffterAttacked((int) damage, plAtt != null ? (plAtt.nPoint != null && plAtt.nPoint.isCrit) : false);
+                this.sendMobStillAliveAffterAttacked((int) damage,
+                        plAtt != null ? (plAtt.nPoint != null && plAtt.nPoint.isCrit) : false);
             }
             if (plAtt != null) {
                 if (plAtt.isPl() && plAtt.satellite != null && plAtt.satellite.isDefend) {
@@ -249,7 +253,7 @@ public class Mob {
             return 0;
         }
         if (pl.zone.map.mapId == 122 || pl.zone.map.mapId == 123 || pl.zone.map.mapId == 124) {
-            //tiemNang *= 2;
+            // tiemNang *= 2;
         }
         return tiemNang;
     }
@@ -269,7 +273,8 @@ public class Mob {
         if (this.isDie() && !Maintenance.isRunning && !isBigBoss()) {
             switch (zone.map.type) {
                 case ConstMap.MAP_DOANH_TRAI:
-                    if (this.tempId == ConstMob.BULON && this.zone.isTUTAlive && Util.canDoWithTime(lastTimeDie, 10000)) {
+                    if (this.tempId == ConstMob.BULON && this.zone.isTUTAlive
+                            && Util.canDoWithTime(lastTimeDie, 10000)) {
                         this.hoiSinh();
                         this.hoiSinhMobPhoBan();
                         if (this.id == 13) {
@@ -316,7 +321,8 @@ public class Mob {
         return (this.tempId == ConstMob.HIRUDEGARN || this.tempId == ConstMob.VUA_BACH_TUOC
                 || this.tempId == ConstMob.ROBOT_BAO_VE || this.tempId == ConstMob.GAU_TUONG_CUOP
                 || this.tempId == ConstMob.VOI_CHIN_NGA || this.tempId == ConstMob.GA_CHIN_CUA
-                || this.tempId == ConstMob.NGUA_CHIN_LMAO || this.tempId == ConstMob.MAY_DO_SUC_MANH || this.tempId == ConstMob.PIANO);
+                || this.tempId == ConstMob.NGUA_CHIN_LMAO || this.tempId == ConstMob.MAY_DO_SUC_MANH
+                || this.tempId == ConstMob.PIANO);
     }
 
     public void attack() {
@@ -349,7 +355,9 @@ public class Mob {
         try {
             List<Player> players = this.zone.getNotBosses();
             for (Player pl : players) {
-                if (!pl.isDie() && !pl.isBoss && !pl.isNewPet && (pl.satellite == null || !pl.satellite.isDefend) && (pl.effectSkin == null || !pl.effectSkin.isVoHinh) && (this.tempId > 18 || (this.tempId > 9 && this.type == 4)) || isBigBoss()) {
+                if (!pl.isDie() && !pl.isBoss && !pl.isNewPet && (pl.satellite == null || !pl.satellite.isDefend)
+                        && (pl.effectSkin == null || !pl.effectSkin.isVoHinh)
+                        && (this.tempId > 18 || (this.tempId > 9 && this.type == 4)) || isBigBoss()) {
                     int dis = Util.getDistance(pl, this);
                     if (dis <= distance || isBigBoss()) {
                         plAttack = pl;
@@ -376,7 +384,8 @@ public class Mob {
                         continue;
                     }
                     if (plAttt.isDie() || plAttt.isBoss || (plAttt.satellite != null && plAttt.satellite.isDefend)
-                            || (plAttt.effectSkin != null && plAttt.effectSkin.isVoHinh) || !this.temporaryEnemies.contains(plAttt)) {
+                            || (plAttt.effectSkin != null && plAttt.effectSkin.isVoHinh)
+                            || !this.temporaryEnemies.contains(plAttt)) {
                         continue;
                     }
                     int d = Util.getDistance(plAttt, this);
@@ -405,7 +414,8 @@ public class Mob {
 
         if (player.isPet) {
             Pet pet = (Pet) player;
-            if (pet.master != null && pet.master.charms != null && pet.master.charms.tdDeTu > System.currentTimeMillis()) {
+            if (pet.master != null && pet.master.charms != null
+                    && pet.master.charms.tdDeTu > System.currentTimeMillis()) {
                 dameMob /= 2;
             }
         }
@@ -438,7 +448,7 @@ public class Mob {
             try {
                 msg = new Message(-11);
                 msg.writer().writeByte(this.id);
-                msg.writer().writeInt(dame); //dame
+                msg.writer().writeInt(dame); // dame
                 player.sendMessage(msg);
                 msg.cleanup();
             } catch (Exception e) {
@@ -474,7 +484,8 @@ public class Mob {
             }
         }
         this.lvMob = this.tempId > 12 && this.tempId < 34 && !isBigBoss() ? Util.isTrue(0, 10000) ? 1 : 0 : 0;
-        this.point.hp = this.lvMob > 0 ? this.point.maxHp <= 20000000 ? this.point.maxHp * 10 : 2000000000 : this.point.maxHp;
+        this.point.hp = this.lvMob > 0 ? this.point.maxHp <= 20000000 ? this.point.maxHp * 10 : 2000000000
+                : this.point.maxHp;
         return this.lvMob;
     }
 
@@ -611,909 +622,931 @@ public class Mob {
             return list;
         }
         int mapid = player.zone.map.mapId;
-        //========================Capsul Kì Bí========================
+        // ========================Capsul Kì Bí========================
         if (player.itemTime.isUseMayDo
                 && (Util.isTrue(1, 50))
                 && this.tempId > 57 && this.tempId < 66) {
             list.add(new ItemMap(zone, 380, 1, x, yEnd, player.id));
         }
-// int rate;
+        // int rate;
 
-// // < 57 → 0,3%
-// if (this.tempId < 57) {
-//     rate = 3;
-// }
-// // 57 – 66 → 0,5%
-// else if (this.tempId <= 66) {
-//     rate = 5;
-// }
-// // > 66 → 1%
-// else {
-//     rate = 10;
-// }
-
-// if (Util.isTrue(rate, 100)) {
-//     int[] itemIds = {19, 20};
-//     int itemId = itemIds[Util.nextInt(itemIds.length)];
-//     list.add(new ItemMap(zone, itemId, 1, x, yEnd, player.id));
-// }
-
-if (player.zone.map.mapId == 100 && Util.isTrue(1, 30)) {
-    ItemMap itemMap = new ItemMap(player.zone, 1508, 1, this.location.x, this.location.y, player.id);
-    Service.gI().dropItemMap(player.zone, itemMap);
-}
-// if (player.zone.map.mapId == 92 && Util.isTrue(1, 200)) {
-//     ItemMap itemMap = new ItemMap(player.zone, 444, 1, this.location.x, this.location.y, player.id);
-//     Service.gI().dropItemMap(player.zone, itemMap);
-// }
-//         //========================TASK========================
-        // if (player.isPl() && TaskService.gI().getIdTask(player) == ConstTask.TASK_8_1) {
-        //     if (player.gender == 0 && this.tempId == 11 || player.gender == 1 && this.tempId == 12 || player.gender == 2 && this.tempId == 10) {
-        //         list.add(new ItemMap(zone, 2, 1, x, yEnd, player.id));
-        //         TaskService.gI().checkDoneTaskFind7Stars(player);
-        //     }
+        // // < 57 → 0,3%
+        // if (this.tempId < 57) {
+        // rate = 3;
+        // }
+        // // 57 – 66 → 0,5%
+        // else if (this.tempId <= 66) {
+        // rate = 5;
+        // }
+        // // > 66 → 1%
+        // else {
+        // rate = 10;
         // }
 
-        //========================Map Bang Hội========================
-//   if (MapService.gI().isMapUpPorata(mapid)) {
+        // if (Util.isTrue(rate, 100)) {
+        // int[] itemIds = {19, 20};
+        // int itemId = itemIds[Util.nextInt(itemIds.length)];
+        // list.add(new ItemMap(zone, itemId, 1, x, yEnd, player.id));
+        // }
 
-//     // 934 - tỉ lệ 1/150
-//     if (Util.isTrue(1, 150)) {
-//         ItemMap it934 = new ItemMap(zone, 934, 1, x, yEnd, player.id);
-//        it934.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
-//         list.add(it934);
-//     }
+        if (player.zone.map.mapId == 100 && Util.isTrue(1, 30)) {
+            ItemMap itemMap = new ItemMap(player.zone, 1508, 1, this.location.x, this.location.y, player.id);
+            Service.gI().dropItemMap(player.zone, itemMap);
+        }
+        // if (player.zone.map.mapId == 92 && Util.isTrue(1, 200)) {
+        // ItemMap itemMap = new ItemMap(player.zone, 444, 1, this.location.x,
+        // this.location.y, player.id);
+        // Service.gI().dropItemMap(player.zone, itemMap);
+        // }
+        // //========================TASK========================
+        // if (player.isPl() && TaskService.gI().getIdTask(player) ==
+        // ConstTask.TASK_8_1) {
+        // if (player.gender == 0 && this.tempId == 11 || player.gender == 1 &&
+        // this.tempId == 12 || player.gender == 2 && this.tempId == 10) {
+        // list.add(new ItemMap(zone, 2, 1, x, yEnd, player.id));
+        // TaskService.gI().checkDoneTaskFind7Stars(player);
+        // }
+        // }
 
-//     // 935 - tỉ lệ 1/500
-//     if (Util.isTrue(1, 500)) {
-//         ItemMap it935 = new ItemMap(zone, 935, 1, x, yEnd, player.id);
-//         it935.options.add(new Item.ItemOption(30, 1));
-//         list.add(it935);
-//     }
+        // ========================Map Bang Hội========================
+        // if (MapService.gI().isMapUpPorata(mapid)) {
 
-//     // 933 - tỉ lệ 1/50 (nếu có item 454)
-//     if (InventoryService.gI().findItem(player, 454) && Util.isTrue(1, 50)) {
-//         ItemMap it933 = new ItemMap(zone, 933, 1, x, yEnd, player.id);
-//         it933.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
-//         list.add(it933);
-//     }
+        // // 934 - tỉ lệ 1/150
+        // if (Util.isTrue(1, 150)) {
+        // ItemMap it934 = new ItemMap(zone, 934, 1, x, yEnd, player.id);
+        // it934.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
+        // list.add(it934);
+        // }
 
-//     // 1820 - tỉ lệ 1/100 (nếu có item 921)
-//     if (InventoryService.gI().findItem(player, 921) && Util.isTrue(1, 100)) {
-//         ItemMap it1820 = new ItemMap(zone, 1820, 1, x, yEnd, player.id);
-//         it1820.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
-//         list.add(it1820);
-//     }
-// }
+        // // 935 - tỉ lệ 1/500
+        // if (Util.isTrue(1, 500)) {
+        // ItemMap it935 = new ItemMap(zone, 935, 1, x, yEnd, player.id);
+        // it935.options.add(new Item.ItemOption(30, 1));
+        // list.add(it935);
+        // }
 
-if (MapService.gI().AllMap(mapid)) {
+        // // 933 - tỉ lệ 1/50 (nếu có item 454)
+        // if (InventoryService.gI().findItem(player, 454) && Util.isTrue(1, 50)) {
+        // ItemMap it933 = new ItemMap(zone, 933, 1, x, yEnd, player.id);
+        // it933.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
+        // list.add(it933);
+        // }
 
-    // Tỷ lệ 1/1000 rơi item 1998
-    if (Util.isTrue(1, 1000)) {
+        // // 1820 - tỉ lệ 1/100 (nếu có item 921)
+        // if (InventoryService.gI().findItem(player, 921) && Util.isTrue(1, 100)) {
+        // ItemMap it1820 = new ItemMap(zone, 1820, 1, x, yEnd, player.id);
+        // it1820.options.add(new Item.ItemOption(31, Util.nextInt(2, 5)));
+        // list.add(it1820);
+        // }
+        // }
 
-        ItemMap it = new ItemMap(zone, 1998, 1, x, yEnd, player.id);
-        it.options = new ArrayList<>();
+        if (MapService.gI().AllMap(mapid)) {
 
-        list.add(it);
+            // Tỷ lệ 1/1000 rơi item 1998
+            if (Util.isTrue(1, 1000)) {
 
-        ChatGlobalService.gI().ThongBaoRoiDo(
-            player,
-            player.name + " vừa nhặt được " + it.itemTemplate.name +
-            " tại " + this.zone.map.mapName +
-            " khu " + this.zone.zoneId
-        );
-    }
-}
+                ItemMap it = new ItemMap(zone, 1998, 1, x, yEnd, player.id);
+                it.options = new ArrayList<>();
 
+                list.add(it);
 
-
-  if (MapService.gI().AllMap(mapid)) {
-
-        player.monsterKillCountAutoTrain++;
-
-        int rateGold = 0;
-        int goldMin = 0;
-        int goldMax = 0;
-
-        int rate220 = 0;
-        int rateNgoc = 0;
-        int ratePhaLe = 0;
-
-        // ======================== PHÂN CẤP QUÁI ========================
-
-        if (this.tempId > 1 && this.tempId < 38) {
-
-            rateGold = 50;
-            goldMin = 1;
-            goldMax = 20000;
-
-            rate220 = 500;
-            rateNgoc = 1500;
-            ratePhaLe = 1000;
-
-        } else if (this.tempId >= 38 && this.tempId < 58) {
-
-            rateGold = 50;
-            goldMin = 1;
-            goldMax = 30000;
-
-            rate220 = 400;
-            rateNgoc = 1250;
-            ratePhaLe = 900;
-
-         } else if (this.tempId >= 58 && this.tempId < 66) {
-
-            rateGold = 50;
-            goldMin = 30000;
-            goldMax = 50000;
-
-            rate220 = 300;
-            rateNgoc = 1000;
-            ratePhaLe = 800;
-            
-        } else if (this.tempId >= 66 && this.tempId < 70) {
-
-            rateGold = 50;
-            goldMin = 50000;
-            goldMax = 80000;
-
-            rate220 = 200;
-            rateNgoc = 750;
-            ratePhaLe = 700;
+                ChatGlobalService.gI().ThongBaoRoiDo(
+                        player,
+                        player.name + " vừa nhặt được " + it.itemTemplate.name +
+                                " tại " + this.zone.map.mapName +
+                                " khu " + this.zone.zoneId);
+            }
         }
 
-        // ======================== DROP 220 -> 224 ========================
-if (rate220 > 0 && Util.isTrue(1, rate220)) {
+        if (MapService.gI().AllMap(mapid)) {
 
-            int rand = Util.nextInt(0, 4);
-            ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
-            it.options.add(new Item.ItemOption(71 - rand, 0));
+            player.monsterKillCountAutoTrain++;
+
+            int rateGold = 0;
+            int goldMin = 0;
+            int goldMax = 0;
+
+            int rate220 = 0;
+            int rateNgoc = 0;
+            int ratePhaLe = 0;
+
+            // ======================== PHÂN CẤP QUÁI ========================
+
+            if (this.tempId > 1 && this.tempId < 38) {
+
+                rateGold = 50;
+                goldMin = 1;
+                goldMax = 20000;
+
+                rate220 = 500;
+                rateNgoc = 1500;
+                ratePhaLe = 1000;
+
+            } else if (this.tempId >= 38 && this.tempId < 58) {
+
+                rateGold = 50;
+                goldMin = 1;
+                goldMax = 30000;
+
+                rate220 = 400;
+                rateNgoc = 1250;
+                ratePhaLe = 900;
+
+            } else if (this.tempId >= 58 && this.tempId < 66) {
+
+                rateGold = 50;
+                goldMin = 30000;
+                goldMax = 50000;
+
+                rate220 = 300;
+                rateNgoc = 1000;
+                ratePhaLe = 800;
+
+            } else if (this.tempId >= 66 && this.tempId < 70) {
+
+                rateGold = 50;
+                goldMin = 50000;
+                goldMax = 80000;
+
+                rate220 = 200;
+                rateNgoc = 750;
+                ratePhaLe = 700;
+            }
+
+            // ======================== DROP 220 -> 224 ========================
+            if (rate220 > 0 && Util.isTrue(1, rate220)) {
+
+                int rand = Util.nextInt(0, 4);
+                ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
+                it.options.add(new Item.ItemOption(71 - rand, 0));
+                list.add(it);
+            }
+
+            // ======================== NGỌC RỒNG ========================
+
+            if (rateNgoc > 0 && Util.isTrue(1, rateNgoc)) {
+
+                int rand = Util.nextInt(100);
+                int itemNgoc;
+
+                if (rand < 90) {
+                    itemNgoc = 18;
+                } else if (rand < 95) {
+                    itemNgoc = 19;
+                } else {
+                    itemNgoc = 20;
+                }
+
+                list.add(new ItemMap(zone, itemNgoc, 1, x, yEnd, player.id));
+            }
+
+            // ======================== SAO PHA LÊ ========================
+
+            int op110 = InventoryService.gI().getOptionParamInBody(player, 110);
+
+            if (op110 > 0 && ratePhaLe > 0 && Util.isTrue(1, ratePhaLe)) {
+
+                int itemId = 0;
+                int optionId = 0;
+
+                int rand = Util.nextInt(0, 4);
+
+                switch (rand) {
+                    case 0 -> {
+                        itemId = 441;
+                        optionId = 95;
+                    }
+                    case 1 -> {
+                        itemId = 442;
+                        optionId = 96;
+                    }
+                    case 2 -> {
+                        itemId = 443;
+                        optionId = 97;
+                    }
+                    case 3 -> {
+                        itemId = 447;
+                        optionId = 101;
+                    }
+                    case 4 -> {
+                        itemId = 446;
+                        optionId = 100;
+                    }
+                }
+
+                ItemMap it = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
+                it.options.add(new Item.ItemOption(optionId, 5)); // chỉ số chuẩn
+                list.add(it);
+            }
+            // ======================== VÀNG ========================
+
+            int op100 = InventoryService.gI().getOptionParamInBody(player, 100);
+
+            int intrinsicGold = 0;
+
+            if (player.playerIntrinsic != null
+                    && player.playerIntrinsic.intrinsic != null) {
+
+                String name = player.playerIntrinsic.intrinsic.name;
+
+                if (name != null && name.contains("Vàng rơi")) {
+                    intrinsicGold = player.playerIntrinsic.intrinsic.param1;
+                }
+            }
+
+            if (rateGold > 0 && Util.isTrue(1, rateGold)) {
+
+                int itemGold = 0;
+                int quantity = 0;
+
+                if (this.tempId < 38) {
+                    itemGold = 188;
+                    quantity = Util.nextInt(goldMin, goldMax);
+                } else if (this.tempId < 54) {
+                    itemGold = 189;
+                    quantity = Util.nextInt(goldMin, goldMax);
+                } else {
+                    itemGold = 190;
+                    quantity = Util.nextInt(goldMin, goldMax);
+                }
+
+                if (op100 > 0) {
+                    quantity += quantity * op100 / 100;
+                }
+
+                if (intrinsicGold > 0) {
+                    quantity += quantity * intrinsicGold / 100;
+                }
+
+                list.add(new ItemMap(zone, itemGold, quantity, x, yEnd, player.id));
+            }
+        }
+
+        if ((MapService.gI().isMapNappa(mapid) && Util.isTrue(1, 100000)) ||
+                (MapService.gI().isMapTuongLai(mapid) && Util.isTrue(1, 50000)) ||
+                (MapService.gI().isMapCold(mapid) && Util.isTrue(1, 30000))) {
+
+            int[] dropItems = {
+                    241, 253, 265, 277,
+                    233, 245, 257, 269,
+                    237, 249, 261, 273,
+                    281
+            };
+            int itemId = dropItems[Util.nextInt(0, dropItems.length - 1)];
+
+            ItemMap it = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
+            // Option 107
+            int op = 107;
+            int value = Util.isTrue(10, 100) ? 1 : 0; // 10% = 1, 90% = 0
+            it.options.add(new Item.ItemOption(op, value));
+            // Option theo nhóm item
+            switch (itemId) {
+                case 241:
+                case 233:
+                case 237:
+                    it.options.add(new Item.ItemOption(47, Util.nextInt(400, 550)));
+                    break;
+
+                case 253:
+                case 245:
+                case 249:
+                    it.options.add(new Item.ItemOption(6, Util.nextInt(22000, 27000)));
+                    it.options.add(new Item.ItemOption(27, Util.nextInt(3000, 5000)));
+                    break;
+
+                case 265:
+                case 261:
+                case 257:
+                    it.options.add(new Item.ItemOption(0, Util.nextInt(2100, 2400)));
+                    break;
+
+                case 277:
+                case 269:
+                case 273:
+                    it.options.add(new Item.ItemOption(7, Util.nextInt(22000, 26000)));
+                    it.options.add(new Item.ItemOption(28, Util.nextInt(4000, 6000)));
+                    break;
+
+                case 281:
+                    it.options.add(new Item.ItemOption(14, Util.nextInt(11, 13)));
+                    break;
+            }
+
             list.add(it);
         }
-    
-        // ======================== NGỌC RỒNG ========================
 
-     if (rateNgoc > 0 && Util.isTrue(1, rateNgoc)) {
-
-            int rand = Util.nextInt(100);
-            int itemNgoc;
-
-            if (rand < 90) {
-                itemNgoc = 18;
-            } else if (rand < 95) {
-                itemNgoc = 19;
-            } else {
-                itemNgoc = 20;
-            }
-
-            list.add(new ItemMap(zone, itemNgoc, 1, x, yEnd, player.id));
-        }
-
-        // ======================== SAO PHA LÊ ========================
-
-     int op110 = InventoryService.gI().getOptionParamInBody(player, 110);
-
-if (op110 > 0 && ratePhaLe > 0 && Util.isTrue(1, ratePhaLe)) {
-
-    int itemId = 0;
-    int optionId = 0;
-
-    int rand = Util.nextInt(0, 4);
-
-    switch (rand) {
-        case 0 -> {
-            itemId = 441;
-            optionId = 95;
-        }
-        case 1 -> {
-            itemId = 442;
-            optionId = 96;
-        }
-        case 2 -> {
-            itemId = 443;
-            optionId = 97;
-        }
-        case 3 -> {
-            itemId = 447;
-            optionId = 101;
-        }
-        case 4 -> {
-            itemId = 446;
-            optionId = 100;
-        }
-    }
-
-    ItemMap it = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
-    it.options.add(new Item.ItemOption(optionId, 5)); // chỉ số chuẩn
-    list.add(it);
-}
-        // ======================== VÀNG ========================
-
-        int op100 = InventoryService.gI().getOptionParamInBody(player, 100);
-
-        int intrinsicGold = 0;
-
-        if (player.playerIntrinsic != null
-                && player.playerIntrinsic.intrinsic != null) {
-
-            String name = player.playerIntrinsic.intrinsic.name;
-
-            if (name != null && name.contains("Vàng rơi")) {
-                intrinsicGold = player.playerIntrinsic.intrinsic.param1;
-            }
-        }
-
-      if (rateGold > 0 && Util.isTrue(1, rateGold)) {
-
-            int itemGold = 0;
-            int quantity = 0;
-
-            if (this.tempId < 38) {
-                itemGold = 188;
-                quantity = Util.nextInt(goldMin, goldMax);
-            } else if (this.tempId < 54) {
-                itemGold = 189;
-                quantity = Util.nextInt(goldMin, goldMax);
-            } else {
-                itemGold = 190;
-                quantity = Util.nextInt(goldMin, goldMax);
-            }
-
-            if (op100 > 0) {
-                quantity += quantity * op100 / 100;
-            }
-
-            if (intrinsicGold > 0) {
-                quantity += quantity * intrinsicGold / 100;
-            }
-
-            list.add(new ItemMap(zone, itemGold, quantity, x, yEnd, player.id));
-        }
-    }
-
-  if (
-     (MapService.gI().isMapNappa(mapid) && Util.isTrue(1, 100000)) ||
-        (MapService.gI().isMapTuongLai(mapid) && Util.isTrue(1, 50000)) ||
-        (MapService.gI().isMapCold(mapid) && Util.isTrue(1, 30000))
-    ) {
-
-        int[] dropItems = {
-            241, 253, 265, 277,
-            233, 245, 257, 269,
-            237, 249, 261, 273,
-            281
-        };
-        int itemId = dropItems[Util.nextInt(0, dropItems.length - 1)];
-
-        ItemMap it = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
-    // Option 107
-int op = 107;
-int value = Util.isTrue(10, 100) ? 1 : 0; // 10% = 1, 90% = 0
-it.options.add(new Item.ItemOption(op, value));
-        // Option theo nhóm item
-        switch (itemId) {
-            case 241:
-            case 233:
-            case 237:
-                it.options.add(new Item.ItemOption(47, Util.nextInt(400, 550)));
-                break;
-
-            case 253:
-            case 245:
-            case 249:
-                it.options.add(new Item.ItemOption(6, Util.nextInt(22000, 27000)));
-                it.options.add(new Item.ItemOption(27, Util.nextInt(3000, 5000)));
-                break;
-
-            case 265:
-            case 261:
-            case 257:
-                it.options.add(new Item.ItemOption(0, Util.nextInt(2100, 2400)));
-                break;
-
-            case 277:
-            case 269:
-            case 273:
-                it.options.add(new Item.ItemOption(7, Util.nextInt(22000, 26000)));
-                it.options.add(new Item.ItemOption(28, Util.nextInt(4000, 6000)));
-                break;
-
-            case 281:
-                it.options.add(new Item.ItemOption(14, Util.nextInt(11, 13)));
-                break;
-        }
-
-        list.add(it);
-    }
-
-        //======================== Vàng Ngọc ========================
+        // ======================== Vàng Ngọc ========================
         // if (MapService.gI().isMap3Planets(mapid)) {
-        //     if (Util.isTrue(1, 100)) {
-        //         int vang = Util.nextInt(1, 1000);
-        //         if (vang < 500) {
-        //             list.add(new ItemMap(zone, 76, vang, x, yEnd, player.id));
-        //         } else if (vang < 800) {
-        //             list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
-        //         } else {
-        //             list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
-        //         }
-        //     }
+        // if (Util.isTrue(1, 100)) {
+        // int vang = Util.nextInt(1, 1000);
+        // if (vang < 500) {
+        // list.add(new ItemMap(zone, 76, vang, x, yEnd, player.id));
+        // } else if (vang < 800) {
+        // list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
+        // } else {
+        // list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
+        // }
+        // }
         // }
         // if (MapService.gI().isMapNappa(mapid)) {
-        //     if (Util.isTrue(1, 80)) {
-        //         int vang = Util.nextInt(1, 1500);
-        //         if (vang < 550) {
-        //             list.add(new ItemMap(zone, 76, vang, x, yEnd, player.id));
-        //         } else if (vang < 900) {
-        //             list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
-        //         } else {
-        //             list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
-        //         }
-        //     }
+        // if (Util.isTrue(1, 80)) {
+        // int vang = Util.nextInt(1, 1500);
+        // if (vang < 550) {
+        // list.add(new ItemMap(zone, 76, vang, x, yEnd, player.id));
+        // } else if (vang < 900) {
+        // list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
+        // } else {
+        // list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
         // }
-        
-            //    if (Util.isTrue(1, 500)) {
-            //     int rand = Util.nextInt(0, 4);
-            //     ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
-            //     it.options.add(new Item.ItemOption(71 - rand, 0));
-            //     list.add(it);
-            // }
-             // sao pha lê
+        // }
+        // }
 
-// if (Util.isTrue(1, 500)) {
+        // if (Util.isTrue(1, 500)) {
+        // int rand = Util.nextInt(0, 4);
+        // ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
+        // it.options.add(new Item.ItemOption(71 - rand, 0));
+        // list.add(it);
+        // }
+        // sao pha lê
 
-//     int[][] data = {
-//         {441, 95},
-//         {442, 96},
-//         {443, 97},
-//         {447, 101}
-//     };
+        // if (Util.isTrue(1, 500)) {
 
-//     int[] pick = data[Util.nextInt(data.length)];
+        // int[][] data = {
+        // {441, 95},
+        // {442, 96},
+        // {443, 97},
+        // {447, 101}
+        // };
 
-//     ItemMap it = new ItemMap(zone, pick[0], 1, x, yEnd, player.id);
-//     it.options.add(new Item.ItemOption(pick[1], 5));
-//     list.add(it);
-// }
+        // int[] pick = data[Util.nextInt(data.length)];
 
+        // ItemMap it = new ItemMap(zone, pick[0], 1, x, yEnd, player.id);
+        // it.options.add(new Item.ItemOption(pick[1], 5));
+        // list.add(it);
+        // }
 
- //========================Map Bang Hội========================
-if (MapService.gI().isMapUpPorata(mapid)) {
+        // ========================Map Bang Hội========================
+        if (MapService.gI().isMapUpPorata(mapid)) {
 
-    double rateMultiplier = 1.0;
+            double rateMultiplier = 1.0;
 
-    // ===== CHECK CẢI TRANG 884 AN TOÀN =====
-    if (player.inventory != null
-            && player.inventory.itemsBody != null
-            && player.inventory.itemsBody.size() > 5
-            && player.inventory.itemsBody.get(5) != null
-            && player.inventory.itemsBody.get(5).template != null
-            && player.inventory.itemsBody.get(5).template.id == 464) {
+            // ===== CHECK CẢI TRANG 884 AN TOÀN =====
+            if (player.inventory != null
+                    && player.inventory.itemsBody != null
+                    && player.inventory.itemsBody.size() > 5
+                    && player.inventory.itemsBody.get(5) != null
+                    && player.inventory.itemsBody.get(5).template != null
+                    && player.inventory.itemsBody.get(5).template.id == 464) {
 
-        rateMultiplier = 1.5;
-    }
+                rateMultiplier = 1.5;
+            }
 
-    // ===== 934 =====
-    if (Util.isTrue(1, (int) (100 / rateMultiplier))) {
+            // ===== 934 =====
+            if (Util.isTrue(1, (int) (100 / rateMultiplier))) {
 
-        ItemMap it = new ItemMap(zone, 934, 1, x, yEnd, player.id);
-        if (it.itemTemplate != null) {
-            it.options.add(new Item.ItemOption(31, 3));
-            it.options.add(new Item.ItemOption(30, 0));
-            list.add(it);
+                ItemMap it = new ItemMap(zone, 934, 1, x, yEnd, player.id);
+                if (it.itemTemplate != null) {
+                    it.options.add(new Item.ItemOption(31, 3));
+                    it.options.add(new Item.ItemOption(30, 0));
+                    list.add(it);
+                }
+            }
+
+            // ===== 935 =====
+            if (Util.isTrue(1, (int) (10000 / rateMultiplier))) {
+
+                ItemMap it = new ItemMap(zone, 935, 1, x, yEnd, player.id);
+                if (it.itemTemplate != null) {
+                    it.options.add(new Item.ItemOption(30, 0));
+                    list.add(it);
+                }
+            }
+
+            // ===== 933 (cần 454) =====
+            if (InventoryService.gI().findItem(player, 454)
+                    && Util.isTrue(1, (int) (100 / rateMultiplier))) {
+
+                ItemMap it = new ItemMap(zone, 933, 1, x, yEnd, player.id);
+                if (it.itemTemplate != null) {
+                    it.options.add(new Item.ItemOption(30, 0));
+                    it.options.add(new Item.ItemOption(31, Util.nextInt(1, 10)));
+                    list.add(it);
+                }
+            }
+
+            // ===== 1820 (cần 921) =====
+            if (InventoryService.gI().findItem(player, 921)
+                    && Util.isTrue(1, (int) (150 / rateMultiplier))) {
+
+                ItemMap it = new ItemMap(zone, 1820, 1, x, yEnd, player.id);
+                if (it.itemTemplate != null) {
+                    it.options.add(new Item.ItemOption(30, 0));
+                    it.options.add(new Item.ItemOption(31, Util.nextInt(1, 5)));
+                    list.add(it);
+                }
+            }
         }
-    }
-
-    // ===== 935 =====
-    if (Util.isTrue(1, (int) (10000 / rateMultiplier))) {
-
-        ItemMap it = new ItemMap(zone, 935, 1, x, yEnd, player.id);
-        if (it.itemTemplate != null) {
-            it.options.add(new Item.ItemOption(30, 0));
-            list.add(it);
-        }
-    }
-
-    // ===== 933 (cần 454) =====
-    if (InventoryService.gI().findItem(player, 454)
-            && Util.isTrue(1, (int) (100 / rateMultiplier))) {
-
-        ItemMap it = new ItemMap(zone, 933, 1, x, yEnd, player.id);
-        if (it.itemTemplate != null) {
-            it.options.add(new Item.ItemOption(30, 0));
-            it.options.add(new Item.ItemOption(31, Util.nextInt(1, 10)));
-            list.add(it);
-        }
-    }
-
-    // ===== 1820 (cần 921) =====
-    if (InventoryService.gI().findItem(player, 921)
-            && Util.isTrue(1, (int) (150 / rateMultiplier))) {
-
-        ItemMap it = new ItemMap(zone, 1820, 1, x, yEnd, player.id);
-        if (it.itemTemplate != null) {
-            it.options.add(new Item.ItemOption(30, 0));
-            it.options.add(new Item.ItemOption(31, Util.nextInt(1, 5)));
-            list.add(it);
-        }
-    }
-}
-
 
         if (MapService.gI().AllMap(mapid)) {
             if (player != null) {
                 player.monsterKillCountAutoTrain++;
             }
 
-        
-        
-
         }
         // if (MapService.gI().AllMap(mapid)) {
-        //     if (Util.isTrue(1, 30)) {
-        //         ItemMap it = new ItemMap(zone, 1798, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
-        //     if (Util.isTrue(1, 60)) {
-        //         ItemMap it = new ItemMap(zone, 1799, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
-        //     if (Util.isTrue(1, 90)) {
-        //         ItemMap it = new ItemMap(zone, 1800, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
-        //     // if (Util.isTrue(5, 100)) {
-        //     //     ItemMap it = new ItemMap(zone, 1612, 1, x, yEnd, player.id);
-        //     //     list.add(it);
-        //     // }
-        //     if (Util.isTrue(1, 120)) {
-        //         ItemMap it = new ItemMap(zone, 1801, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
-        //     if (Util.isTrue(1, 150)) {
-        //         ItemMap it = new ItemMap(zone, 1802, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
+        // if (Util.isTrue(1, 30)) {
+        // ItemMap it = new ItemMap(zone, 1798, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
+        // if (Util.isTrue(1, 60)) {
+        // ItemMap it = new ItemMap(zone, 1799, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
+        // if (Util.isTrue(1, 90)) {
+        // ItemMap it = new ItemMap(zone, 1800, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
+        // // if (Util.isTrue(5, 100)) {
+        // // ItemMap it = new ItemMap(zone, 1612, 1, x, yEnd, player.id);
+        // // list.add(it);
+        // // }
+        // if (Util.isTrue(1, 120)) {
+        // ItemMap it = new ItemMap(zone, 1801, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
+        // if (Util.isTrue(1, 150)) {
+        // ItemMap it = new ItemMap(zone, 1802, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
         // }
 
         // if (MapService.gI().isMapCold(mapid)) {
-        //     if (Util.isTrue(1, 40)) {
-        //         int vang = Util.nextInt(5000, 7000);
-        //         if (vang < 5500) {
-        //             list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id)); // Rơi vàng cấp 189
-        //         } else if (vang < 6000) {
-        //             list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id)); // Rơi vàng cấp 190
-        //         } else {
-        //             list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id)); // Rơi vàng cấp 190
-        //         }
-        //     }
+        // if (Util.isTrue(1, 40)) {
+        // int vang = Util.nextInt(5000, 7000);
+        // if (vang < 5500) {
+        // list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id)); // Rơi vàng cấp
+        // 189
+        // } else if (vang < 6000) {
+        // list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id)); // Rơi vàng cấp
+        // 190
+        // } else {
+        // list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id)); // Rơi vàng cấp
+        // 190
+        // }
+        // }
         // }
         // if (MapService.gI().isMapTuongLai(mapid)) {
-        //     if (Util.isTrue(1, 60)) {
-        //         int vang = Util.nextInt(3000, 5000);
-        //         if (vang < 3500) {
-        //             list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
-        //         } else if (vang < 4700) {
-        //             list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
-        //         } else {
-        //             list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id));
-        //         }
-        //     }
+        // if (Util.isTrue(1, 60)) {
+        // int vang = Util.nextInt(3000, 5000);
+        // if (vang < 3500) {
+        // list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
+        // } else if (vang < 4700) {
+        // list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
+        // } else {
+        // list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id));
+        // }
+        // }
         // }
 
+        boolean isMapUpSKH = MapService.gI().isMapUpSKH(mapid);
+        boolean isMapRiengTu = MapService.gI().isMapRiengTu(mapid);
 
-    boolean isMapUpSKH = MapService.gI().isMapUpSKH(mapid);
-boolean isMapRiengTu = MapService.gI().isMapRiengTu(mapid);
+        // ===== TỶ LỆ CƠ BẢN =====
+        int denominator = 500; // all map mặc định
 
-// ===== TỶ LỆ CƠ BẢN =====
-int denominator = 500; // all map mặc định
+        if (isMapRiengTu) {
+            denominator = 300;
+        } else if (isMapUpSKH) {
+            denominator = 400;
+        }
 
-if (isMapRiengTu) {
-    denominator = 300;
-} else if (isMapUpSKH) {
-    denominator = 400;
-}
+        boolean hasOption236 = false;
 
-boolean hasOption236 = false;
-
-for (Item item : player.inventory.itemsBody) {
-    if (item != null && item.itemOptions != null) {
-        for (Item.ItemOption op : item.itemOptions) {
-            if (op.optionTemplate.id == 236) {
-                hasOption236 = true;
+        for (Item item : player.inventory.itemsBody) {
+            if (item != null && item.itemOptions != null) {
+                for (Item.ItemOption op : item.itemOptions) {
+                    if (op.optionTemplate.id == 236) {
+                        hasOption236 = true;
+                        break;
+                    }
+                }
+            }
+            if (hasOption236)
                 break;
+        }
+
+        // ===== ĐIỀU CHỈNH TỶ LỆ =====
+        if (isMapRiengTu) {
+            if (hasOption236 && player.itemTime.isUseCoBonLa) {
+                denominator = 150;
+            } else if (hasOption236) {
+                denominator = 250;
+            } else if (player.itemTime.isUseCoBonLa) {
+                denominator = 200;
+            }
+        } else if (isMapUpSKH) {
+            if (hasOption236 && player.itemTime.isUseCoBonLa) {
+                denominator = 350;
+            } else if (hasOption236) {
+                denominator = 300;
+            } else if (player.itemTime.isUseCoBonLa) {
+                denominator = 250;
+            }
+        } else {
+            if (hasOption236 && player.itemTime.isUseCoBonLa) {
+                denominator = 400;
+            } else if (hasOption236) {
+                denominator = 450;
+            } else if (player.itemTime.isUseCoBonLa) {
+                denominator = 450;
             }
         }
-    }
-    if (hasOption236) break;
-}
 
-// ===== ĐIỀU CHỈNH TỶ LỆ =====
-if (isMapRiengTu) {
-    if (hasOption236 && player.itemTime.isUseCoBonLa) {
-        denominator = 150;
-    } else if (hasOption236) {
-        denominator = 250;
-    } else if (player.itemTime.isUseCoBonLa) {
-        denominator = 200;
-    }
-} else if (isMapUpSKH) {
-    if (hasOption236 && player.itemTime.isUseCoBonLa) {
-        denominator = 350;
-    } else if (hasOption236) {
-        denominator = 300;
-    } else if (player.itemTime.isUseCoBonLa) {
-        denominator = 250;
-    }
-} else {
-    if (hasOption236 && player.itemTime.isUseCoBonLa) {
-        denominator = 400;
-    } else if (hasOption236) {
-        denominator = 450;
-    } else if (player.itemTime.isUseCoBonLa) {
-        denominator = 450;
-    }
-}
+        // ===== RƠI SÉT KÍCH HOẠT ALL MAP =====
+        if (Util.isTrue(1, denominator)) {
 
-// ===== RƠI SÉT KÍCH HOẠT ALL MAP =====
-if (Util.isTrue(1, denominator)) {
+            short itTemp = (short) ItemService.gI().randTempItemKichHoat(player.gender);
+            ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
 
-    short itTemp = (short) ItemService.gI().randTempItemKichHoat(player.gender);
-    ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+            List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
+            if (!ops.isEmpty()) {
+                it.options = ops;
+            }
 
-    List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
-    if (!ops.isEmpty()) {
-        it.options = ops;
-    }
+            int[] opsrand = ItemService.gI().randOptionItemKichHoat(player.gender);
+            for (int opId : opsrand) {
+                if (opId > 0) {
+                    it.options.add(new Item.ItemOption(opId, 0));
+                }
+            }
 
-    int[] opsrand = ItemService.gI().randOptionItemKichHoat(player.gender);
-    for (int opId : opsrand) {
-        if (opId > 0) {
-            it.options.add(new Item.ItemOption(opId, 0));
+            it.options.add(new Item.ItemOption(30, 0));
+
+            // Map thường thì có option 93 random 1-7 ngày
+            // Map UpSKH / Riêng tư thì KHÔNG có option 93
+            if (!isMapUpSKH && !isMapRiengTu) {
+                it.options.add(new Item.ItemOption(93, Util.nextInt(1, 7)));
+            }
+
+            list.add(it);
+
+            ChatGlobalService.gI().ThongBaoRoiDo(
+                    player,
+                    player.name + " vừa nhặt được " + it.itemTemplate.name +
+                            " sét kích hoạt tại " + this.zone.map.mapName +
+                            " khu " + this.zone.zoneId);
         }
-    }
 
-    it.options.add(new Item.ItemOption(30, 0));
+        // ===== RƠI MẢNH KÍCH HOẠT THEO GENDER =====
+        if ((mapid == 1 || mapid == 8 || mapid == 15) && Util.isTrue(1, 3)) {
+            List<Integer> validTypes = new ArrayList<>();
+            for (nro.models.player_system.Template.SetKichHoatTemplate temp : nro.models.server.Manager.SET_KICH_HOAT_TEMPLATES) {
+                if (temp.gender == player.gender) {
+                    validTypes.add(temp.typeManh);
+                }
+            }
+            if (!validTypes.isEmpty()) {
+                List<Short> validItemIds = new ArrayList<>();
+                for (nro.models.player_system.Template.ItemTemplate itemTemp : nro.models.server.Manager.ITEM_TEMPLATES) {
+                    if (itemTemp != null && validTypes.contains((int) itemTemp.type)) {
+                        validItemIds.add(itemTemp.id);
+                    }
+                }
+                if (!validItemIds.isEmpty()) {
+                    short chosenItemId = validItemIds.get(Util.nextInt(validItemIds.size()));
+                    ItemMap it = new ItemMap(zone, chosenItemId, 1, x, yEnd, player.id);
+                    list.add(it);
+                }
+            }
+        }
 
-    // Map thường thì có option 93 random 1-7 ngày
-    // Map UpSKH / Riêng tư thì KHÔNG có option 93
-    if (!isMapUpSKH && !isMapRiengTu) {
-        it.options.add(new Item.ItemOption(93, Util.nextInt(1, 7)));
-    }
+        // ===== CAPSULE VỠ CHỈ MAP RIÊNG TƯ =====
+        if (isMapRiengTu && Util.isTrue(1, 500)) {
 
-    list.add(it);
+            short itTemp = 1634;
+            ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+            it.options = new ArrayList<>();
 
-    ChatGlobalService.gI().ThongBaoRoiDo(
-        player,
-        player.name + " vừa nhặt được " + it.itemTemplate.name +
-        " sét kích hoạt tại " + this.zone.map.mapName +
-        " khu " + this.zone.zoneId
-    );
-}
+            list.add(it);
 
-// ===== CAPSULE VỠ CHỈ MAP RIÊNG TƯ =====
-if (isMapRiengTu && Util.isTrue(1, 500)) {
-
-    short itTemp = 1634;
-    ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
-    it.options = new ArrayList<>();
-
-    list.add(it);
-
-    ChatGlobalService.gI().ThongBaoRoiDo(
-        player,
-        player.name + " vừa nhặt được Capsule vỡ tại " +
-        this.zone.map.mapName + " khu " + this.zone.zoneId
-    );
-}
+            ChatGlobalService.gI().ThongBaoRoiDo(
+                    player,
+                    player.name + " vừa nhặt được Capsule vỡ tại " +
+                            this.zone.map.mapName + " khu " + this.zone.zoneId);
+        }
 
         // if (MapService.gI().isMapPhoBan(mapid)) {
-        //     if (Util.isTrue(1, 100)) {
-        //         int vang = Util.nextInt(80000, 200000);
-        //         if (player.itemTime.isUseCoBonLa) {
-        //             vang = (int) (vang * 1.15);
-        //         }
-        //         if (vang < 6000) {
-        //             list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
-        //         } else if (vang < 10000) {
-        //             list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
-        //         } else {
-        //             list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id));
-        //         }
-        //     }
+        // if (Util.isTrue(1, 100)) {
+        // int vang = Util.nextInt(80000, 200000);
+        // if (player.itemTime.isUseCoBonLa) {
+        // vang = (int) (vang * 1.15);
+        // }
+        // if (vang < 6000) {
+        // list.add(new ItemMap(zone, 188, vang, x, yEnd, player.id));
+        // } else if (vang < 10000) {
+        // list.add(new ItemMap(zone, 189, vang, x, yEnd, player.id));
+        // } else {
+        // list.add(new ItemMap(zone, 190, vang, x, yEnd, player.id));
+        // }
+        // }
         // }
         // if (Util.isTrue(1, 10000)) {
-        //     int ngoc = Util.nextInt(1, 2);
-        //     list.add(new ItemMap(zone, 77, ngoc, x, yEnd, player.id));
+        // int ngoc = Util.nextInt(1, 2);
+        // list.add(new ItemMap(zone, 77, ngoc, x, yEnd, player.id));
         // }
-//       if (MapService.gI().isMapUpSKH(mapid)) {
+        // if (MapService.gI().isMapUpSKH(mapid)) {
 
-//     int baseTileDrop = 1; // tỉ lệ gốc
-//     int tileDrop = baseTileDrop;
+        // int baseTileDrop = 1; // tỉ lệ gốc
+        // int tileDrop = baseTileDrop;
 
-//     // Nếu dùng Cỏ Bốn Lá -> x2 tỉ lệ
-//     if (player.itemTime.isUseCoBonLa) {
-//         tileDrop = baseTileDrop * 2;
-//     }
+        // // Nếu dùng Cỏ Bốn Lá -> x2 tỉ lệ
+        // if (player.itemTime.isUseCoBonLa) {
+        // tileDrop = baseTileDrop * 2;
+        // }
 
-//     if (Util.isTrue(tileDrop, 9999)) {
-//         int soLuong = 1;
-//         list.add(new ItemMap(zone, 1634, soLuong, x, yEnd, player.id));
-//     }
-// }
+        // if (Util.isTrue(tileDrop, 9999)) {
+        // int soLuong = 1;
+        // list.add(new ItemMap(zone, 1634, soLuong, x, yEnd, player.id));
+        // }
+        // }
 
         // if (MapService.gI().isMapDoanhTrai(mapid)) {
-        //     int baseTileDrop = 20;
-        //     int tileDrop = baseTileDrop;
-        //     if (player.itemTime.isUseCoBonLa) {
-        //         tileDrop = (int) (baseTileDrop * 1.15);
-        //     }
-
-        //     if (Util.isTrue(tileDrop, 100)) {
-        //         int soLuong = 1;
-        //         list.add(new ItemMap(zone, 1778, soLuong, x, yEnd, player.id));
-        //     }
+        // int baseTileDrop = 20;
+        // int tileDrop = baseTileDrop;
+        // if (player.itemTime.isUseCoBonLa) {
+        // tileDrop = (int) (baseTileDrop * 1.15);
         // }
-      
-//       if (MapService.gI().isMapRiengTu(mapid) ) {
 
-//     // ===== BASE TỈ LỆ =====
-//     int numerator = 1;
-//     int denominator = 9999;
+        // if (Util.isTrue(tileDrop, 100)) {
+        // int soLuong = 1;
+        // list.add(new ItemMap(zone, 1778, soLuong, x, yEnd, player.id));
+        // }
+        // }
 
-//     // ===== CỎ 4 LÁ =====
-//     if (player.itemTime.isUseCoBonLa) {
-//         numerator = 2;
-//         denominator = 9999;
-//     }
+        // if (MapService.gI().isMapRiengTu(mapid) ) {
 
-//     // ===== OPTION 236 (GIỮ LOGIC CŨ) =====
-//     int totalOption236Param = 0;
-//     for (Item item : player.inventory.itemsBody) {
-//         if (item != null && item.itemOptions != null) {
-//             for (Item.ItemOption op : item.itemOptions) {
-//                 if (op.optionTemplate.id == 236) {
-//                     totalOption236Param += op.param;
-//                 }
-//             }
-//         }
-//     }
+        // // ===== BASE TỈ LỆ =====
+        // int numerator = 1;
+        // int denominator = 9999;
 
-//     if (totalOption236Param > 100) {
-//         totalOption236Param = 100;
-//     }
+        // // ===== CỎ 4 LÁ =====
+        // if (player.itemTime.isUseCoBonLa) {
+        // numerator = 2;
+        // denominator = 9999;
+        // }
 
-//     // cộng thêm tối đa 20%
-//     double bonusPercent = Math.pow(totalOption236Param / 100.0, 1.5) * 20.0;
-//     numerator = (int) Math.round(numerator * (1 + bonusPercent / 100.0));
+        // // ===== OPTION 236 (GIỮ LOGIC CŨ) =====
+        // int totalOption236Param = 0;
+        // for (Item item : player.inventory.itemsBody) {
+        // if (item != null && item.itemOptions != null) {
+        // for (Item.ItemOption op : item.itemOptions) {
+        // if (op.optionTemplate.id == 236) {
+        // totalOption236Param += op.param;
+        // }
+        // }
+        // }
+        // }
 
-//     // ===== CHECK RƠI ITEM 1634 =====
-//     if (Util.isTrue(numerator, denominator)) {
-//         short itTemp = 1634; // vật phẩm cố định
-//         ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+        // if (totalOption236Param > 100) {
+        // totalOption236Param = 100;
+        // }
 
-//         List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
-//         if (!ops.isEmpty()) {
-//             it.options = ops;
-//         }
-//         list.add(it);
-//     }
-// }
+        // // cộng thêm tối đa 20%
+        // double bonusPercent = Math.pow(totalOption236Param / 100.0, 1.5) * 20.0;
+        // numerator = (int) Math.round(numerator * (1 + bonusPercent / 100.0));
 
-        //========================Đồ Sao Khác Vải Thô========================
+        // // ===== CHECK RƠI ITEM 1634 =====
+        // if (Util.isTrue(numerator, denominator)) {
+        // short itTemp = 1634; // vật phẩm cố định
+        // ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+
+        // List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
+        // if (!ops.isEmpty()) {
+        // it.options = ops;
+        // }
+        // list.add(it);
+        // }
+        // }
+
+        // ========================Đồ Sao Khác Vải Thô========================
         // if (((Util.isTrue(1, 8000))) && MapService.gI().isMapUpSKH(mapid)) {
-        //     int baseDropRate = 1;
-        //     if (player.itemTime.isUseCoBonLa) {
-        //         baseDropRate = 1;
-        //         int coBonLaBonus = 15;
-        //         baseDropRate = (int) (baseDropRate * (1 + coBonLaBonus / 100.0));
-        //     }
+        // int baseDropRate = 1;
+        // if (player.itemTime.isUseCoBonLa) {
+        // baseDropRate = 1;
+        // int coBonLaBonus = 15;
+        // baseDropRate = (int) (baseDropRate * (1 + coBonLaBonus / 100.0));
+        // }
 
-        //     if (Util.isTrue(baseDropRate, 19999)) {
-        //         short itTemp = (short) ItemService.gI().randTempItemDoSao(player.gender);
-        //         ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
-        //         List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
-        //         if (!ops.isEmpty()) {
-        //             it.options = ops;
-        //         }
+        // if (Util.isTrue(baseDropRate, 19999)) {
+        // short itTemp = (short) ItemService.gI().randTempItemDoSao(player.gender);
+        // ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+        // List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
+        // if (!ops.isEmpty()) {
+        // it.options = ops;
+        // }
 
-        //         int randOption = Util.nextInt(100);
-        //         boolean hasOption = false;
-        //         if (randOption < 50) {
-        //             int randAddOption = Util.nextInt(100);
-        //             if (randAddOption < 50) {
-        //                 it.options.add(new Item.ItemOption(107, 1));
-        //                 hasOption = true;
-        //             } else if (randAddOption < 90) {
-        //                 it.options.add(new Item.ItemOption(107, 2));
-        //                 hasOption = true;
-        //             } else {
-        //                 it.options.add(new Item.ItemOption(107, 3));
-        //                 hasOption = true;
-        //             }
-        //         }
+        // int randOption = Util.nextInt(100);
+        // boolean hasOption = false;
+        // if (randOption < 50) {
+        // int randAddOption = Util.nextInt(100);
+        // if (randAddOption < 50) {
+        // it.options.add(new Item.ItemOption(107, 1));
+        // hasOption = true;
+        // } else if (randAddOption < 90) {
+        // it.options.add(new Item.ItemOption(107, 2));
+        // hasOption = true;
+        // } else {
+        // it.options.add(new Item.ItemOption(107, 3));
+        // hasOption = true;
+        // }
+        // }
 
-        //         if (hasOption) {
-        //             list.add(it);
-        //             //  ChatGlobalService.gI().ThongBaoRoiDo(player, "[Hệ Thống] " + player.name + " vừa nhặt được " + it.itemTemplate.name + " Sét Kích Hoạt");
-        //         }
-        //     }
+        // if (hasOption) {
+        // list.add(it);
+        // // ChatGlobalService.gI().ThongBaoRoiDo(player, "[Hệ Thống] " + player.name +
+        // " vừa nhặt được " + it.itemTemplate.name + " Sét Kích Hoạt");
+        // }
+        // }
         // }
 
         // END
-       // ========================Đồ Sao 3 Map Đầu========================
+        // ========================Đồ Sao 3 Map Đầu========================
         // if (((Util.isTrue(1, 2))) && MapService.gI().isMapUpSKH(mapid)) {
-        //     int baseRate = 50;
-        //     if (player.itemTime.isUseCoBonLa) {
-        //         baseRate = (int) (baseRate * (1 + 0.15));
-        //     }
-
-        //     int powerReduction = (int) Math.min(player.nPoint.power / 100000, 5) * 20;
-        //     int finalRate = Math.max(baseRate - powerReduction, 0);
-
-        //     if (finalRate > 0 && Util.nextInt(100) < finalRate) {
-        //         short itTemp = (short) ItemService.gI().randDoSao(player.gender);
-        //         ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
-        //         List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
-        //         if (!ops.isEmpty()) {
-        //             it.options = ops;
-        //         }
-
-        //         int randOption = Util.nextInt(1, 100);
-        //         boolean hasOption = false;
-        //         if (randOption < 50) {
-        //             int randAddOption = Util.nextInt(100);
-        //             if (randAddOption < 60) {
-        //                 it.options.add(new Item.ItemOption(107, 1));
-        //                 hasOption = true;
-        //             } else if (randAddOption < 90) {
-        //                 it.options.add(new Item.ItemOption(107, 2));
-        //                 hasOption = true;
-        //             } else {
-        //                 it.options.add(new Item.ItemOption(107, 3));
-        //                 hasOption = true;
-        //             }
-        //         }
-        //         if (hasOption) {
-        //             list.add(it);
-        //             //   ChatGlobalService.gI().ThongBaoRoiDo(player, "[ Hệ Thống ] " + player.name + " vừa nhặt được " + it.itemTemplate.name + " tại " + this.zone.map.mapName + " khu " + this.zone.zoneId);
-        //         }
-        //     }
+        // int baseRate = 50;
+        // if (player.itemTime.isUseCoBonLa) {
+        // baseRate = (int) (baseRate * (1 + 0.15));
         // }
 
-        //========================Đồ Thần + Thức Ăn========================
-  if (MapService.gI().isMapCold(mapid)) {
+        // int powerReduction = (int) Math.min(player.nPoint.power / 100000, 5) * 20;
+        // int finalRate = Math.max(baseRate - powerReduction, 0);
 
-    // Nếu pet giết thì tính cho chủ
-    if (player.isPet) {
-        player = ((Pet) player).master;
-    }
+        // if (finalRate > 0 && Util.nextInt(100) < finalRate) {
+        // short itTemp = (short) ItemService.gI().randDoSao(player.gender);
+        // ItemMap it = new ItemMap(zone, itTemp, 1, x, yEnd, player.id);
+        // List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop(itTemp);
+        // if (!ops.isEmpty()) {
+        // it.options = ops;
+        // }
 
-    // 1️⃣ Tỉ lệ 1/50000 rơi đồ Thần
-    if (Util.isTrue(1, 100000)) {
-        ItemMap it = ItemService.gI().randDoTL(this.zone, 1, x, yEnd, player.id);
-        list.add(it);
-    }
+        // int randOption = Util.nextInt(1, 100);
+        // boolean hasOption = false;
+        // if (randOption < 50) {
+        // int randAddOption = Util.nextInt(100);
+        // if (randAddOption < 60) {
+        // it.options.add(new Item.ItemOption(107, 1));
+        // hasOption = true;
+        // } else if (randAddOption < 90) {
+        // it.options.add(new Item.ItemOption(107, 2));
+        // hasOption = true;
+        // } else {
+        // it.options.add(new Item.ItemOption(107, 3));
+        // hasOption = true;
+        // }
+        // }
+        // if (hasOption) {
+        // list.add(it);
+        // // ChatGlobalService.gI().ThongBaoRoiDo(player, "[ Hệ Thống ] " + player.name
+        // + " vừa nhặt được " + it.itemTemplate.name + " tại " + this.zone.map.mapName
+        // + " khu " + this.zone.zoneId);
+        // }
+        // }
+        // }
 
-    // 2️⃣ Nếu có Set God -> 1% rơi thêm 663 hoặc 667
-   if (player.setClothes.checkSetGod() && Util.isTrue(1, 50)) {
-    int itemId = Util.nextInt(663, 667);
-    ItemMap itGod = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
-    list.add(itGod);
-}
-  }
-// mảnh thiên sứ
-if (player.setClothes.checkSetDes() 
-        && MapService.gI().isMapNgucTu(mapid)) {
+        // ========================Đồ Thần + Thức Ăn========================
+        if (MapService.gI().isMapCold(mapid)) {
 
-    // Drop 1066-1070 (20%)
-    if (Util.isTrue(1, 50)) {
-        list.add(new ItemMap(zone, Util.nextInt(1066, 1070), 3, x, yEnd, player.id));
-    }
+            // Nếu pet giết thì tính cho chủ
+            if (player.isPet) {
+                player = ((Pet) player).master;
+            }
 
-    // Drop bí kíp 1229 (50%)
-    if (Util.isTrue(1, 2)) {   // 50%
-        list.add(new ItemMap(zone, 1229, 1, x, yEnd, player.id));
-    }
-}
+            // 1️⃣ Tỉ lệ 1/50000 rơi đồ Thần
+            if (Util.isTrue(1, 100000)) {
+                ItemMap it = ItemService.gI().randDoTL(this.zone, 1, x, yEnd, player.id);
+                list.add(it);
+            }
 
+            // 2️⃣ Nếu có Set God -> 1% rơi thêm 663 hoặc 667
+            if (player.setClothes.checkSetGod() && Util.isTrue(1, 50)) {
+                int itemId = Util.nextInt(663, 667);
+                ItemMap itGod = new ItemMap(zone, itemId, 1, x, yEnd, player.id);
+                list.add(itGod);
+            }
+        }
+        // mảnh thiên sứ
+        if (player.setClothes.checkSetDes()
+                && MapService.gI().isMapNgucTu(mapid)) {
+
+            // Drop 1066-1070 (20%)
+            if (Util.isTrue(1, 50)) {
+                list.add(new ItemMap(zone, Util.nextInt(1066, 1070), 3, x, yEnd, player.id));
+            }
+
+            // Drop bí kíp 1229 (50%)
+            if (Util.isTrue(1, 2)) { // 50%
+                list.add(new ItemMap(zone, 1229, 1, x, yEnd, player.id));
+            }
+        }
 
         // if (MapService.gI().isMapCold(mapid)) {
-        //     if (Util.isTrue(1, 30)) {
-        //         int rand = Util.nextInt(0, 4);
-        //         ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
-        //         it.options.add(new Item.ItemOption(71 - rand, 0));
-        //         list.add(it);
-        //     }
+        // if (Util.isTrue(1, 30)) {
+        // int rand = Util.nextInt(0, 4);
+        // ItemMap it = new ItemMap(zone, 220 + rand, 1, x, yEnd, player.id);
+        // it.options.add(new Item.ItemOption(71 - rand, 0));
+        // list.add(it);
+        // }
         // }
 
         // if (MapService.gI().isMapDoanhTrai(mapid) && (Util.isTrue(1, 100))) {
-        //     ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
-        //     it.options.add(new Item.ItemOption(74, 0));
-        //     list.add(it);
+        // ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
+        // it.options.add(new Item.ItemOption(74, 0));
+        // list.add(it);
         // }
 
         // if (MapService.gI().isMap3Planets(mapid) && (Util.isTrue(1, 100))) {
-        //     ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
-        //     it.options.add(new Item.ItemOption(74, 0));
-        //     list.add(it);
+        // ItemMap it = new ItemMap(zone, 225, 1, x, yEnd, player.id);
+        // it.options.add(new Item.ItemOption(74, 0));
+        // list.add(it);
         // }
 
-        // if (MapService.gI().isMap3Planets(mapid) || MapService.gI().isMapNappa(mapid) || MapService.gI().isMapTuongLai(mapid) || MapService.gI().isMapCold(mapid)) {
-        //     int dropRate = 10;
-        //     if (player.itemTime.isUseCoBonLa) {
-        //         dropRate = (int) (dropRate * 1.15);
-        //     }
+        // if (MapService.gI().isMap3Planets(mapid) || MapService.gI().isMapNappa(mapid)
+        // || MapService.gI().isMapTuongLai(mapid) || MapService.gI().isMapCold(mapid))
+        // {
+        // int dropRate = 10;
+        // if (player.itemTime.isUseCoBonLa) {
+        // dropRate = (int) (dropRate * 1.15);
+        // }
 
-        //     if (Util.isTrue(dropRate, 70) || (player.isActive() && Util.isTrue(1, 100))) {
-        //         int rand = Util.nextInt(0, 1);
-        //         ItemMap it = new ItemMap(zone, 19 + rand, 1, x, yEnd, player.id);
-        //         list.add(it);
-        //     }
+        // if (Util.isTrue(dropRate, 70) || (player.isActive() && Util.isTrue(1, 100)))
+        // {
+        // int rand = Util.nextInt(0, 1);
+        // ItemMap it = new ItemMap(zone, 19 + rand, 1, x, yEnd, player.id);
+        // list.add(it);
+        // }
         // }
         // if (player.setClothes.checkSetDes() && MapService.gI().isMapNgucTu(mapid)) {
-        //     if ((player.isActive() && Util.isTrue(2, 555)) || Util.isTrue(10, 20)) {
-        //         list.add(new ItemMap(zone, Util.nextInt(1066, 1070), 9, x, yEnd, player.id));
-        //     }
+        // if ((player.isActive() && Util.isTrue(2, 555)) || Util.isTrue(10, 20)) {
+        // list.add(new ItemMap(zone, Util.nextInt(1066, 1070), 9, x, yEnd, player.id));
         // }
-        // if ((Util.isTrue(10, 100) || (player.isActive() && player.setClothes.checkSetDes() && Util.isTrue(20, 100))) && MapService.gI().isMapNgucTu(mapid)) {
-        //     list.add(new ItemMap(zone, 1229, 1, x, yEnd, player.id));
+        // }
+        // if ((Util.isTrue(10, 100) || (player.isActive() &&
+        // player.setClothes.checkSetDes() && Util.isTrue(20, 100))) &&
+        // MapService.gI().isMapNgucTu(mapid)) {
+        // list.add(new ItemMap(zone, 1229, 1, x, yEnd, player.id));
         // }
 
-//         if ((Util.isTrue(10, 100) && MapService.gI().isMapNguHanhSon(mapid))) {
-//             list.add(new ItemMap(zone, Util.nextInt(541, 542), 1, x, yEnd, player.id));
-//         }
+        // if ((Util.isTrue(10, 100) && MapService.gI().isMapNguHanhSon(mapid))) {
+        // list.add(new ItemMap(zone, Util.nextInt(541, 542), 1, x, yEnd, player.id));
+        // }
 
-//      if (this.zone.map.mapId >= 0) {
-//     int rate;
-//     int total;
+        // if (this.zone.map.mapId >= 0) {
+        // int rate;
+        // int total;
 
-//     if (player.itemTime.isUseCoBonLa) {
-//         // Có Cỏ: 1%
-//         rate = 1;
-//         total = 100;
-//     } else {
-//         // Không Cỏ: 0.25%
-//         rate = 1;
-//         total = 400;
-//     }
+        // if (player.itemTime.isUseCoBonLa) {
+        // // Có Cỏ: 1%
+        // rate = 1;
+        // total = 100;
+        // } else {
+        // // Không Cỏ: 0.25%
+        // rate = 1;
+        // total = 400;
+        // }
 
-//     if (Util.isTrue(rate, total)) {
-//         list.add(new ItemMap(
-//             zone,
-//             Util.nextInt(18, 20),
-//             1,
-//             x,
-//             this.location.y,
-//             player.id
-//         ));
-//     }
-// }
+        // if (Util.isTrue(rate, total)) {
+        // list.add(new ItemMap(
+        // zone,
+        // Util.nextInt(18, 20),
+        // 1,
+        // x,
+        // this.location.y,
+        // player.id
+        // ));
+        // }
+        // }
 
+        // if (this.zone.map.mapId >= 0) {
+        // int rate;
+        // int total;
 
-//      if (this.zone.map.mapId >= 0) {
-//     int rate;
-//     int total;
+        // if (player.itemTime.isUseCoBonLa) {
+        // // Có Cỏ: 1%
+        // rate = 1;
+        // total = 100;
+        // } else {
+        // // Không Cỏ: 0.5%
+        // rate = 1;
+        // total = 200;
+        // }
 
-//     if (player.itemTime.isUseCoBonLa) {
-//         // Có Cỏ: 1%
-//         rate = 1;
-//         total = 100;
-//     } else {
-//         // Không Cỏ: 0.5%
-//         rate = 1;
-//         total = 200;
-//     }
+        // if (Util.isTrue(rate, total)) { // spl
+        // list.add(new ItemMap(
+        // Util.spl(zone, Util.nextInt(441, 443), 1, x, this.location.y, player.id)
+        // ));
+        // }
+        // }
 
-//     if (Util.isTrue(rate, total)) { // spl
-//         list.add(new ItemMap(
-//             Util.spl(zone, Util.nextInt(441, 443), 1, x, this.location.y, player.id)
-//         ));
-//     }
-// }
-
-return list;
-
+        return list;
 
     }
 
@@ -1534,9 +1567,10 @@ return list;
                     if (Util.isTrue(10, 10)) {
                         itemMap = new ItemMap(zone, 2, 1, location.x, location.y, player.id);
                     } else {
-                        Service.gI().sendThongBao(player, "Con thằn lằn mẹ này không giữ Áo vải thô, hãy tìm con thằn lằn mẹ khác");
+                        Service.gI().sendThongBao(player,
+                                "Con thằn lằn mẹ này không giữ Áo vải thô, hãy tìm con thằn lằn mẹ khác");
                     }
-                      TaskService.gI().checkDoneTaskFind7Stars(player);
+                    TaskService.gI().checkDoneTaskFind7Stars(player);
                 }
         }
         if (itemMap != null) {
@@ -1569,7 +1603,7 @@ return list;
             msg = new Message(-13);
             msg.writer().writeByte(this.id);
             msg.writer().writeByte(this.tempId);
-            msg.writer().writeByte(this.lvMob); //level mob
+            msg.writer().writeByte(this.lvMob); // level mob
             msg.writer().writeInt(this.point.hp);
             Service.gI().sendMessAllPlayerInMap(this.zone, msg);
             msg.cleanup();
@@ -1586,7 +1620,7 @@ return list;
             msg = new Message(-13);
             msg.writer().writeByte(this.id);
             msg.writer().writeByte(this.tempId);
-            msg.writer().writeByte(this.lvMob); //level mob
+            msg.writer().writeByte(this.lvMob); // level mob
             msg.writer().writeInt(this.point.hp);
             Service.gI().sendMessAllPlayerInMap(this.zone, msg);
             msg.cleanup();

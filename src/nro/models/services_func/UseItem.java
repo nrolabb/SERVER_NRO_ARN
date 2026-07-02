@@ -260,6 +260,12 @@ public class UseItem {
 
     private void useItem(Player pl, Item item, int indexBag) {
         if (item != null && item.isNotNullItem()) {
+            for (nro.models.player_system.Template.SetKichHoatTemplate temp : Manager.SET_KICH_HOAT_TEMPLATES) {
+                if (temp.typeManh == item.template.type) {
+                    Service.gI().sendThongBao(pl, "Vật phẩm này chỉ dùng để ghép trang bị kích hoạt tại đảo Kame!");
+                    return;
+                }
+            }
 
             if (item.template.id == 570) {
                 if (!Util.isAfterMidnight(pl.lastTimeRewardWoodChest)) {

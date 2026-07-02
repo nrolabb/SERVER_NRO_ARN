@@ -54,6 +54,7 @@ public class CombineService {
     public static final int PHAN_RA_DO_THAN_LINH = 514;
     public static final int CHE_TAO_TRANG_BI_THIEN_SU = 515;
     public static final int NANG_CHI_SO_BONG_TAI = 517;
+    public static final int GHEP_TRANG_BI_KICH_HOAT = 518;
     public static final int NANG_CAP_BONG_TAI3 = 455;
     public static final int NANG_CHI_SO_BONG_TAI3 = 457;
     private static CombineService instance;
@@ -162,6 +163,9 @@ public class CombineService {
             case DA_MAI:
                 TaoDaMai.showInfoCombine(player);
                 break;
+            case GHEP_TRANG_BI_KICH_HOAT:
+                GhepTrangBiKichHoat.showInfoCombine(player);
+                break;
         }
     }
 
@@ -243,6 +247,9 @@ public class CombineService {
                 break;
             case DA_MAI:
                 TaoDaMai.CheTaoDuiDuc(player);
+                break;
+            case GHEP_TRANG_BI_KICH_HOAT:
+                GhepTrangBiKichHoat.thucHienGhep(player);
                 break;
         }
         

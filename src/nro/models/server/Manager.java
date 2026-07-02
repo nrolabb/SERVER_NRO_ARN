@@ -98,6 +98,7 @@ public final class Manager {
     public static final List<ClanTaskTemplate> CLAN_TASKS_TEMPLATE = new ArrayList<>();
     public static final List<AchievementTemplate> ACHIEVEMENT_TEMPLATE = new ArrayList<>();
     public static final List<Intrinsic> INTRINSICS = new ArrayList<>();
+    public static final List<SetKichHoatTemplate> SET_KICH_HOAT_TEMPLATES = new ArrayList<>();
     public static final List<Intrinsic> INTRINSIC_TD = new ArrayList<>();
     public static final List<Intrinsic> INTRINSIC_NM = new ArrayList<>();
     public static final List<Intrinsic> INTRINSIC_XD = new ArrayList<>();
@@ -1057,6 +1058,7 @@ public final class Manager {
             Logger.success(Logger.RED + "Successfully top Thach Dau Whis (" + Topwhis.size() + ")\n");
             Topmaydam = realTop(queryTopmaydam, ConnectionDatabase);
             Manager.timeRealTop = System.currentTimeMillis();
+            loadSetKichHoat(ConnectionDatabase);
 
         } catch (Exception e) {
             Logger.logException(Manager.class, e, "Database loading error");
@@ -1075,6 +1077,81 @@ public final class Manager {
 
         Logger.log(Logger.PURPLE, "Total database loading time: " + (System.currentTimeMillis() - st) + " (ms)\n");
 
+    }
+
+    private void loadSetKichHoat(Connection con) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            // Tự động tạo bảng nếu chưa tồn tại
+            String sqlCreate = "CREATE TABLE IF NOT EXISTS `set_kich_hoat` ("
+                    + "`id` int(11) NOT NULL AUTO_INCREMENT,"
+                    + "`skh_id` int(11) DEFAULT NULL,"
+                    + "`gender` int(11) DEFAULT NULL,"
+                    + "`name` varchar(255) DEFAULT NULL,"
+                    + "`description` varchar(255) DEFAULT NULL,"
+                    + "`type_manh` int(11) DEFAULT NULL,"
+                    + "PRIMARY KEY (`id`)"
+                    + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+            ps = con.prepareStatement(sqlCreate);
+            ps.executeUpdate();
+            ps.close();
+
+            // Kiểm tra xem bảng có dữ liệu chưa, nếu chưa có thì chèn dữ liệu mẫu mặc định
+            ps = con.prepareStatement("SELECT COUNT(*) FROM `set_kich_hoat`");
+            rs = ps.executeQuery();
+            boolean isEmpty = true;
+            if (rs.next()) {
+                isEmpty = rs.getInt(1) == 0;
+            }
+            rs.close();
+            ps.close();
+
+            if (isEmpty) {
+                // Chèn dữ liệu mẫu với skh_id và type_manh tương ứng
+                String sqlInsert = "INSERT INTO `set_kich_hoat` (`skh_id`, `gender`, `name`, `description`, `type_manh`) VALUES "
+                        + "(129, 0, 'Set Songoku', 'Kamejoko +100% dame', 100),"
+                        + "(127, 0, 'Set Thiên Xin Hăng', 'Stun Thái Dương Hạ San x2 thời gian', 101),"
+                        + "(128, 0, 'Set Kirin', 'Tăng mạnh HP/KI', 102),"
+                        + "(245, 0, 'Set Thần Vũ Trụ Kaio', 'Tăng 30% sát thương Kaioken', 103),"
+                        + "(253, 0, 'Set Kaioken', 'Tăng chỉ số Kaioken', 104),"
+                        + "(131, 1, 'Set Ốc Tiêu', 'Liên hoàn +100% dame', 105),"
+                        + "(132, 1, 'Set Pikkoro Daimao', 'Tăng sát thương đòn laze', 106),"
+                        + "(130, 1, 'Set Picolo', 'Tăng sát thương đòn laze', 107),"
+                        + "(237, 1, 'Set Nail', 'Tăng 80% sát thương chiêu Masenko', 108),"
+                        + "(250, 1, 'Set Liên Hoàn', 'Liên hoàn đặc biệt', 109),"
+                        + "(133, 2, 'Set Kakarot', 'Đấm Galick +100% dame', 110),"
+                        + "(134, 2, 'Set Cadic', 'Tăng sát thương đòn liên hoàn', 111),"
+                        + "(135, 2, 'Set Nappa', 'Tăng chỉ số khi biến khỉ', 112),"
+                        + "(241, 2, 'Set Cadic M', 'Tự sát +50% dame', 113),"
+                        + "(252, 2, 'Set Giảm Sát Thương', 'Tăng giảm sát thương nhận vào', 114)";
+                ps = con.prepareStatement(sqlInsert);
+                ps.executeUpdate();
+                ps.close();
+            }
+
+            // Load dữ liệu
+            ps = con.prepareStatement("SELECT * FROM `set_kich_hoat`");
+            rs = ps.executeQuery();
+            SET_KICH_HOAT_TEMPLATES.clear();
+            while (rs.next()) {
+                SetKichHoatTemplate temp = new SetKichHoatTemplate();
+                temp.id = rs.getInt("skh_id");
+                temp.gender = rs.getInt("gender");
+                temp.name = rs.getString("name");
+                temp.description = rs.getString("description");
+                temp.typeManh = rs.getInt("type_manh");
+                SET_KICH_HOAT_TEMPLATES.add(temp);
+            }
+            Logger.success(Logger.RED + "Successfully loaded set kich hoat (" + SET_KICH_HOAT_TEMPLATES.size() + ")\n");
+        } catch (Exception e) {
+            Logger.logException(Manager.class, e, "Lỗi load set_kich_hoat");
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (Exception ex) {}
+        }
     }
 
     public static List<TOP> realTop(String query, Connection con) {

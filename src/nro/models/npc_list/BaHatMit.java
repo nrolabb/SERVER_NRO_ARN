@@ -46,7 +46,8 @@ public class BaHatMit extends Npc {
                             "Võ đài\nSinh tử"
                             ,
                             // "Phân rã\nTrang bị\nKích hoạt",
-                            "Nâng Cấp\nSKH"
+                            "Nâng Cấp\nSKH",
+                            "Ghép\nTrang bị\nKích hoạt"
                     );
 
                 case 112 -> {
@@ -161,6 +162,8 @@ public class BaHatMit extends Npc {
                             //     CombineService.gI().openTabCombine(player, CombineService.PHAN_RA_TRANG_BI_KH);
                             case 3 ->
                                 CombineService.gI().openTabCombine(player, CombineService.TAI_TAO_CAPSULE_KH);
+                            case 4 ->
+                                CombineService.gI().openTabCombine(player, CombineService.GHEP_TRANG_BI_KICH_HOAT);
                         }
                     } else if (player.idMark.getIndexMenu() == 3) {
                         switch (select) {
@@ -193,7 +196,7 @@ public class BaHatMit extends Npc {
                         }
                     } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
                         switch (player.combineNew.typeCombine) {
-                            case CombineService.EP_SAO_TRANG_BI, CombineService.PHA_LE_HOA_TRANG_BI, CombineService.CHUYEN_HOA_TRANG_BI_VANG, CombineService.CHUYEN_HOA_TRANG_BI_NGOC, CombineService.PHAN_RA_TRANG_BI_KH, CombineService.TAI_TAO_CAPSULE_KH, CombineService.NANG_CAP_SAO_PHA_LE, CombineService.DANH_BONG_SAO_PHA_LE, CombineService.CUONG_HOA_LO_SAO_PHA_LE, CombineService.TAO_DA_HEMATITE -> {
+                            case CombineService.EP_SAO_TRANG_BI, CombineService.PHA_LE_HOA_TRANG_BI, CombineService.CHUYEN_HOA_TRANG_BI_VANG, CombineService.CHUYEN_HOA_TRANG_BI_NGOC, CombineService.PHAN_RA_TRANG_BI_KH, CombineService.TAI_TAO_CAPSULE_KH, CombineService.NANG_CAP_SAO_PHA_LE, CombineService.DANH_BONG_SAO_PHA_LE, CombineService.CUONG_HOA_LO_SAO_PHA_LE, CombineService.TAO_DA_HEMATITE, CombineService.GHEP_TRANG_BI_KICH_HOAT -> {
                                 switch (select) {
                                     case 0 ->
                                         CombineService.gI().startCombine(player);

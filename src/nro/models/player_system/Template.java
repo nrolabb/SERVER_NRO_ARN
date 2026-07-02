@@ -285,4 +285,12 @@ public class Template {
         }
     }
 
+    public static class SetKichHoatTemplate {
+        public int id;
+        public int gender;
+        public String name;
+        public String description;
+        public int typeManh;
+    }
+
 }
