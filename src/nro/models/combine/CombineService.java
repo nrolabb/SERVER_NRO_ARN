@@ -666,6 +666,8 @@ public class CombineService {
                 return "Ta sẽ phù phép\n"
                         + "cho 10 mảnh đá vụn\n"
                         + "trở thành 1 đá nâng cấp";
+            case GHEP_TRANG_BI_KICH_HOAT:
+                return "Ta sẽ phù phép\nmảnh kích hoạt\nthành trang bị kích hoạt";
             default:
                 return "";
         }
@@ -737,6 +739,13 @@ public class CombineService {
                         + "Chọn 1 bình nước phép\n"
                         + "(mua tại Uron ở trạm tàu vũ trụ)\n"
                         + "Sau đó chọn 'Làm phép'";
+            case GHEP_TRANG_BI_KICH_HOAT:
+                return "Vào hành trang\n"
+                        + "Chọn 10 mảnh trang bị kích hoạt cùng loại\n"
+                        + "Cần 2 tỷ vàng\n"
+                        + "Thành công nhận trang bị đúng loại mảnh\n"
+                        + "đúng hành tinh và đúng set kích hoạt\n"
+                        + "Sau đó chọn 'Nâng cấp'";
             default:
                 return "";
         }

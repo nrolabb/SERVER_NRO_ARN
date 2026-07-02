@@ -322,6 +322,10 @@ public class ItemService {
                 return new int[]{242, 243, 244};
             case 245:
                 return new int[]{246, 247, 248};
+            case 251:
+            case 252:
+            case 253:
+                return new int[]{};
             default:
                 return new int[]{};
         }

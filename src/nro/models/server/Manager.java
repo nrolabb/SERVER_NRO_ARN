@@ -1110,25 +1110,27 @@ public final class Manager {
             if (isEmpty) {
                 // Chèn dữ liệu mẫu với skh_id và type_manh tương ứng
                 String sqlInsert = "INSERT INTO `set_kich_hoat` (`skh_id`, `gender`, `name`, `description`, `type_manh`) VALUES "
-                        + "(129, 0, 'Set Songoku', 'Kamejoko +100% dame', 100),"
-                        + "(127, 0, 'Set Thiên Xin Hăng', 'Stun Thái Dương Hạ San x2 thời gian', 101),"
+                        + "(129, 0, 'Set Sôngôku', 'Kamejoko +100% dame', 100),"
+                        + "(127, 0, 'Set Thên Xin Hăng', 'Stun Thái Dương Hạ San x2 thời gian', 101),"
                         + "(128, 0, 'Set Kirin', 'Tăng mạnh HP/KI', 102),"
                         + "(245, 0, 'Set Thần Vũ Trụ Kaio', 'Tăng 30% sát thương Kaioken', 103),"
                         + "(253, 0, 'Set Kaioken', 'Tăng chỉ số Kaioken', 104),"
-                        + "(131, 1, 'Set Ốc Tiêu', 'Liên hoàn +100% dame', 105),"
+                        + "(131, 1, 'Set Ốc tiêu', 'Liên hoàn +100% dame', 105),"
                         + "(132, 1, 'Set Pikkoro Daimao', 'Tăng sát thương đòn laze', 106),"
                         + "(130, 1, 'Set Picolo', 'Tăng sát thương đòn laze', 107),"
-                        + "(237, 1, 'Set Nail', 'Tăng 80% sát thương chiêu Masenko', 108),"
-                        + "(250, 1, 'Set Liên Hoàn', 'Liên hoàn đặc biệt', 109),"
+                        + "(237, 1, 'Set Nail chiến binh Namếc', 'Tăng 80% sát thương chiêu Masenko', 108),"
+                        + "(251, 1, 'Set Liên Hoàn', 'Liên hoàn đặc biệt', 109),"
                         + "(133, 2, 'Set Kakarot', 'Đấm Galick +100% dame', 110),"
-                        + "(134, 2, 'Set Cadic', 'Tăng sát thương đòn liên hoàn', 111),"
+                        + "(134, 2, 'Set Ca Đíc', 'Tăng sát thương đòn liên hoàn', 111),"
                         + "(135, 2, 'Set Nappa', 'Tăng chỉ số khi biến khỉ', 112),"
-                        + "(241, 2, 'Set Cadic M', 'Tự sát +50% dame', 113),"
+                        + "(241, 2, 'Set Cađic M', 'Tự sát +50% dame', 113),"
                         + "(252, 2, 'Set Giảm Sát Thương', 'Tăng giảm sát thương nhận vào', 114)";
                 ps = con.prepareStatement(sqlInsert);
                 ps.executeUpdate();
                 ps.close();
             }
+
+            ensureSetKichHoatOptionTemplates(con);
 
             // Load dữ liệu
             ps = con.prepareStatement("SELECT * FROM `set_kich_hoat`");
@@ -1152,6 +1154,77 @@ public final class Manager {
                 if (ps != null) ps.close();
             } catch (Exception ex) {}
         }
+    }
+
+    private void ensureSetKichHoatOptionTemplates(Connection con) throws SQLException {
+        ensureItemOptionTemplate(con, 127, "Set Thên Xin Hăng");
+        ensureItemOptionTemplate(con, 128, "Set Kirin");
+        ensureItemOptionTemplate(con, 129, "Set Sôngôku");
+        ensureItemOptionTemplate(con, 130, "Set Picolo");
+        ensureItemOptionTemplate(con, 131, "Set Ốc tiêu");
+        ensureItemOptionTemplate(con, 132, "Set Pikkoro Daimao");
+        ensureItemOptionTemplate(con, 133, "Set Kakarot");
+        ensureItemOptionTemplate(con, 134, "Set Ca Đíc");
+        ensureItemOptionTemplate(con, 135, "Set Nappa");
+        ensureItemOptionTemplate(con, 233, "Set Gohan");
+        ensureItemOptionTemplate(con, 237, "Set Nail chiến binh Namếc");
+        ensureItemOptionTemplate(con, 241, "Set Cađic M");
+        ensureItemOptionTemplate(con, 245, "Set Thần Vũ Trụ Kaio");
+        ensureItemOptionTemplate(con, 251, "Set Liên Hoàn");
+        ensureItemOptionTemplate(con, 252, "Set Giảm Sát Thương");
+        ensureItemOptionTemplate(con, 253, "Set Kaioken");
+
+        try (PreparedStatement ps = con.prepareStatement(
+                "UPDATE `set_kich_hoat` SET `skh_id` = 251 WHERE `type_manh` = 109 AND `skh_id` = 250")) {
+            ps.executeUpdate();
+        }
+        updateSetKichHoatName(con, 127, "Set Thên Xin Hăng");
+        updateSetKichHoatName(con, 128, "Set Kirin");
+        updateSetKichHoatName(con, 129, "Set Sôngôku");
+        updateSetKichHoatName(con, 130, "Set Picolo");
+        updateSetKichHoatName(con, 131, "Set Ốc tiêu");
+        updateSetKichHoatName(con, 132, "Set Pikkoro Daimao");
+        updateSetKichHoatName(con, 133, "Set Kakarot");
+        updateSetKichHoatName(con, 134, "Set Ca Đíc");
+        updateSetKichHoatName(con, 135, "Set Nappa");
+        updateSetKichHoatName(con, 233, "Set Gohan");
+        updateSetKichHoatName(con, 237, "Set Nail chiến binh Namếc");
+        updateSetKichHoatName(con, 241, "Set Cađic M");
+        updateSetKichHoatName(con, 245, "Set Thần Vũ Trụ Kaio");
+        updateSetKichHoatName(con, 251, "Set Liên Hoàn");
+        updateSetKichHoatName(con, 252, "Set Giảm Sát Thương");
+        updateSetKichHoatName(con, 253, "Set Kaioken");
+    }
+
+    private void updateSetKichHoatName(Connection con, int skhId, String name) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "UPDATE `set_kich_hoat` SET `name` = ? WHERE `skh_id` = ?")) {
+            ps.setString(1, name);
+            ps.setInt(2, skhId);
+            ps.executeUpdate();
+        }
+    }
+
+    private void ensureItemOptionTemplate(Connection con, int id, String name) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO `item_option_template` (`id`, `name`) VALUES (?, ?) "
+                + "ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)")) {
+            ps.setInt(1, id);
+            ps.setString(2, name);
+            ps.executeUpdate();
+        }
+
+        for (ItemOptionTemplate optionTemp : ITEM_OPTION_TEMPLATES) {
+            if (optionTemp != null && optionTemp.id == id) {
+                optionTemp.name = name;
+                return;
+            }
+        }
+
+        ItemOptionTemplate optionTemp = new ItemOptionTemplate();
+        optionTemp.id = id;
+        optionTemp.name = name;
+        ITEM_OPTION_TEMPLATES.add(optionTemp);
     }
 
     public static List<TOP> realTop(String query, Connection con) {

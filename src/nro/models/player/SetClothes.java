@@ -134,7 +134,7 @@ public class SetClothes {
                         isActSet = true;
                         kaioken++;
                         break;
-                    case 250:
+                    case 251:
                         isActSet = true;
                         lienHoan++;
                         break;

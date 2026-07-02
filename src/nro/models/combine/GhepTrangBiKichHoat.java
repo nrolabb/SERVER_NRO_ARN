@@ -16,10 +16,14 @@ import nro.models.utils.Util;
  */
 public class GhepTrangBiKichHoat {
 
-    private static final int THOI_VANG_ID = 457;
-    private static final int SOLUONG_THOI_VANG = 10;
+    private static final int GOLD_GHEP = 2_000_000_000;
     private static final int SOLUONG_MANH = 10;
     private static final int RATIO_SUCCESS = 20; // 20% thành công
+    private static final int[][] TRANG_BI_KICH_HOAT = {
+        {0, 6, 21, 27, 12}, // Trai Dat: ao, quan, gang, giay, rada
+        {1, 7, 22, 28, 12}, // Namek
+        {2, 8, 23, 29, 12}  // Xayda
+    };
 
     public static Template.SetKichHoatTemplate getSetKichHoatTemplate(int typeManh) {
         for (Template.SetKichHoatTemplate temp : Manager.SET_KICH_HOAT_TEMPLATES) {
@@ -39,7 +43,7 @@ public class GhepTrangBiKichHoat {
             if (optId >= 127 && optId <= 135) {
                 return true;
             }
-            if (optId == 233 || optId == 237 || optId == 241 || optId == 245 || optId == 250 || optId == 252 || optId == 253) {
+            if (optId == 233 || optId == 237 || optId == 241 || optId == 245 || optId == 251 || optId == 252 || optId == 253) {
                 return true;
             }
         }
@@ -47,101 +51,51 @@ public class GhepTrangBiKichHoat {
     }
 
     public static void showInfoCombine(Player player) {
-        if (player.combineNew.itemsCombine.size() == 2) {
-            Item itemGoc = null;
-            Item itemManh = null;
-
-            for (Item item : player.combineNew.itemsCombine) {
-                if (item.isNotNullItem()) {
-                    if (item.template.type >= 0 && item.template.type <= 4) {
-                        if (!isTrangBiKichHoat(item)) {
-                            itemGoc = item;
-                        }
-                    } else {
-                        itemManh = item;
-                    }
-                }
-            }
-
-            if (itemGoc == null) {
-                for (Item item : player.combineNew.itemsCombine) {
-                    if (item.isNotNullItem() && item.template.type >= 0 && item.template.type <= 4 && isTrangBiKichHoat(item)) {
-                        CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
-                                "Trang bị này đã có set kích hoạt rồi!", "Đóng");
-                        return;
-                    }
-                }
-            }
-
-            if (itemGoc != null && itemManh != null) {
-                Template.SetKichHoatTemplate skh = getSetKichHoatTemplate(itemManh.template.type);
-                if (skh != null) {
-                    // Kiểm tra tính tương thích giới tính
-                    if (itemGoc.template.gender == 3 || itemGoc.template.gender == skh.gender) {
-                        player.combineNew.goldCombine = 0; // Không tốn vàng thường
-                        player.combineNew.ratioCombine = RATIO_SUCCESS;
-
-                        Item thoiVang = InventoryService.gI().findItemBag(player, THOI_VANG_ID);
-                        int currentThoiVang = thoiVang != null ? thoiVang.quantity : 0;
-
-                        String npcSay = "|2|Ghép Trang Bị Kích Hoạt\n";
-                        npcSay += "|1|Trang bị gốc: " + itemGoc.template.name + "\n";
-                        npcSay += "|1|Set kích hoạt mục tiêu: " + skh.name + " (" + skh.description + ")\n";
-                        npcSay += "|2|Yêu cầu mảnh: " + SOLUONG_MANH + " " + itemManh.template.name + " (Đang có: " + itemManh.quantity + ")\n";
-                        npcSay += "|2|Yêu cầu lệ phí: " + SOLUONG_THOI_VANG + " Thỏi vàng (Đang có: " + currentThoiVang + ")\n";
-                        npcSay += "|2|Tỉ lệ thành công: " + player.combineNew.ratioCombine + "%\n";
-                        npcSay += "|7|Lưu ý: Nếu thất bại sẽ mất thỏi vàng và mảnh nguyên liệu, trang bị gốc giữ nguyên!\n";
-
-                        if (itemManh.quantity < SOLUONG_MANH) {
-                            npcSay += "|7|Số lượng mảnh không đủ " + SOLUONG_MANH + " cái!\n";
-                            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU, npcSay, "Đóng");
-                        } else if (currentThoiVang < SOLUONG_THOI_VANG) {
-                            npcSay += "|7|Bạn không đủ thỏi vàng, còn thiếu " + (SOLUONG_THOI_VANG - currentThoiVang) + " thỏi vàng!\n";
-                            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU, npcSay, "Đóng");
-                        } else {
-                            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.MENU_START_COMBINE, npcSay,
-                                    "Ghép ngay\n(Cần " + SOLUONG_THOI_VANG + " Thỏi vàng)", "Từ chối");
-                        }
-                    } else {
-                        CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
-                                "Hệ phái của trang bị gốc và set kích hoạt không tương thích!", "Đóng");
-                    }
-                } else {
-                    CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
-                                "Vật phẩm mảnh kích hoạt không hợp lệ hoặc chưa được đăng ký trong hệ thống!", "Đóng");
-                }
-            } else {
-                CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
-                        "Vui lòng đặt đúng 1 Trang bị gốc (chưa kích hoạt) và 1 loại Mảnh SKH tương ứng!", "Đóng");
-            }
-        } else {
+        if (player.combineNew.itemsCombine.size() != 1) {
             CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
-                    "Ta có thể giúp gì cho ngươi?\nHãy đặt 1 trang bị gốc (Áo, Quần, Găng, Giày, Rada chưa kích hoạt) và Mảnh SKH tương ứng (yêu cầu " + SOLUONG_MANH + " cái).", "Đóng");
+                    "Ta có thể giúp gì cho ngươi?\nHãy đặt 1 loại Mảnh SKH tương ứng (yêu cầu " + SOLUONG_MANH + " cái).", "Đóng");
+            return;
+        }
+
+        Item itemManh = getItemManh(player);
+        if (itemManh == null) {
+            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU,
+                    "Vật phẩm mảnh kích hoạt không hợp lệ hoặc chưa được đăng ký trong hệ thống!", "Đóng");
+            return;
+        }
+
+        Template.SetKichHoatTemplate skh = getSetKichHoatTemplate(itemManh.template.type);
+        player.combineNew.goldCombine = GOLD_GHEP;
+        player.combineNew.ratioCombine = RATIO_SUCCESS;
+
+        String npcSay = "|2|Ghép Trang Bị Kích Hoạt\n";
+        npcSay += "|1|Set kích hoạt mục tiêu: " + skh.name + " (" + skh.description + ")\n";
+        npcSay += "|1|Trang bị nhận được: đúng loại mảnh và đúng hành tinh của set\n";
+        npcSay += "|2|Yêu cầu mảnh: " + SOLUONG_MANH + " " + itemManh.template.name + " (Đang có: " + itemManh.quantity + ")\n";
+        npcSay += "|2|Yêu cầu lệ phí: " + Util.numberToMoney(GOLD_GHEP) + " vàng\n";
+        npcSay += "|2|Tỉ lệ thành công: " + player.combineNew.ratioCombine + "%\n";
+        npcSay += "|7|Lưu ý: Nếu thất bại sẽ mất vàng và mảnh nguyên liệu!\n";
+
+        if (itemManh.quantity < SOLUONG_MANH) {
+            npcSay += "|7|Số lượng mảnh không đủ " + SOLUONG_MANH + " cái!\n";
+            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU, npcSay, "Đóng");
+        } else if (player.inventory.gold < GOLD_GHEP) {
+            npcSay += "|7|Bạn không đủ vàng, còn thiếu " + Util.powerToString(GOLD_GHEP - player.inventory.gold) + " vàng!\n";
+            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.IGNORE_MENU, npcSay, "Đóng");
+        } else {
+            CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.MENU_START_COMBINE, npcSay,
+                    "Ghép ngay\n(Cần " + Util.numberToMoney(GOLD_GHEP) + " vàng)", "Từ chối");
         }
     }
 
     public static void thucHienGhep(Player player) {
-        if (player.combineNew.itemsCombine.size() != 2) {
+        if (player.combineNew.itemsCombine.size() != 1) {
             Service.gI().sendThongBao(player, "Nguyên liệu không hợp lệ");
             return;
         }
 
-        Item itemGoc = null;
-        Item itemManh = null;
-
-        for (Item item : player.combineNew.itemsCombine) {
-            if (item.isNotNullItem()) {
-                if (item.template.type >= 0 && item.template.type <= 4) {
-                    if (!isTrangBiKichHoat(item)) {
-                        itemGoc = item;
-                    }
-                } else {
-                    itemManh = item;
-                }
-            }
-        }
-
-        if (itemGoc == null || itemManh == null) {
+        Item itemManh = getItemManh(player);
+        if (itemManh == null) {
             Service.gI().sendThongBao(player, "Nguyên liệu không hợp lệ");
             return;
         }
@@ -152,19 +106,13 @@ public class GhepTrangBiKichHoat {
             return;
         }
 
-        if (itemGoc.template.gender != 3 && itemGoc.template.gender != skh.gender) {
-            Service.gI().sendThongBao(player, "Hệ phái trang bị và set kích hoạt không tương thích");
-            return;
-        }
-
         if (itemManh.quantity < SOLUONG_MANH) {
             Service.gI().sendThongBao(player, "Số lượng mảnh kích hoạt không đủ");
             return;
         }
 
-        Item thoiVang = InventoryService.gI().findItemBag(player, THOI_VANG_ID);
-        if (thoiVang == null || thoiVang.quantity < SOLUONG_THOI_VANG) {
-            Service.gI().sendThongBao(player, "Không đủ thỏi vàng");
+        if (player.inventory.gold < GOLD_GHEP) {
+            Service.gI().sendThongBao(player, "Không đủ vàng");
             return;
         }
 
@@ -173,20 +121,17 @@ public class GhepTrangBiKichHoat {
             return;
         }
 
-        // Thực hiện trừ lệ phí thỏi vàng và mảnh nguyên liệu
-        InventoryService.gI().subQuantityItemsBag(player, thoiVang, SOLUONG_THOI_VANG);
+        player.inventory.gold -= GOLD_GHEP;
         InventoryService.gI().subQuantityItemsBag(player, itemManh, SOLUONG_MANH);
 
         // Kiểm tra tỉ lệ thành công
         boolean success = Util.isTrue(RATIO_SUCCESS, 100);
         if (success) {
-            // Trừ trang bị gốc cũ
-            InventoryService.gI().subQuantityItemsBag(player, itemGoc, 1);
-            
-            // Tạo trang bị kích hoạt mới
-            Item itemSKH = ItemService.gI().createItemSKH(itemGoc.template.id, skh.id);
+            int itemId = getItemKichHoatByManh(skh.gender, itemManh);
+            Item itemSKH = itemId != -1 ? ItemService.gI().createItemSKH(itemId, skh.id) : null;
             if (itemSKH != null) {
                 InventoryService.gI().addItemBag(player, itemSKH);
+                player.combineNew.itemsCombine.clear();
                 CombineService.gI().sendEffectSuccessCombine(player);
                 Service.gI().sendThongBao(player, "Chúc mừng! Bạn đã ghép thành công " + itemSKH.template.name + " (" + skh.name + ")!");
             } else {
@@ -194,14 +139,58 @@ public class GhepTrangBiKichHoat {
                 Service.gI().sendThongBao(player, "Có lỗi xảy ra, việc ghép thất bại!");
             }
         } else {
-            // Thất bại: Mất thỏi vàng + mảnh, trang bị gốc giữ nguyên
             CombineService.gI().sendEffectFailCombine(player);
             Service.gI().sendThongBao(player, "Rất tiếc, ghép trang bị kích hoạt thất bại!");
         }
 
         InventoryService.gI().sendItemBags(player);
         Service.gI().sendMoney(player);
-        player.combineNew.itemsCombine.clear();
+        if (!success || !itemManh.isNotNullItem() || itemManh.quantity <= 0) {
+            player.combineNew.itemsCombine.removeIf(item -> item == null || !item.isNotNullItem() || item.quantity <= 0);
+        }
         CombineService.gI().reOpenItemCombine(player);
+    }
+
+    private static Item getItemManh(Player player) {
+        for (Item item : player.combineNew.itemsCombine) {
+            if (item != null && item.isNotNullItem() && getSetKichHoatTemplate(item.template.type) != null) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private static int getItemKichHoatByManh(int gender, Item itemManh) {
+        if (gender < 0 || gender >= TRANG_BI_KICH_HOAT.length) {
+            return -1;
+        }
+        int typeTrangBi = getTypeTrangBiByManh(itemManh);
+        if (typeTrangBi < 0 || typeTrangBi >= TRANG_BI_KICH_HOAT[gender].length) {
+            return -1;
+        }
+        return TRANG_BI_KICH_HOAT[gender][typeTrangBi];
+    }
+
+    private static int getTypeTrangBiByManh(Item itemManh) {
+        if (itemManh == null || itemManh.template == null || itemManh.template.name == null) {
+            return -1;
+        }
+        String name = itemManh.template.name.toLowerCase();
+        if (name.contains("áo") || name.contains("ao")) {
+            return 0;
+        }
+        if (name.contains("quần") || name.contains("quan")) {
+            return 1;
+        }
+        if (name.contains("găng") || name.contains("gang")) {
+            return 2;
+        }
+        if (name.contains("giày") || name.contains("giầy") || name.contains("giay")) {
+            return 3;
+        }
+        if (name.contains("rada") || name.contains("rađa")) {
+            return 4;
+        }
+        return -1;
     }
 }

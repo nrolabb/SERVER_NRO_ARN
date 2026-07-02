@@ -3,5 +3,6 @@
 *.class
 *.exe
 *.7z
+*.zip
 /.vs
 /data
