@@ -2,7 +2,6 @@ package nro.models.boss.phoban;
 
 import nro.models.boss.Boss;
 import nro.models.boss.BossData;
-import nro.models.boss.BossesData;
 import nro.models.consts.BossStatus;
 import nro.models.consts.BossType;
 import nro.models.item.Item;
@@ -14,17 +13,25 @@ import nro.models.services.Service;
 import nro.models.services.TaskService;
 import nro.models.utils.Util;
 
-public class ClanDungeonBoss extends Boss {
+public abstract class ClanDungeonBoss extends Boss {
 
     public static final int COOLER = 0;
     public static final int GOLDEN_FRIEZA = 1;
     public static final int CUMBER = 2;
     public static final int SIEU_BO_HUNG = 3;
+    private static final int FINAL_BOSS_RESPAWN_TIME = 180_000;
 
-    private final ClanDungeon clanDungeon;
-    private final int type;
+    protected final ClanDungeon clanDungeon;
+    protected final int type;
+    private int nextFinalBossHp;
+    private int nextFinalBossKi;
+    private int nextFinalBossDame;
+    private boolean notifiedAfterDeath;
+    private boolean notifiedTwoMinutes;
+    private boolean notifiedOneMinute;
+    private boolean notifiedTenSeconds;
 
-    public ClanDungeonBoss(ClanDungeon clanDungeon, int id, int type, BossData... data) throws Exception {
+    protected ClanDungeonBoss(ClanDungeon clanDungeon, int id, int type, BossData... data) throws Exception {
         super(BossType.PHOBAN, id, true, true, data);
         this.clanDungeon = clanDungeon;
         this.type = type;
@@ -32,38 +39,51 @@ public class ClanDungeonBoss extends Boss {
     }
 
     public static ClanDungeonBoss cooler(ClanDungeon clanDungeon, int id) throws Exception {
-        return new ClanDungeonBoss(clanDungeon, id, COOLER, cloneData(BossesData.COOLER), cloneData(BossesData.COOLER_2));
+        return new CoolerClanDungeonBoss(clanDungeon, id);
     }
 
     public static ClanDungeonBoss goldenFrieza(ClanDungeon clanDungeon, int id) throws Exception {
-        return new ClanDungeonBoss(clanDungeon, id, GOLDEN_FRIEZA, cloneData(BossesData.GOLDEN_FRIEZA));
+        return new GoldenFriezaClanDungeonBoss(clanDungeon, id);
     }
 
     public static ClanDungeonBoss cumber(ClanDungeon clanDungeon, int id) throws Exception {
-        return new ClanDungeonBoss(clanDungeon, id, CUMBER, cloneData(BossesData.CUMBER), cloneData(BossesData.SUPER_CUMBER));
+        return new CumberClanDungeonBoss(clanDungeon, id);
     }
 
     public static ClanDungeonBoss sieuBoHung(ClanDungeon clanDungeon, int id) throws Exception {
-        return new ClanDungeonBoss(clanDungeon, id, SIEU_BO_HUNG,
-                cloneData(BossesData.SIEU_BO_HUNG_1), cloneData(BossesData.SIEU_BO_HUNG_2));
+        return new SieuBoHungClanDungeonBoss(clanDungeon, id);
     }
 
-    private static BossData cloneData(BossData data) {
+    protected static BossData cloneData(BossData data) {
         return new BossData(data.getName(), data.getGender(), data.getOutfit(), data.getDame(), data.getHp(),
                 data.getMapJoin(), data.getSkillTemp(), data.getTextS(), data.getTextM(), data.getTextE(), 60);
     }
 
     @Override
-    public void reward(Player plKill) {
-        if (clanDungeon != null) {
-            clanDungeon.addPoint(20);
+    public void initBase() {
+        super.initBase();
+        if (!isFinalMapBoss() || nextFinalBossHp <= 0) {
+            return;
         }
+        this.nPoint.hpg = nextFinalBossHp;
+        this.nPoint.mpg = nextFinalBossKi;
+        this.nPoint.dameg = nextFinalBossDame;
+        this.nPoint.calPoint();
+        this.nPoint.hp = this.nPoint.hpMax;
+        this.nPoint.mp = this.nPoint.mpMax;
+    }
+
+    @Override
+    public void reward(Player plKill) {
         if (this.type == GOLDEN_FRIEZA) {
             dropGoldenFriezaReward(plKill);
         } else {
             dropCommonBossReward(plKill, this.type == SIEU_BO_HUNG ? 20 : 100);
         }
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
+        if (clanDungeon != null) {
+            clanDungeon.addPoint(20);
+        }
     }
 
     private void dropGoldenFriezaReward(Player plKill) {
@@ -149,17 +169,88 @@ public class ClanDungeonBoss extends Boss {
         return 2;
     }
 
+    private boolean isFinalMapBoss() {
+        return this.type == CUMBER || this.type == SIEU_BO_HUNG;
+    }
+
+    private int scaleNextFinalBossStat(int value) {
+        long scaled = value + (value / 2L);
+        return (int) Math.max(1, Math.min(Integer.MAX_VALUE, scaled));
+    }
+
+    private boolean canRespawnFinalBoss() {
+        return clanDungeon != null && clanDungeon.isOpened() && isFinalMapBoss();
+    }
+
+    private void resetFinalBossRespawnNotifies() {
+        notifiedAfterDeath = false;
+        notifiedTwoMinutes = false;
+        notifiedOneMinute = false;
+        notifiedTenSeconds = false;
+    }
+
+    private void notifyFinalBossRespawn(String timeLeft) {
+        if (clanDungeon == null || clanDungeon.getClan() == null) {
+            return;
+        }
+        String text = this.name + " sẽ xuất hiện sau " + timeLeft + ".";
+        for (Player pl : clanDungeon.getClan().membersInGame) {
+            if (pl != null && pl.zone != null && pl.zone.map.mapId == ClanDungeon.MAP_END) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
+    }
+
+    @Override
+    public void rest() {
+        if (!canRespawnFinalBoss()) {
+            super.rest();
+            return;
+        }
+        long elapsed = System.currentTimeMillis() - this.lastTimeRest;
+        long timeLeft = FINAL_BOSS_RESPAWN_TIME - elapsed;
+        if (!notifiedAfterDeath) {
+            notifyFinalBossRespawn("3 phút");
+            notifiedAfterDeath = true;
+        }
+        if (!notifiedTwoMinutes && timeLeft <= 120_000) {
+            notifyFinalBossRespawn("2 phút");
+            notifiedTwoMinutes = true;
+        }
+        if (!notifiedOneMinute && timeLeft <= 60_000) {
+            notifyFinalBossRespawn("1 phút");
+            notifiedOneMinute = true;
+        }
+        if (!notifiedTenSeconds && timeLeft <= 10_000) {
+            notifyFinalBossRespawn("10 giây");
+            notifiedTenSeconds = true;
+        }
+        if (elapsed >= FINAL_BOSS_RESPAWN_TIME) {
+            resetFinalBossRespawnNotifies();
+            this.changeStatus(BossStatus.RESPAWN);
+        }
+    }
+
     @Override
     public void autoLeaveMap() {
     }
 
     @Override
     public void leaveMap() {
+        boolean respawnFinalBoss = canRespawnFinalBoss();
+        if (respawnFinalBoss) {
+            nextFinalBossHp = scaleNextFinalBossStat(this.nPoint.hpMax);
+            nextFinalBossKi = scaleNextFinalBossStat(this.nPoint.mpMax);
+            nextFinalBossDame = scaleNextFinalBossStat(this.nPoint.dame);
+        }
         if (this.zone != null) {
             nro.models.map.service.ChangeMapService.gI().exitMap(this);
         }
         this.lastZone = null;
         this.lastTimeRest = System.currentTimeMillis();
+        if (respawnFinalBoss) {
+            resetFinalBossRespawnNotifies();
+        }
         this.changeStatus(BossStatus.REST);
     }
 }

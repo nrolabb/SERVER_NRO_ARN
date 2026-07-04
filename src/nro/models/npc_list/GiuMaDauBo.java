@@ -10,7 +10,6 @@ import nro.models.shop.ShopService;
 import nro.models.map.service.ChangeMapService;
 import nro.models.map.service.NpcService;
 import nro.models.utils.TimeUtil;
-import nro.models.utils.Util;
 import nro.models.map.phoban.ClanDungeon;
 
 public class GiuMaDauBo extends Npc {
@@ -43,12 +42,36 @@ public class GiuMaDauBo extends Npc {
         }
         if (select == 0 && this.mapId != 153) {
             ChangeMapService.gI().changeMapBySpaceShip(player, 153, -1, -1);
-        } else if (select == 0) {
+        } else if (player.idMark.getIndexMenu() == ConstNpc.BASE_MENU && select == 0) {
+            showClanDungeonMenu(player);
+        } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_CLAN_DUNGEON && select == 0) {
             openClanDungeonMenu(player);
-        } else if (select == 1) {
+        } else if (player.idMark.getIndexMenu() == ConstNpc.BASE_MENU && select == 1) {
             ShopService.gI().opendShop(player, "SHOP_CLAN", false);
             ClanService.gI().sendClanBox(player);
         }
+    }
+
+    private void showClanDungeonMenu(Player player) {
+        if (player.clan == null) {
+            NpcService.gI().createTutorial(player, tempId, this.avartar, "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai");
+            return;
+        }
+        int opened = ClanDungeonService.gI().getOpenedClanDungeonCount();
+        int maxOpened = ClanDungeonService.gI().getMaxOpenedClanDungeon();
+        int dailyLeft = player.clan.getClanDungeonLeftToday();
+        int sameClan = countSameClanInMap(player);
+        boolean openedByClan = player.clan.clanDungeon != null && player.clan.clanDungeon.isOpened();
+        String action = openedByClan ? "Vào\nphó bản" : "Mở\nphó bản";
+        String text = "Thông tin phó bản bang hội\n"
+                + "Lượt mở còn lại hôm nay: " + dailyLeft + "/1\n"
+                + "Yêu cầu: " + ClanDungeon.N_PLAYER_MAP + " thành viên cùng bang trong map 153\n"
+                + "Hiện có trong map: " + sameClan + "/" + ClanDungeon.N_PLAYER_MAP + "\n"
+                + "Bang hội đang mở phó bản: " + opened + "/" + maxOpened;
+        if (!openedByClan && opened >= maxOpened) {
+            text += "\nHiện đã đầy slot, vui lòng đợi đến khi còn slot trống.";
+        }
+        this.createOtherMenu(player, ConstNpc.MENU_CLAN_DUNGEON, text, action, "Đóng");
     }
 
     private void openClanDungeonMenu(Player player) {
@@ -64,7 +87,14 @@ public class GiuMaDauBo extends Npc {
             ClanDungeonService.gI().joinClanDungeon(player);
             return;
         }
-        if (player.clan.haveGoneClanDungeon && !Util.isAfterMidnight(player.clan.lastTimeOpenClanDungeon)) {
+        if (ClanDungeonService.gI().isFullOpenedClanDungeon()) {
+            Service.gI().sendThongBao(player, "Đã có "
+                    + ClanDungeonService.gI().getMaxOpenedClanDungeon()
+                    + "/" + ClanDungeonService.gI().getMaxOpenedClanDungeon()
+                    + " bang hội đang mở phó bản, vui lòng đợi còn slot trống");
+            return;
+        }
+        if (!player.clan.canOpenClanDungeonToday()) {
             String name = player.clan.playerOpenClanDungeon != null ? player.clan.playerOpenClanDungeon.name : "một thành viên trong bang";
             NpcService.gI().createTutorial(player, tempId, this.avartar,
                     "Bang hội đã đi phó bản bang hôm nay\nNgười mở: " + name
@@ -73,11 +103,7 @@ public class GiuMaDauBo extends Npc {
             return;
         }
         int sameClan = 0;
-        for (Player pl : player.zone.getPlayers()) {
-            if (pl != null && pl.clan != null && pl.clan.equals(player.clan)) {
-                sameClan++;
-            }
-        }
+        sameClan = countSameClanInMap(player);
         if (sameClan < ClanDungeon.N_PLAYER_MAP) {
             NpcService.gI().createTutorial(player, tempId, this.avartar,
                     "Cần có ít nhất " + ClanDungeon.N_PLAYER_MAP
@@ -85,5 +111,18 @@ public class GiuMaDauBo extends Npc {
             return;
         }
         ClanDungeonService.gI().joinClanDungeon(player);
+    }
+
+    private int countSameClanInMap(Player player) {
+        if (player.zone == null || player.clan == null) {
+            return 0;
+        }
+        int sameClan = 0;
+        for (Player pl : player.zone.getPlayers()) {
+            if (pl != null && pl.clan != null && pl.clan.equals(player.clan)) {
+                sameClan++;
+            }
+        }
+        return sameClan;
     }
 }

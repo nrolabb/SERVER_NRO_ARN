@@ -57,6 +57,7 @@ public class Clan {
 
     public long lastTimeOpenClanDungeon;
     public boolean haveGoneClanDungeon;
+    public int timesPerDayClanDungeon;
     public ClanDungeon clanDungeon;
     public Player playerOpenClanDungeon;
 
@@ -116,6 +117,62 @@ public class Clan {
 
     public void setClanIntrinsicLevel(byte intrinsicId, byte level) {
         this.clanIntrinsics.put(intrinsicId, level);
+    }
+
+    public void checkResetClanDungeonDaily() {
+        if (Util.isAfterMidnight(lastTimeOpenClanDungeon)) {
+            timesPerDayClanDungeon = 0;
+            haveGoneClanDungeon = false;
+        }
+    }
+
+    public int getClanDungeonDailyLimit() {
+        return 1;
+    }
+
+    public int getClanDungeonLeftToday() {
+        checkResetClanDungeonDaily();
+        return Math.max(0, getClanDungeonDailyLimit() - timesPerDayClanDungeon);
+    }
+
+    public boolean canOpenClanDungeonToday() {
+        return getClanDungeonLeftToday() > 0;
+    }
+
+    public void markOpenClanDungeon(Player opener, long openTime) {
+        checkResetClanDungeonDaily();
+        timesPerDayClanDungeon++;
+        haveGoneClanDungeon = true;
+        playerOpenClanDungeon = opener;
+        lastTimeOpenClanDungeon = openTime;
+    }
+
+    public String getClanDungeonDailyData() {
+        checkResetClanDungeonDaily();
+        JSONObject data = new JSONObject();
+        data.put("clan_dungeon_count", timesPerDayClanDungeon);
+        data.put("clan_dungeon_last_open", lastTimeOpenClanDungeon);
+        return data.toJSONString();
+    }
+
+    public void loadClanDungeonDailyData(String dataStr) {
+        try {
+            Object parsed = org.json.simple.JSONValue.parse(dataStr);
+            if (!(parsed instanceof JSONObject data)) {
+                checkResetClanDungeonDaily();
+                return;
+            }
+            Object count = data.get("clan_dungeon_count");
+            Object lastOpen = data.get("clan_dungeon_last_open");
+            if (count != null) {
+                timesPerDayClanDungeon = Integer.parseInt(String.valueOf(count));
+            }
+            if (lastOpen != null) {
+                lastTimeOpenClanDungeon = Long.parseLong(String.valueOf(lastOpen));
+            }
+        } catch (Exception e) {
+        }
+        checkResetClanDungeonDaily();
     }
 
     public String getClanIntrinsicsData() {
@@ -377,7 +434,7 @@ public class Clan {
         String thongTinLeader = "[" + getLeader().id + "," + getLeader().name + "," + getLeader().head + ","
                 + getLeader().body + "," + getLeader().leg + "]";
 
-        String top = dataArray.toJSONString();
+        String top = getClanDungeonDailyData();
 
         PreparedStatement ps = null;
         try (Connection con = LocalManager.getConnection();) {
@@ -479,7 +536,7 @@ public class Clan {
             ps.setInt(6, this.level);
             ps.setString(7, member);
             ps.setString(8, this.name2);
-            ps.setString(9, "cc");
+            ps.setString(9, getClanDungeonDailyData());
             ps.setString(10, topBanDoKhoBau);
             ps.setString(11, thongTinLeader);
             ps.setString(12, itemsBoxStr);

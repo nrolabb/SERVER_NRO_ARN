@@ -1,6 +1,7 @@
 package nro.models.map.phoban;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import lombok.Data;
 import nro.models.boss.Boss;
@@ -23,7 +24,8 @@ import nro.models.utils.Util;
 @Data
 public class ClanDungeon implements Runnable {
 
-    public static final int AVAILABLE = 5;
+    public static final int NORMAL_AVAILABLE = 5;
+    public static final int AVAILABLE = 10;
     public static final int N_PLAYER_MAP = 1;
     public static final int TIME_CLAN_DUNGEON = 1_800_000;
 
@@ -36,7 +38,11 @@ public class ClanDungeon implements Runnable {
     private long lastTimeOpen;
     private boolean opened;
     private int point;
+    private boolean clearedMap156;
+    private boolean clearedMap157;
+    private boolean clearedMap158;
     private final List<Boss> bosses = new ArrayList<>();
+    private final List<MobState> mobStates = new ArrayList<>();
 
     public ClanDungeon(int id) {
         this.id = id;
@@ -64,10 +70,12 @@ public class ClanDungeon implements Runnable {
         this.clan = player.clan;
         this.opened = true;
         this.point = 0;
+        this.clearedMap156 = false;
+        this.clearedMap157 = false;
+        this.clearedMap158 = false;
         player.clan.clanDungeon = this;
-        player.clan.playerOpenClanDungeon = player;
-        player.clan.lastTimeOpenClanDungeon = this.lastTimeOpen;
-        player.clan.haveGoneClanDungeon = false;
+        player.clan.markOpenClanDungeon(player, this.lastTimeOpen);
+        player.clan.update();
 
         init();
         moveClanMembersToDungeon(player);
@@ -77,17 +85,23 @@ public class ClanDungeon implements Runnable {
 
     private void moveClanMembersToDungeon(Player opener) {
         List<Player> players = new ArrayList<>();
-        for (Player pl : opener.zone.getPlayers()) {
-            if (pl != null && pl.clan != null && pl.clan.equals(opener.clan) && !pl.isDie()) {
+        Zone startZone = getMapById(MAP_START);
+        if (startZone == null) {
+            return;
+        }
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.clan != null && pl.clan.equals(opener.clan) && pl.zone != null && !pl.isDie()
+                    && (pl.zone.equals(opener.zone) || MapService.gI().isMapClanDungeon(pl.zone.map.mapId))) {
                 players.add(pl);
             }
         }
         for (Player pl : players) {
-            ChangeMapService.gI().changeMapInYard(pl, MAP_START, -1, 100);
+            ChangeMapService.gI().changeMapInYard(pl, startZone, 100);
         }
     }
 
     private void init() {
+        saveMobStates();
         long totalDamage = 0;
         long totalHp = 0;
         for (Player player : this.clan.membersInGame) {
@@ -109,6 +123,15 @@ public class ClanDungeon implements Runnable {
             }
         }
         spawnBosses();
+    }
+
+    private void saveMobStates() {
+        mobStates.clear();
+        for (Zone zone : this.zones) {
+            for (Mob mob : zone.mobs) {
+                mobStates.add(new MobState(mob));
+            }
+        }
     }
 
     private void spawnBosses() {
@@ -147,6 +170,69 @@ public class ClanDungeon implements Runnable {
         this.clan.sendMyClanForAllMember();
         this.clan.update();
         sendTextClanDungeon();
+        checkClearByPoint();
+    }
+
+    private void checkClearByPoint() {
+        if (!clearedMap156 && point >= 200) {
+            clearMapByPoint(156, 200);
+            clearedMap156 = true;
+        }
+        if (!clearedMap157 && point >= 500) {
+            clearMapByPoint(157, 500);
+            clearedMap157 = true;
+        }
+        if (!clearedMap158 && point >= 1000) {
+            clearMapByPoint(158, 1000);
+            clearedMap158 = true;
+        }
+    }
+
+    private void clearMapByPoint(int mapId, int requiredPoint) {
+        Zone zone = getMapById(mapId);
+        if (zone == null) {
+            return;
+        }
+        clearMobs(zone);
+        clearBosses(zone);
+        notifyNextMap(requiredPoint, mapId + 1);
+    }
+
+    private void clearMobs(Zone zone) {
+        for (Mob mob : zone.mobs) {
+            if (mob != null) {
+                mob.point.maxHp = 0;
+                if (!mob.isDie()) {
+                    mob.startDie();
+                } else {
+                    mob.point.hp = -1;
+                }
+            }
+        }
+    }
+
+    private void clearBosses(Zone zone) {
+        for (Iterator<Boss> it = bosses.iterator(); it.hasNext();) {
+            Boss boss = it.next();
+            if (boss != null && boss.zone != null && boss.zone.equals(zone)) {
+                boss.leaveMap();
+                OtherBossManager.gI().removeBoss(boss);
+                it.remove();
+            }
+        }
+    }
+
+    private void notifyNextMap(int requiredPoint, int nextMapId) {
+        if (clan == null) {
+            return;
+        }
+        String text = "Bang hội đã đạt " + requiredPoint + " điểm tích lũy.\n"
+                + "Quái và boss khu vực này đã rút lui, hãy sang map " + nextMapId + ".";
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
     }
 
     @Override
@@ -221,13 +307,51 @@ public class ClanDungeon implements Runnable {
                 ItemMapService.gI().removeItemMap(itemMap);
             }
         }
+        restoreMobStates();
         bosses.clear();
         if (clan != null) {
-            clan.haveGoneClanDungeon = true;
             clan.clanDungeon = null;
+            clan.update();
         }
         clan = null;
         point = 0;
         opened = false;
+    }
+
+    private void restoreMobStates() {
+        for (MobState state : mobStates) {
+            state.restore();
+        }
+        mobStates.clear();
+    }
+
+    private static class MobState {
+
+        private final Mob mob;
+        private final int dame;
+        private final int maxHp;
+        private final int hp;
+        private final int lvMob;
+        private final int status;
+
+        private MobState(Mob mob) {
+            this.mob = mob;
+            this.dame = mob.point.dame;
+            this.maxHp = mob.point.maxHp;
+            this.hp = mob.point.hp;
+            this.lvMob = mob.lvMob;
+            this.status = mob.status;
+        }
+
+        private void restore() {
+            mob.point.dame = dame;
+            mob.point.maxHp = maxHp;
+            mob.point.hp = hp > 0 ? hp : maxHp;
+            mob.lvMob = lvMob;
+            mob.status = status;
+            if (mob.point.hp > 0) {
+                mob.hoiSinhMobPhoBan();
+            }
+        }
     }
 }

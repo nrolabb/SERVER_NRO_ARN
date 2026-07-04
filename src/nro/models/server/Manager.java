@@ -417,6 +417,7 @@ public final class Manager {
                     clan.level = 1;
                 }
                 clan.createTime = (int) (rs.getTimestamp("create_time").getTime() / 1000);
+                clan.loadClanDungeonDailyData(rs.getString("tops"));
                 dataArray = (JSONArray) JSONValue.parse(rs.getString("members"));
                 for (int i = 0; i < dataArray.size(); i++) {
                     dataObject = (JSONObject) JSONValue.parse(String.valueOf(dataArray.get(i)));

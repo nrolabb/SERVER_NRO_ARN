@@ -275,6 +275,9 @@ public class Mob {
         }
 
         if (this.isDie() && !Maintenance.isRunning && !isBigBoss()) {
+            if (MapService.gI().isMapClanDungeon(this.zone.map.mapId) && this.point.maxHp <= 0) {
+                return;
+            }
             switch (zone.map.type) {
                 case ConstMap.MAP_DOANH_TRAI:
                     if (this.tempId == ConstMob.BULON && this.zone.isTUTAlive

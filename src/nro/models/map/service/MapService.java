@@ -10,6 +10,7 @@ import nro.models.player.Player;
 import nro.models.server.Manager;
 import nro.models.network.Message;
 import nro.models.services.Service;
+import nro.models.services_dungeon.ClanDungeonService;
 import nro.models.utils.Logger;
 import nro.models.utils.Util;
 import java.io.DataInputStream;
@@ -102,10 +103,7 @@ public class MapService {
         }
 
         if (this.isMapClanDungeon(mapId) && (player.zone == null || player.clan == null || player.clan.clanDungeon == null)) {
-            Zone zone = getZone(153);
-            player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
-            player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
-            return zone;
+            return ClanDungeonService.gI().getNormalZone(mapId);
         }
 
         if (this.isMapBanDoKhoBau(mapId)) {
@@ -172,10 +170,16 @@ public class MapService {
         }
 
         if (this.isMapClanDungeon(mapId) && player.clan != null && player.clan.clanDungeon != null) {
-            if (!this.isMapClanDungeon(player.zone.map.mapId) && mapId != ClanDungeon.MAP_START) {
-                return null;
+            boolean fromClanDungeon = player.zone != null && this.isMapClanDungeon(player.zone.map.mapId)
+                    && ClanDungeonService.gI().isOpenedDungeonZone(player.zone);
+            boolean fromClanLand = player.zone != null && player.zone.map.mapId == 153;
+            if (!fromClanDungeon) {
+                if (mapId == ClanDungeon.MAP_START && fromClanLand) {
+                    return player.clan.clanDungeon.getMapById(mapId);
+                }
+                return ClanDungeonService.gI().getNormalZone(mapId);
             }
-            if (this.isMapClanDungeon(player.zone.map.mapId) && !canGoNextClanDungeonMap(player, mapId)) {
+            if (!canGoNextClanDungeonMap(player, mapId)) {
                 return null;
             }
             return player.clan.clanDungeon.getMapById(mapId);
@@ -318,11 +322,17 @@ public class MapService {
 
 
     for (Zone z : map.zones) {
+        if (isMapClanDungeon(mapId) && !ClanDungeonService.gI().isNormalClanDungeonZone(z)) {
+            continue;
+        }
         if (z.getNumOfPlayers() < z.maxPlayer) {
             return z;
         }
     }
 
+    if (isMapClanDungeon(mapId)) {
+        return ClanDungeonService.gI().getNormalZone(mapId);
+    }
 
     return map.zones.get(0);
 }

@@ -6,6 +6,7 @@ import nro.models.consts.ConstPlayer;
 import nro.models.consts.ConstTask;
 import nro.models.map.Map;
 import nro.models.services_dungeon.MajinBuuService;
+import nro.models.services_dungeon.ClanDungeonService;
 import nro.models.map.WayPoint;
 import nro.models.map.Zone;
 import nro.models.mob.Mob;
@@ -122,7 +123,8 @@ public class ChangeMapService {
                 Service.gI().sendThongBaoOK(pl, "Không thể đổi khu vực trong map này");
                 return;
             }
-            if (MapService.gI().isMapPhoBan(pl.zone.map.mapId)) {
+            if (MapService.gI().isMapPhoBan(pl.zone.map.mapId)
+                    && !isNormalClanDungeonZone(pl.zone)) {
                 Service.gI().sendThongBaoOK(pl, "Không thể đổi khu vực trong map này");
                 return;
             }
@@ -130,8 +132,12 @@ public class ChangeMapService {
         Message msg = null;
         try {
             msg = new Message(29);
-            msg.writer().writeByte(pl.zone.map.zones.size());
+            int zoneCount = getVisibleZoneCount(pl);
+            msg.writer().writeByte(zoneCount);
             for (Zone zone : pl.zone.map.zones) {
+                if (!canShowZone(pl, zone)) {
+                    continue;
+                }
                 msg.writer().writeByte(zone.zoneId);
                 int numPlayers = zone.getNumOfPlayers();
                 msg.writer().writeByte((numPlayers < 5 ? 0 : (numPlayers < 8 ? 1 : 2)));
@@ -172,7 +178,8 @@ public class ChangeMapService {
                 NpcService.gI().createTutorial(pl, -1, "Không thể đến khu vực này");
                 return;
             }
-            if (MapService.gI().isMapPhoBan(pl.zone.map.mapId)) {
+            if (MapService.gI().isMapPhoBan(pl.zone.map.mapId)
+                    && !isNormalClanDungeonZone(pl.zone)) {
                 NpcService.gI().createTutorial(pl, -1, "Không thể đến khu vực này");
                 return;
             }
@@ -194,6 +201,16 @@ public class ChangeMapService {
                     NpcService.gI().createTutorial(pl, -1, "Khu vực này đã đầy");
                     return;
                 }
+                if (!pl.isAdmin() && !pl.isBoss && ClanDungeonService.gI().isDungeonInstanceZone(zoneJoin)
+                        && !ClanDungeonService.gI().isOpenedDungeonZone(pl.zone)) {
+                    NpcService.gI().createTutorial(pl, -1, "Không thể đến khu vực này");
+                    return;
+                }
+                if (!pl.isAdmin() && !pl.isBoss && ClanDungeonService.gI().isOpenedDungeonZone(zoneJoin)
+                        && !ClanDungeonService.gI().isOpenedDungeonZone(pl.zone)) {
+                    NpcService.gI().createTutorial(pl, -1, "Không thể đến khu vực này");
+                    return;
+                }
                 if (zoneJoin != null) {
                     changeMap(pl, zoneJoin, -1, -1, pl.location.x, pl.location.y, NON_SPACE_SHIP);
                 }
@@ -204,6 +221,35 @@ public class ChangeMapService {
             NpcService.gI().createTutorial(pl, -1, "Chưa thể chuyển khu vực lúc này vui lòng chờ "
                     + TimeUtil.getTimeLeft(pl.idMark.getLastTimeChangeZone(), 7) + " nữa");
         }
+    }
+
+    private boolean isNormalClanDungeonZone(Zone zone) {
+        return zone != null && zone.map != null
+                && MapService.gI().isMapClanDungeon(zone.map.mapId)
+                && ClanDungeonService.gI().isNormalClanDungeonZone(zone);
+    }
+
+    private int getVisibleZoneCount(Player player) {
+        int count = 0;
+        for (Zone zone : player.zone.map.zones) {
+            if (canShowZone(player, zone)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private boolean canShowZone(Player player, Zone zone) {
+        if (player.isAdmin()) {
+            return true;
+        }
+        if (zone == null || zone.map == null) {
+            return false;
+        }
+        if (MapService.gI().isMapClanDungeon(zone.map.mapId)) {
+            return ClanDungeonService.gI().isNormalClanDungeonZone(zone);
+        }
+        return true;
     }
 
     /**

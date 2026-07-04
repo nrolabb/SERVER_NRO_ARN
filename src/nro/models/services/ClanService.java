@@ -1005,6 +1005,10 @@ public class ClanService {
     public void leaveClan(Player player) {
         Clan clan = player.clan;
         if (clan != null) {
+            if (isClanDungeonOpening(clan)) {
+                Service.gI().sendThongBao(player, "Không thể rời bang khi phó bản bang hội đang mở");
+                return;
+            }
             ClanMember cm = clan.getClanMember((int) player.id);
             if (cm != null) {
                 if (clan.isLeader(player)) {
@@ -1070,6 +1074,10 @@ public class ClanService {
         ClanMember cm = clan.getClanMember(memberId);
         if (clan != null && cm != null
                 && (clan.isLeader(player) || clan.isDeputy(player) && cm.role == MEMBER)) {
+            if (isClanDungeonOpening(clan)) {
+                Service.gI().sendThongBao(player, "Không thể đuổi thành viên khi phó bản bang hội đang mở");
+                return;
+            }
             Player plKicked = clan.getPlayerOnline(memberId);
             ClanMember cmKick = clan.getClanMember((int) player.id);
             ClanMessage cmg = new ClanMessage(clan);
@@ -1197,6 +1205,10 @@ public class ClanService {
         }
     }
 
+    private boolean isClanDungeonOpening(Clan clan) {
+        return clan != null && clan.clanDungeon != null && clan.clanDungeon.isOpened();
+    }
+
     public void close() {
         PreparedStatement ps;
         try (Connection con = LocalManager.getConnection();) {
@@ -1234,7 +1246,7 @@ public class ClanService {
                 ps.setInt(6, clan.level);
                 ps.setString(7, member);
                 ps.setString(8, clan.name2);
-                ps.setString(9, "cc");
+                ps.setString(9, clan.getClanDungeonDailyData());
                 ps.setInt(10, clan.id);
                 ps.addBatch();
             }
