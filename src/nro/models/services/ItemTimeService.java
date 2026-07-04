@@ -11,6 +11,7 @@ import nro.models.map.phoban.BanDoKhoBau;
 import nro.models.map.phoban.SnakeWay;
 import nro.models.map.phoban.DestronGas;
 import nro.models.map.phoban.RedRibbonHQ;
+import nro.models.map.phoban.ClanDungeon;
 import nro.models.utils.Logger;
 
 /**
@@ -54,6 +55,7 @@ public class ItemTimeService {
         ItemTimeService.gI().sendTextDoanhTrai(player);
         ItemTimeService.gI().sendTextConDuongRanDoc(player);
         ItemTimeService.gI().sendTextKhiGasHuyDiet(player);
+        ItemTimeService.gI().sendTextClanDungeon(player);
         ItemTimeService.gI().sendTextTimePickDoanhTrai(player);
         if (player.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
             sendItemTime(player, player.gender == ConstPlayer.NAMEC ? 3901 : 3790,
@@ -261,6 +263,17 @@ public class ItemTimeService {
         }
     }
 
+    public void sendTextClanDungeon(Player player) {
+        if (player.clan != null && player.clan.clanDungeon != null && player.clan.clanDungeon.isOpened()) {
+            int secondPassed = (int) ((System.currentTimeMillis() - player.clan.clanDungeon.getLastTimeOpen()) / 1000);
+            int secondsLeft = (ClanDungeon.TIME_CLAN_DUNGEON / 1000) - secondPassed;
+            if (secondsLeft < 0 || secondsLeft > 1800) {
+                return;
+            }
+            sendTextTime(player, PHO_BAN_BANG, "PB Bang:\nTích lũy: " + player.clan.clanDungeon.getPoint() + " điểm\nThời gian còn lại: ", secondsLeft);
+        }
+    }
+
     public void sendTextTimeKeoBuaBao(Player player, int time) {
         sendTextTime(player, TIME_KEO_BUA_BAO, "Thời gian : ", time);
     }
@@ -279,6 +292,10 @@ public class ItemTimeService {
 
     public void removeTextKhiGasHuyDiet(Player player) {
         removeTextTime(player, KHI_GAS_HUY_DIET);
+    }
+
+    public void removeTextClanDungeon(Player player) {
+        removeTextTime(player, PHO_BAN_BANG);
     }
 
     public void removeTextTime(Player player, byte id) {

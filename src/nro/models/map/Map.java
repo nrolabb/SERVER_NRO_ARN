@@ -12,7 +12,9 @@ import java.io.IOException;
 import nro.models.services_dungeon.MajinBuuService;
 import nro.models.map.phoban.BlackBallWar;
 import nro.models.map.phoban.RedRibbonHQ;
+import nro.models.map.phoban.ClanDungeon;
 import nro.models.services_dungeon.RedRibbonHQService;
+import nro.models.services_dungeon.ClanDungeonService;
 import nro.models.mob.Mob;
 import nro.models.npc.Npc;
 import nro.models.npc.NpcFactory;
@@ -144,6 +146,9 @@ public class Map implements Runnable {
             case ConstMap.MAP_KHI_GAS_HUY_DIET ->
                 nZone = DestronGas.AVAILABLE;
         }
+        if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END) {
+            nZone = ClanDungeon.AVAILABLE;
+        }
 
         for (int i = 0; i < nZone; i++) {
             Zone zone = new Zone(this, i, maxPlayer);
@@ -163,6 +168,9 @@ public class Map implements Runnable {
                     SuperDivineWaterService.gI().addZone(zone);
                 case ConstMap.MAP_MABU_14H ->
                     MajinBuu14HService.gI().addMapMaBu2H(i, zone);
+            }
+            if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END) {
+                ClanDungeonService.gI().addMapClanDungeon(i, zone);
             }
         }
     }

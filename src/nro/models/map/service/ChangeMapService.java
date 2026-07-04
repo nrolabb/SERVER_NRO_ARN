@@ -449,6 +449,10 @@ public class ChangeMapService {
                 plX = 60;
             }
             Service.gI().resetPoint(pl, plX, pl.location.y);
+            if (pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendThongBao(pl, getClanDungeonBlockMessage(pl));
+                return;
+            }
             Service.gI().sendThongBao(pl, "Bạn chưa thể đến khu vực này");
         }
     }
@@ -503,6 +507,10 @@ public class ChangeMapService {
 
         } else {
             resetPoint(player);
+            if (MapService.gI().isMapClanDungeon(player.zone.map.mapId)) {
+                Service.gI().sendThongBao(player, getClanDungeonBlockMessage(player));
+                return;
+            }
             if (MapService.gI().isMapPhoBan(player.zone.map.mapId)) {
                 Service.gI().sendThongBao(player, "Chưa hạ hết đối thủ");
                 return;
@@ -520,6 +528,18 @@ public class ChangeMapService {
             x = 60;
         }
         Service.gI().resetPoint(player, x, player.location.y);
+    }
+
+    private String getClanDungeonBlockMessage(Player player) {
+        if (player == null || player.clan == null || player.clan.clanDungeon == null || player.zone == null) {
+            return "Bạn chưa thể đến khu vực này";
+        }
+        int nextMapId = Math.min(player.zone.map.mapId + 1, 159);
+        int requiredPoint = MapService.gI().getClanDungeonRequiredPoint(nextMapId);
+        if (requiredPoint > 0 && player.clan.clanDungeon.getPoint() < requiredPoint) {
+            return "Cần " + requiredPoint + " điểm tích lũy để qua cửa tiếp theo";
+        }
+        return "Bạn chưa thể đến khu vực này";
     }
 
     public void finishLoadMap(Player player) {

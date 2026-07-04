@@ -2,6 +2,7 @@ package nro.models.clan;
 
 import nro.models.data.LocalManager;
 import nro.models.map.phoban.RedRibbonHQ;
+import nro.models.map.phoban.ClanDungeon;
 import nro.models.services.ClanService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,11 @@ public class Clan {
     public boolean haveGoneDoanhTrai;
     public RedRibbonHQ doanhTrai;
     public Player playerOpenDoanhTrai;
+
+    public long lastTimeOpenClanDungeon;
+    public boolean haveGoneClanDungeon;
+    public ClanDungeon clanDungeon;
+    public Player playerOpenClanDungeon;
 
     public final List<ClanMember> members;
     public final List<Player> membersInGame;

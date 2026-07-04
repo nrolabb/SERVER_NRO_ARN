@@ -167,6 +167,10 @@ public class Mob {
                 this.status = 0;
                 this.setDie();
                 this.temporaryEnemies.clear();
+                if (MapService.gI().isMapClanDungeon(this.zone.map.mapId)
+                        && plAtt != null && plAtt.clan != null && plAtt.clan.clanDungeon != null) {
+                    plAtt.clan.clanDungeon.addPoint(1);
+                }
                 if (plAtt != null) {
                     this.sendMobDieAffterAttacked(plAtt, (int) damage);
                     TaskService.gI().checkDoneTaskKillMob(plAtt, this);

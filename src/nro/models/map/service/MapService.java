@@ -5,6 +5,7 @@ import nro.models.map.Map;
 import nro.models.map.WayPoint;
 import nro.models.map.Zone;
 import nro.models.mob.Mob;
+import nro.models.map.phoban.ClanDungeon;
 import nro.models.player.Player;
 import nro.models.server.Manager;
 import nro.models.network.Message;
@@ -100,6 +101,13 @@ public class MapService {
             return zone;
         }
 
+        if (this.isMapClanDungeon(mapId) && (player.zone == null || player.clan == null || player.clan.clanDungeon == null)) {
+            Zone zone = getZone(153);
+            player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
+            player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
+            return zone;
+        }
+
         if (this.isMapBanDoKhoBau(mapId)) {
             if (player.clan == null || player.clan.BanDoKhoBau == null || player.zone == null) {
                 // Đưa về zone mặc định an toàn
@@ -161,6 +169,16 @@ public class MapService {
                 }
             }
             return player.clan.doanhTrai.getMapById(mapId);
+        }
+
+        if (this.isMapClanDungeon(mapId) && player.clan != null && player.clan.clanDungeon != null) {
+            if (!this.isMapClanDungeon(player.zone.map.mapId) && mapId != ClanDungeon.MAP_START) {
+                return null;
+            }
+            if (this.isMapClanDungeon(player.zone.map.mapId) && !canGoNextClanDungeonMap(player, mapId)) {
+                return null;
+            }
+            return player.clan.clanDungeon.getMapById(mapId);
         }
 
         if (this.isMapBanDoKhoBau(mapId) && player.clan != null && player.clan.BanDoKhoBau != null) {
@@ -494,6 +512,27 @@ public class MapService {
         return mapId >= 53 && mapId <= 62;
     }
 
+    public boolean isMapClanDungeon(int mapId) {
+        return mapId >= ClanDungeon.MAP_START && mapId <= ClanDungeon.MAP_END;
+    }
+
+    public int getClanDungeonRequiredPoint(int mapId) {
+        return switch (mapId) {
+            case 157 -> 200;
+            case 158 -> 500;
+            case 159 -> 1000;
+            default -> 0;
+        };
+    }
+
+    private boolean canGoNextClanDungeonMap(Player player, int mapId) {
+        if (mapId <= player.zone.map.mapId) {
+            return true;
+        }
+        int requiredPoint = getClanDungeonRequiredPoint(mapId);
+        return player.clan.clanDungeon.getPoint() >= requiredPoint;
+    }
+
     public boolean isMapSieuThanhThuy(int mapId) {
         return mapId == 146;
     }
@@ -541,7 +580,7 @@ public class MapService {
     }
 
     public boolean isMapPhoBan(int mapId) {
-        return isMapBanDoKhoBau(mapId) || isMapDoanhTrai(mapId) || isMapConDuongRanDoc(mapId) || isMapKhiGasHuyDiet(mapId);
+        return isMapBanDoKhoBau(mapId) || isMapDoanhTrai(mapId) || isMapConDuongRanDoc(mapId) || isMapKhiGasHuyDiet(mapId) || isMapClanDungeon(mapId);
     }
 
     public boolean isskh(int mapId) {

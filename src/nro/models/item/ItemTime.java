@@ -14,6 +14,7 @@ public class ItemTime {
     public static final byte KHI_GAS_HUY_DIET = 3;
     public static final byte TIME_KEO_BUA_BAO = 4;
     public static final byte TEXT_NHAN_BUA_MIEN_PHI = 5;
+    public static final byte PHO_BAN_BANG = 6;
 
     public static final int TIME_ITEM = 600000;
     public static final int TIME_OPEN_POWER = 8640000;
