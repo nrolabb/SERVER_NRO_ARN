@@ -53,8 +53,13 @@ public final class Sender implements Runnable {
                 if (message == null) {
                     continue;
                 }
-                this.doSendMessage(message);
+                this.sendCollect.doSendMessage(this.session, this.dos, message);
                 message.cleanup();
+                
+                // TCP Batching: Only flush when the queue is empty
+                if (this.messages.isEmpty()) {
+                    this.dos.flush();
+                }
             }
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
@@ -64,6 +69,7 @@ public final class Sender implements Runnable {
 
     public synchronized void doSendMessage(Message message) throws Exception {
         this.sendCollect.doSendMessage(this.session, this.dos, message);
+        this.dos.flush();
     }
 
     public void sendMessage(Message msg) {

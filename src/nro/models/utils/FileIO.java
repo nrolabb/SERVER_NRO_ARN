@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -16,13 +17,24 @@ import java.util.List;
 
 public class FileIO {
 
+    // Global memory cache to prevent slow disk I/O reads during game operations
+    private static final ConcurrentHashMap<String, byte[]> fileCache = new ConcurrentHashMap<>();
     public static byte[] readFile(String url) {
+        // Return cached byte array if available to boost performance
+        byte[] cached = fileCache.get(url);
+        if (cached != null) {
+            return cached;
+        }
+        
         try {
             byte[] ab = null;
             FileInputStream fis = new FileInputStream(url);
             ab = new byte[fis.available()];
             fis.read(ab, 0, ab.length);
             fis.close();
+            
+            // Cache the result for future reads
+            fileCache.put(url, ab);
             return ab;
         } catch (IOException e) {
         }
@@ -62,6 +74,9 @@ public class FileIO {
             fos.write(ab);
             fos.flush();
             fos.close();
+            
+            // Update the cache if the file is rewritten
+            fileCache.put(url, ab);
         } catch (IOException e) {
         }
     }
