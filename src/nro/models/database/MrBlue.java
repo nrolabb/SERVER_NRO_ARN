@@ -27,6 +27,7 @@ import nro.models.server.Manager;
 import nro.models.network.MySession;
 import nro.models.player_system.AntiLogin;
 import nro.models.services.ClanService;
+import nro.models.services.ActivePointService;
 import nro.models.services.IntrinsicService;
 import nro.models.services.ItemService;
 import nro.models.map.service.MapService;
@@ -125,6 +126,7 @@ public class MrBlue {
                                 player.thachdauwhis = rs.getInt("thachdauwhis");
                                 player.point_maydam = rs.getInt("point_maydam");
                                 player.total_damage_maydam = rs.getLong("total_damage_maydam");
+                                ActivePointService.gI().load(player);
                                 player.isNewMember = !Util.isTimeDifferenceGreaterThanNDays(createTime, 35);
                                 LocalManager.executeUpdate("update account set last_time_login = '" + new Timestamp(System.currentTimeMillis()) + "', ip_address = '" + session.ipAddress + "' where id = " + session.userId);
                             }
@@ -160,6 +162,7 @@ public class MrBlue {
             if (rs.next() && (player = loadPlayer(rs, true)) != null) {
                 player.isOffline = true;
                 player.idMark.setLoadedAllDataPlayer(true);
+                ActivePointService.gI().load(player);
             }
         } catch (Exception e) {
             if (player != null) {

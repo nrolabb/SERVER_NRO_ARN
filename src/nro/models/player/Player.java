@@ -101,6 +101,7 @@ public class Player implements Runnable {
     public int point_sukien;
     public int point_sukien1;
     public int point_sukien2;
+    public int activePoint;
     public int thachdauwhis = 0;
     public int DuaHau;
     public int point_vuahung;

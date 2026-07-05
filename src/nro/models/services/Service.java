@@ -1897,10 +1897,13 @@ public class Service {
     }
 
     public void sendNangDong(Player player) {
+        if (player == null || player.getSession() == null) {
+            return;
+        }
         Message msg;
         try {
             msg = new Message(-97);
-            msg.writer().writeInt(0);
+            msg.writer().writeInt(Math.max(0, player.activePoint));
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {

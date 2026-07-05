@@ -417,6 +417,7 @@ public void checkDoneTaskUseItem(Player player, Item item) {
 
     public void checkDoneTaskKillBoss(Player player, Boss boss) {
         if (player != null && !player.isBot && !player.isBoss && !player.isPet) {
+            ActivePointService.gI().addBossKillPoint(player, boss);
             AchievementService.gI().checkDoneTask(player, ConstAchievement.TRUM_KET_LIEU_BOSS);
             switch ((int) boss.id) {
                 case BossID.KUKU ->
@@ -1477,6 +1478,7 @@ public void paySideTask(Player player) {
                         "Bạn nhận được " + Util.numberToMoney(goldReward) + " vàng và "
                         + quantity + " " + ngocXanh.template.name + ", cộng " + pointReward
                         + " điểm nhiệm vụ. Hiện có: " + player.playerTask.sideTask.point + " điểm");
+                ActivePointService.gI().addPoint(player, 1, "nhiệm vụ ngày");
 
                 // Reset nhiệm vụ
                 player.playerTask.sideTask.reset();
@@ -1650,6 +1652,7 @@ public void paySideTask(Player player) {
                 player.playerTask.clanTask.reset();
                 Service.gI().sendThongBao(player, "Bạn vừa nhận được "
                         + Util.numberToMoney(capsuleClan) + " capsule bang.");
+                ActivePointService.gI().addPoint(player, 1, "nhiệm vụ bang hội");
                 if (player.clan != null) {
                     player.clan.capsuleClan += capsuleClan;
                     for (ClanMember cm : player.clan.getMembers()) {

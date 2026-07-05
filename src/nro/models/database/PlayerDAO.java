@@ -24,6 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import nro.models.server.Manager;
 import nro.models.map.service.ChangeMapService;
+import nro.models.services.ActivePointService;
 import nro.models.player.KOLProgressData;
 import nro.models.utils.TimeUtil;
 import nro.models.utils.Util;
@@ -1083,6 +1084,7 @@ player.reward_200_2207 ? 1 : 0,
 player.reward_300_2207 ? 1 : 0,
 player.reward_500_2207 ? 1 : 0,
                         player.id);
+                ActivePointService.gI().save(player);
                 SuperRankDAO.updateData(player);
                 if (player.isOffline) {
                     Logger.log(Logger.PURPLE, TimeUtil.getCurrHour() + "h" + TimeUtil.getCurrMin() + "m: Player " + player.name + " updated successfully! " + (System.currentTimeMillis() - st) + "ms\n");

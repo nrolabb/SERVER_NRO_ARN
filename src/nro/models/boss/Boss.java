@@ -52,6 +52,7 @@ import nro.models.skill.Skill;
 import nro.models.server.ServerNotify;
 import nro.models.map.service.MapService;
 import nro.models.services.PlayerService;
+import nro.models.services.ActivePointService;
 import nro.models.services.Service;
 import nro.models.services.SkillService;
 import nro.models.services.TaskService;
@@ -99,6 +100,7 @@ public class Boss extends Player implements IBoss {
     public int lv;
 
     public int error;
+    public boolean activePointRewarded;
 
     public boolean prepareBom;
 public long lastBomTime; // ← thêm dòng này
@@ -231,6 +233,7 @@ public Player bomAttacker; // thêm dòng này
     }
 
     protected void resetBase() {
+        this.activePointRewarded = false;
         this.lastTimeChatS = 0;
         this.lastTimeChatE = 0;
         this.timeChatS = 0;
@@ -664,12 +667,14 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
                 || !MapService.gI().isMapDoanhTrai(this.zone.map.mapId)
                 || !MapService.gI().isMapBanDoKhoBau(this.zone.map.mapId))) {
             if (!plKill.isBot) {
+                ActivePointService.gI().addBossKillPoint(plKill, this);
                 reward(plKill);
             }
             ServerNotify.gI().notify(plKill.name + ": Đã tiêu diệt được " + this.name + " mọi người đều ngưỡng mộ.");
             this.changeStatus(BossStatus.DIE);
         } else {
             if (plKill != null && !plKill.isBot) {
+                ActivePointService.gI().addBossKillPoint(plKill, this);
                 reward(plKill);
             }
             this.changeStatus(BossStatus.DIE);
@@ -678,6 +683,7 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
 
     @Override
     public void reward(Player plKill) {
+        ActivePointService.gI().addBossKillPoint(plKill, this);
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
     }
 
