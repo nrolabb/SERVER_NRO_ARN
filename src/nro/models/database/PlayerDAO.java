@@ -411,7 +411,7 @@ public class PlayerDAO {
                 dataArray.add(player.nPoint.defg);
                 dataArray.add(player.nPoint.critg);
                 dataArray.add(player.nPoint.critdragon);
-                dataArray.add(0);
+                dataArray.add(Math.max(0, player.activePoint));
                 dataArray.add(hp);
                 dataArray.add(mp);
                 String point = dataArray.toJSONString();

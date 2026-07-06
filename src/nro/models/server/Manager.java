@@ -896,7 +896,7 @@ public final class Manager {
             if (rs.next()) {
                 int countRow = rs.getShort(1);
                 MAP_TEMPLATES = new MapTemplate[countRow];
-                ps = ConnectionDatabase.prepareStatement("select * from map_template");
+                ps = ConnectionDatabase.prepareStatement("select id, name, type, planet_id, bg_type, tile_id, bg_id, zones, max_player, waypoints, mobs, npcs from map_template");
                 rs = ps.executeQuery();
                 short i = 0;
                 while (rs.next()) {

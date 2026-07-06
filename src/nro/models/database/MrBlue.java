@@ -319,7 +319,7 @@ public class MrBlue {
             player.nPoint.defg = Integer.parseInt(String.valueOf(dataArray.get(8)));
             player.nPoint.critg = Byte.parseByte(String.valueOf(dataArray.get(9)));
             player.nPoint.critdragon = Byte.parseByte(String.valueOf(dataArray.get(10)));
-            dataArray.get(11); //** Năng động
+            player.activePoint = Math.max(0, Integer.parseInt(String.valueOf(dataArray.get(11)))); //** Năng động
             plHp = Integer.parseInt(String.valueOf(dataArray.get(12)));
             plMp = Integer.parseInt(String.valueOf(dataArray.get(13)));
             dataArray.clear();
