@@ -46,6 +46,7 @@ public class ItemData {
             msg.writer().writeShort(count);
             for (int i = 0; i < count; i++) {
                 Template.ItemTemplate itemTemplate = Manager.ITEM_TEMPLATES.get(i);
+                msg.writer().writeShort(itemTemplate.id);
                 msg.writer().writeByte(itemTemplate.type);
                 msg.writer().writeByte(itemTemplate.gender);
                 msg.writer().writeUTF(itemTemplate.name);
@@ -71,10 +72,9 @@ public class ItemData {
 
             msg.writer().writeByte(DataGame.vsItem); //vcitem
             msg.writer().writeByte(2); //add itemtemplate
-            msg.writer().writeShort(start);
-            msg.writer().writeShort(end);
+            msg.writer().writeShort(end - start);
             for (int i = start; i < end; i++) {
-//                System.out.println("start: " + start + " -> " + end + " id " + Manager.ITEM_TEMPLATES.get(i).id);
+                msg.writer().writeShort(Manager.ITEM_TEMPLATES.get(i).id);
                 msg.writer().writeByte(Manager.ITEM_TEMPLATES.get(i).type);
                 msg.writer().writeByte(Manager.ITEM_TEMPLATES.get(i).gender);
                 msg.writer().writeUTF(Manager.ITEM_TEMPLATES.get(i).name);
