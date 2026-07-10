@@ -710,6 +710,23 @@ public class Service {
         }
     }
 
+    public void chatWithDuration(Player player, String text, int durationMs) {
+        if (player == null || player.zone == null || text == null || text.isEmpty()) {
+            return;
+        }
+        Message msg;
+        try {
+            msg = new Message(44);
+            msg.writer().writeInt((int) player.id);
+            msg.writer().writeUTF(text);
+            msg.writer().writeInt(Math.max(0, durationMs));
+            sendMessAllPlayerInMap(player, msg);
+            msg.cleanup();
+        } catch (Exception e) {
+            Logger.logException(Service.class, e);
+        }
+    }
+
     public void chatJustForMe(Player me, Player plChat, String text) {
         Message msg;
         try {

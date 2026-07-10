@@ -8,6 +8,7 @@ import nro.models.item.Item;
 import java.util.ArrayList;
 import nro.models.player.Pet;
 import nro.models.player.Player;
+import nro.models.boss.giao_vien_whis.GiaoVienWhis;
 import nro.models.network.SessionManager;
 import nro.models.services.ItemService;
 import nro.models.services.PetService;
@@ -321,6 +322,7 @@ public class Command {
         if (cleanedText.isEmpty()) {
             return;
         }
+        GiaoVienWhis.tryAnswer(player, cleanedText);
         if (!check(player, cleanedText)) {
             Service.gI().chat(player, cleanedText);
         }

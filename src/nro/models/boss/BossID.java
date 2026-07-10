@@ -192,6 +192,7 @@ public class BossID {
     public static final int THAN_VU_TRU = -362;
     public static final int TO_SU_KAIO = -363;
     public static final int WHIS = -364;
+    public static final int GIAO_VIEN_WHIS = -387;
     //========================LINH TINH========================
     public static final int AN_TROM = -365;
     public static final int TAU_PAIPAI = -385;

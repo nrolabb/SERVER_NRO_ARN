@@ -471,6 +471,24 @@ public class MapService {
         }
     }
 
+    public void sendPlayerStop(Player player) {
+        if (player == null || player.zone == null) {
+            return;
+        }
+        Message msg;
+        try {
+            msg = new Message(-7);
+            msg.writer().writeInt((int) player.id);
+            msg.writer().writeShort(player.location.x);
+            msg.writer().writeShort(player.location.y);
+            msg.writer().writeByte(1);
+            Service.gI().sendMessAnotherNotMeInMap(player, msg);
+            msg.cleanup();
+        } catch (Exception e) {
+            Logger.logException(MapService.class, e);
+        }
+    }
+
     public boolean isMapOffline(int mapId) {
         for (Map map : Manager.MAPS) {
             if (map.mapId == mapId) {

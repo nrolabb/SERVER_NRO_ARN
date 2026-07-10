@@ -43,12 +43,15 @@ public class SetClothes {
 
     public void setup() {
         setDefault();
+        if (!hasBodySlots(5)) {
+            return;
+        }
         setupSKT();
 
         this.godClothes = true;
         for (int i = 0; i < 5; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
-            if (item.isNotNullItem()) {
+            if (item != null && item.isNotNullItem()) {
                 if (item.template.id > 567 || item.template.id < 555) {
                     this.godClothes = false;
                     break;
@@ -57,8 +60,8 @@ public class SetClothes {
                 this.godClothes = false;
             }
         }
-        Item ct = this.player.inventory.itemsBody.get(5);
-        if (ct.isNotNullItem()) {
+        Item ct = hasBodySlots(6) ? this.player.inventory.itemsBody.get(5) : null;
+        if (ct != null && ct.isNotNullItem()) {
             switch (ct.template.id) {
                 case 618:
                 case 619:
@@ -78,8 +81,15 @@ public class SetClothes {
     }
 
     private void setupSKT() {
+        if (!hasBodySlots(5)) {
+            return;
+        }
         for (int i = 0; i < 5; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
+
+            if (item == null || item.itemOptions == null) {
+                continue;
+            }
 
             // Loại bỏ điều kiện kiểm tra isNotNullItem
             boolean isActSet = false;
@@ -202,12 +212,12 @@ public class SetClothes {
     }
 
     public boolean checkSetGod() {
-        if (this.player.isBot) {
+        if (this.player == null || this.player.isBot || !hasBodySlots(5)) {
             return false;
         }
         for (int i = 0; i < 5; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
-            if (item.isNotNullItem()) {
+            if (item != null && item.isNotNullItem()) {
                 if (item.template.id < 555 || item.template.id > 567) {
                     return false;
                 }
@@ -219,9 +229,12 @@ public class SetClothes {
     }
 
     public boolean checkSetDes() {
+        if (this.player == null || this.player.isBot || !hasBodySlots(5)) {
+            return false;
+        }
         for (int i = 0; i < 5; i++) {
             Item item = this.player.inventory.itemsBody.get(i);
-            if (item.isNotNullItem()) {
+            if (item != null && item.isNotNullItem()) {
                 if (item.template.id < 650 || item.template.id > 662) {
 
                     return false;
@@ -231,6 +244,13 @@ public class SetClothes {
             }
         }
         return true;
+    }
+
+    private boolean hasBodySlots(int requiredSlots) {
+        return this.player != null
+                && this.player.inventory != null
+                && this.player.inventory.itemsBody != null
+                && this.player.inventory.itemsBody.size() >= requiredSlots;
     }
 
     public void dispose() {

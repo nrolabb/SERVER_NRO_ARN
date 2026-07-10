@@ -20,7 +20,11 @@ public class Hirudegarn extends BigBoss {
 
     @Override
     public void injured(Player plAtt, long damage, boolean dieWhenHpFull) {
-        damage = this.point.hp / 100 > 0 ? this.point.hp / 100 : 1;
+        if (plAtt != null && plAtt.isAdmin()) {
+            damage = Math.max(damage, 100_000L);
+        } else {
+            damage = this.point.hp / 100 > 0 ? this.point.hp / 100 : 1;
+        }
         super.injured(plAtt, damage, false);
     }
 
@@ -89,32 +93,33 @@ public class Hirudegarn extends BigBoss {
                         new ItemMap(zone, 190, 32000, this.location.x + X, this.location.y, -1)
                 );
             }
-            if (Util.isTrue(20, 100)) {
+            int eggDropRate = 30 + (lvMob * 20); // Giai đoạn 1/2/3: 50%/70%/90%
+            if (Util.isTrue(eggDropRate, 100)) {
                 ItemMap it = new ItemMap(this.zone, 568, 1, this.location.x, this.zone.map.yPhysicInTop(this.location.x,
                         this.location.y - 24), -1);
                 Service.gI().dropItemMap(this.zone, it);
             }
-            // if (Util.isTrue(20, 100)) {
-            //     ItemMap it = new ItemMap(this.zone, 1795, 1, this.location.x,
-            //             this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
+            if (Util.isTrue(20, 100)) {
+                ItemMap it = new ItemMap(this.zone, 1795, 1, this.location.x,
+                        this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
 
-            //     it.options.add(new ItemOption(250, 0));
+                it.options.add(new ItemOption(250, 0));
 
-            //     Service.gI().dropItemMap(this.zone, it);
-            // }
+                Service.gI().dropItemMap(this.zone, it);
+            }
 
-            // if (Util.isTrue(1, 40)) {
-            //     short[] possibleIds = {555, 557, 559};
-            //     short idItem = possibleIds[Util.nextInt(possibleIds.length)];
-            //     ItemMap it = new ItemMap(this.zone, idItem, 1, this.location.x,
-            //             this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
-            //     ItemMap itemWithOptions = ItemService.gI().randDoTL(this.zone, 1, this.location.x,
-            //             this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
-            //     it.options.clear();
-            //     it.options.addAll(itemWithOptions.options);
-            //     Service.gI().dropItemMap(this.zone, it);
+            if (Util.isTrue(5, 100)) {
+                short[] possibleIds = {555, 557, 559};
+                short idItem = possibleIds[Util.nextInt(possibleIds.length)];
+                ItemMap it = new ItemMap(this.zone, idItem, 1, this.location.x,
+                        this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
+                ItemMap itemWithOptions = ItemService.gI().randDoTL(this.zone, 1, this.location.x,
+                        this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), -1);
+                it.options.clear();
+                it.options.addAll(itemWithOptions.options);
+                Service.gI().dropItemMap(this.zone, it);
 
-            // }
+            }
             Service.gI().sendBigBoss2(this.zone, action, this);
             if (lvMob <= 2) {
                 Message msg = null;

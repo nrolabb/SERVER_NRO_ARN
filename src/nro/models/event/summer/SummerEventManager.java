@@ -3,6 +3,7 @@ package nro.models.event.summer;
 import nro.models.boss.Boss;
 import nro.models.boss.BossData;
 import nro.models.boss.BossID;
+import nro.models.boss.giao_vien_whis.GiaoVienWhis;
 import nro.models.boss.Boss_Manager.BossManager;
 import nro.models.consts.ConstNpc;
 import nro.models.consts.ConstPlayer;
@@ -71,10 +72,17 @@ public class SummerEventManager extends BossManager {
         createEventNpcs();
         createBoss(BossID.BIG_MOM, 1);
         createBoss(BossID.KAIDO, 1);
+        for (int planet = 0; planet < 3; planet++) {
+            try {
+                new GiaoVienWhis(planet);
+            } catch (Exception e) {
+                Logger.logException(SummerEventManager.class, e, "Loi tao Giao vien Whis hanh tinh " + planet);
+            }
+        }
         if (!updateThreadStarted) {
             updateThreadStarted = true;
             new Thread(this, "Update summer event boss").start();
-            Logger.successln("[SUMMER EVENT] Da tao BigMom, Kaido va khoi dong luong cap nhat boss");
+            Logger.successln("[SUMMER EVENT] Da tao BigMom, Kaido, 3 Giao vien Whis va khoi dong luong cap nhat boss");
         }
     }
 
