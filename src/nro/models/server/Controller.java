@@ -744,6 +744,11 @@ public class Controller implements IMessageHandler {
                     break;
                 case 126: // androidPack2
                     break;
+		case 125: // Admin mở danh sách boss bằng phím B
+		    if (player != null && player.isAdmin()) {
+			BossManager.gI().showListBoss(player);
+		    }
+		    break;
                 case -78: // checkMMove
                     _msg.reader().readInt(); // second
                     break;
