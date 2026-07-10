@@ -18,6 +18,10 @@ public class NoiBanh extends Npc {
 
     @Override
     public void openBaseMenu(Player player) {
+        if (!EventConfig.isActive(EventConfig.HUNG_VUONG)) {
+            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
+            return;
+        }
         createOtherMenu(player, 0, "Xin chào " + player.name + "\nTôi là nồi nấu bánh.\nBạn cần gì?",
                 "Tự nấu\nbánh",
                 "Từ chối");
@@ -25,6 +29,10 @@ public class NoiBanh extends Npc {
 
     @Override
     public void confirmMenu(Player pl, int select) {
+        if (!EventConfig.isActive(EventConfig.HUNG_VUONG)) {
+            Service.gI().sendThongBao(pl, "Sự kiện chưa mở hoặc đã kết thúc.");
+            return;
+        }
         if (canOpenNpc(pl)) {
             switch (pl.idMark.getIndexMenu()) {
                 case 0 -> {

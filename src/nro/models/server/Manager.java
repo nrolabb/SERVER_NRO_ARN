@@ -247,7 +247,6 @@ public final class Manager {
     }
 
     public static void loadPart() {
-        JSONValue jv = new JSONValue();
         JSONArray dataArray = null;
         JSONObject dataObject = null;
         PreparedStatement ps = null;
@@ -261,9 +260,9 @@ public final class Manager {
                 Part part = new Part();
                 part.id = rs.getShort("id");
                 part.type = rs.getByte("type");
-                dataArray = (JSONArray) jv.parse(rs.getString("data").replaceAll("\\\"", ""));
+                dataArray = parseJsonArray(rs.getString("data"), "part.data id=" + part.id);
                 for (int j = 0; j < dataArray.size(); j++) {
-                    JSONArray pd = (JSONArray) jv.parse(String.valueOf(dataArray.get(j)));
+                    JSONArray pd = parseJsonArrayElement(dataArray.get(j), "part.data id=" + part.id + " detail=" + j);
                     part.partDetails.add(new PartDetail(Short.parseShort(String.valueOf(pd.get(0))),
                             Byte.parseByte(String.valueOf(pd.get(1))),
                             Byte.parseByte(String.valueOf(pd.get(2)))));
@@ -317,6 +316,31 @@ public final class Manager {
         return part;
     }
 
+    private static JSONArray parseJsonArray(String data, String source) {
+        if (data == null || data.trim().isEmpty()) {
+            throw new IllegalArgumentException(source + " is empty");
+        }
+
+        Object parsed = JSONValue.parse(data);
+        if (parsed instanceof String) {
+            parsed = JSONValue.parse((String) parsed);
+        }
+        if (!(parsed instanceof JSONArray)) {
+            parsed = JSONValue.parse(data.replace("\"", "").replace("\\", ""));
+        }
+        if (!(parsed instanceof JSONArray)) {
+            throw new IllegalArgumentException(source + " is not a valid JSONArray: " + data);
+        }
+        return (JSONArray) parsed;
+    }
+
+    private static JSONArray parseJsonArrayElement(Object data, String source) {
+        if (data instanceof JSONArray) {
+            return (JSONArray) data;
+        }
+        return parseJsonArray(String.valueOf(data), source);
+    }
+
     private void loadDatabase() {
         long st = System.currentTimeMillis();
         JSONArray dataArray;
@@ -332,9 +356,9 @@ public final class Manager {
                 Part part = new Part();
                 part.id = rs.getShort("id");
                 part.type = rs.getByte("type");
-                dataArray = (JSONArray) JSONValue.parse(rs.getString("data").replaceAll("\\\"", ""));
+                dataArray = parseJsonArray(rs.getString("data"), "part.data id=" + part.id);
                 for (int j = 0; j < dataArray.size(); j++) {
-                    JSONArray pd = (JSONArray) JSONValue.parse(String.valueOf(dataArray.get(j)));
+                    JSONArray pd = parseJsonArrayElement(dataArray.get(j), "part.data id=" + part.id + " detail=" + j);
                     part.partDetails.add(new PartDetail(Short.parseShort(String.valueOf(pd.get(0))),
                             Byte.parseByte(String.valueOf(pd.get(1))),
                             Byte.parseByte(String.valueOf(pd.get(2)))));

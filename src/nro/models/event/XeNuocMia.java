@@ -22,6 +22,10 @@ public class XeNuocMia extends Npc {
         if (!canOpenNpc(player)) {
             return;
         }
+        if (!EventConfig.isActive(EventConfig.TOP_UP)) {
+            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
+            return;
+        }
 
         player.idMark.setIndexMenu(ConstNpc.BASE_MENU);
 
@@ -38,6 +42,10 @@ public class XeNuocMia extends Npc {
     @Override
     public void confirmMenu(Player player, int select) {
         if (!canOpenNpc(player)) {
+            return;
+        }
+        if (!EventConfig.isActive(EventConfig.TOP_UP)) {
+            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
             return;
         }
 

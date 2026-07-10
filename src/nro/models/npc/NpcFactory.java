@@ -86,6 +86,7 @@ import nro.models.services.SubMenuService;
 import nro.models.services.shenron.Shenron_Service;
 import java.util.List;
 import nro.models.event.XeNuocMia;
+import nro.models.event.summer.VuaHaiTac;
 import nro.models.npc_list.ChiChi;
 import nro.models.npc_list.DrMyuu;
 import nro.models.npc_list.DuaHau;
@@ -102,7 +103,7 @@ public class NpcFactory {
     public static final java.util.Map<Long, Object> PLAYERID_OBJECT = new HashMap<>();
 
     public static Npc createNPC(int mapId, int status, int cx, int cy, int tempId) {
-        int avatar = Manager.NPC_TEMPLATES.get(tempId).avatar;
+        int avatar = getNpcAvatar(tempId);
         try {
             return switch (tempId) {
                 case ConstNpc.GHI_DANH ->
@@ -227,6 +228,8 @@ public class NpcFactory {
                     new NoiBanh(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.XE_NUOC_MIA ->
                     new XeNuocMia(mapId, status, cx, cy, tempId, avatar);
+                case ConstNpc.VUA_HAI_TAC ->
+                    new VuaHaiTac(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.BARDOCK ->
                     new Bardock(mapId, status, cx, cy, tempId, avatar);
                 default ->
@@ -250,6 +253,13 @@ public class NpcFactory {
                     e, "Lỗi load npc");
             return null;
         }
+    }
+
+    private static int getNpcAvatar(int tempId) {
+        if (tempId >= 0 && tempId < Manager.NPC_TEMPLATES.size() && Manager.NPC_TEMPLATES.get(tempId) != null) {
+            return Manager.NPC_TEMPLATES.get(tempId).avatar;
+        }
+        return 0;
     }
 
     public static void createNpcRongThieng() {

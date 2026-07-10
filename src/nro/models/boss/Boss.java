@@ -15,6 +15,7 @@ import nro.models.boss.Boss_Manager.SnakeWayManager;
 import nro.models.boss.Boss_Manager.HungVuongEventManager;
 import nro.models.boss.Boss_Manager.OtherBossManager;
 import nro.models.boss.Boss_Manager.BossManager;
+import nro.models.event.summer.SummerEventManager;
 import nro.models.consts.AppearType;
 import nro.models.consts.BossStatus;
 import nro.models.consts.BossType;
@@ -39,6 +40,7 @@ import static nro.models.consts.BossType.PHOBANCDRD;
 import static nro.models.consts.BossType.PHOBANDT;
 import static nro.models.consts.BossType.PHOBANKGHD;
 import static nro.models.consts.BossType.SKILLSUMMONED;
+import static nro.models.consts.BossType.SUMMER_EVENT;
 import static nro.models.consts.BossType.TET_EVENT;
 import static nro.models.consts.BossType.TRUNGTHU_EVENT;
 import static nro.models.consts.BossType.YARDART;
@@ -185,6 +187,8 @@ public Player bomAttacker; // thêm dòng này
                 HungVuongEventManager.gI().addBoss(this);
             case TET_EVENT ->
                 LunarNewYearEventManager.gI().addBoss(this);
+            case SUMMER_EVENT ->
+                SummerEventManager.gI().addBoss(this);
         }
 
         this.bossAppearTogether = new Boss[this.data.length][];

@@ -17,6 +17,7 @@ public enum BossType {
     CHRISTMAS_EVENT,
     HUNGVUONG_EVENT,
     TET_EVENT,
+    SUMMER_EVENT,
     MANAGER_DEBUG,
     CADIC
 }

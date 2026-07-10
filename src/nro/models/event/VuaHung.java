@@ -48,6 +48,10 @@ public class VuaHung extends Npc {
 
     @Override
     public void openBaseMenu(Player player) {
+        if (!EventConfig.isActive(EventConfig.HUNG_VUONG)) {
+            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
+            return;
+        }
         long now = System.currentTimeMillis();
         long elapsed = now - START_TIME;
         long phaseStartTime = START_TIME + (elapsed / (60 * 60 * 1000)) * (60 * 60 * 1000);
@@ -116,6 +120,10 @@ public class VuaHung extends Npc {
 
     @Override
     public void confirmMenu(Player pl, int select) {
+        if (!EventConfig.isActive(EventConfig.HUNG_VUONG)) {
+            Service.gI().sendThongBao(pl, "Sự kiện chưa mở hoặc đã kết thúc.");
+            return;
+        }
         // Xử lý menu con di chuyển (map 184)
         if (pl.idMark.getIndexMenu() == 200) {
             if (select == 0) {

@@ -180,6 +180,9 @@ public class BossID {
     public static final int THUY_TINH = -355;
     //========================TET EVENT========================
     public static final int LAN_CON = -371;
+    //========================SUMMER EVENT========================
+    public static final int BIG_MOM = -372;
+    public static final int KAIDO = -373;
 
     public static final int KARIN = -357;
     public static final int YAJIRO = -358;

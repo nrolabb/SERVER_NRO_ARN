@@ -94,6 +94,8 @@ import nro.models.boss.event_trung_thu.NguyetThan;
 import nro.models.boss.event_trung_thu.NhatThan;
 import nro.models.boss.event_tet.LanCon;
 import nro.models.boss.event_noel.OngGiaNoel;
+import nro.models.event.summer.BigMom;
+import nro.models.event.summer.Kaido;
 import nro.models.player.Player;
 import nro.models.network.Message;
 import nro.models.map.service.MapService;
@@ -349,6 +351,10 @@ public class BossManager implements Runnable {
                     new ThuyTinh();
                 case BossID.LAN_CON ->
                     new LanCon();
+                case BossID.BIG_MOM ->
+                    new BigMom();
+                case BossID.KAIDO ->
+                    new Kaido();
                 case BossID.SOI_HEC_QUYN1 ->
                     new SoiHecQuyn();
                 case BossID.O_DO1 ->
