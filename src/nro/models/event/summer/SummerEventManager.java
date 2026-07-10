@@ -13,6 +13,7 @@ import nro.models.npc.Npc;
 import nro.models.npc.NpcFactory;
 import nro.models.player_system.Template.NpcTemplate;
 import nro.models.server.Manager;
+import nro.models.server.ServerManager;
 import nro.models.skill.Skill;
 import nro.models.utils.Logger;
 import nro.models.utils.Util;
@@ -44,6 +45,25 @@ public class SummerEventManager extends BossManager {
     }
 
     private SummerEventManager() {
+    }
+
+    @Override
+    public void run() {
+        while (ServerManager.isRunning) {
+            try {
+                long start = System.currentTimeMillis();
+                for (Boss boss : this.bosses) {
+                    boss.update();
+                }
+                long sleepTime = 300 - (System.currentTimeMillis() - start);
+                Thread.sleep(Math.max(sleepTime, 10));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                Logger.logException(SummerEventManager.class, e, "Loi cap nhat Summer Boss");
+            }
+        }
     }
 
     public synchronized void init() {
@@ -140,12 +160,19 @@ public class SummerEventManager extends BossManager {
     }
 
     public DropReward randomBossDrop() {
+        int totalRate = 0;
         for (DropReward reward : BOSS_DROPS) {
-            if (Util.isTrue(reward.rate, 10000)) {
+            totalRate += reward.rate;
+        }
+        int random = Util.nextInt(1, totalRate);
+        int currentRate = 0;
+        for (DropReward reward : BOSS_DROPS) {
+            currentRate += reward.rate;
+            if (random <= currentRate) {
                 return reward;
             }
         }
-        return null;
+        return BOSS_DROPS[0];
     }
 
     public static final LuckyReward[] LUCKY_REWARDS = {
@@ -180,7 +207,7 @@ public class SummerEventManager extends BossManager {
             new String[]{},
             new String[]{"|-1|Biển cả là của ta!", "|-1|Để lại kho báu rồi chạy đi!"},
             new String[]{"|-1|Ta sẽ quay lại..."},
-            900
+            120
     );
 
     public static final BossData KAIDO_DATA = new BossData(
@@ -194,7 +221,7 @@ public class SummerEventManager extends BossManager {
             new String[]{},
             new String[]{"|-1|Có gan thì tới đây!", "|-1|Ta là vua của vùng biển này!"},
             new String[]{"|-1|Không thể nào..."},
-            1200
+            180
     );
 
     public static class LuckyReward {

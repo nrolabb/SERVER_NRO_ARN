@@ -25,6 +25,9 @@ public class ItemMap {
     public List<ItemOption> options;
 
     public long createTime;
+    private long ownerProtectionTime = 15000;
+    private long existenceTime = 30000;
+    private boolean customDropTiming;
 
     public int clanId = -1;
 
@@ -108,13 +111,15 @@ public class ItemMap {
             // if (this.itemTemplate.type == 22) {
             //     satelliteUpdate();
             // }
-            if (Util.canDoWithTime(createTime, 15000)) {
-                if (this.itemTemplate.type != 22 && this.itemTemplate.id != 726 && this.itemTemplate.id != 992) {
+            if (Util.canDoWithTime(createTime, ownerProtectionTime)) {
+                if (customDropTiming || this.itemTemplate.type != 22 && this.itemTemplate.id != 726 && this.itemTemplate.id != 992) {
                     this.playerId = -1;
                 }
             }
-            if ((Util.canDoWithTime(createTime, 30000) && isNotNullItem() && itemTemplate.type != 22 || Util.canDoWithTime(createTime, 1800000)) && !this.isNamecBall) {
-                if (this.zone != null && this.zone.map.mapId != 21 && this.zone.map.mapId != 22
+            if ((Util.canDoWithTime(createTime, existenceTime) && isNotNullItem()
+                    && (customDropTiming || itemTemplate.type != 22)
+                    || Util.canDoWithTime(createTime, 1800000)) && !this.isNamecBall) {
+                if (customDropTiming || this.zone != null && this.zone.map.mapId != 21 && this.zone.map.mapId != 22
                         && this.zone.map.mapId != 23 && this.itemTemplate.id != 78
                         && this.itemTemplate.id != 726 && !(MapService.gI().isMapDoanhTrai(this.zone.map.mapId) && this.itemTemplate.id >= 14 && this.itemTemplate.id <= 20)) {
                     ItemMapService.gI().removeItemMapAndSendClient(this);
@@ -130,6 +135,12 @@ public class ItemMap {
             //     ItemMapService.gI().removeItemMapAndSendClient(this);
             // }
         }
+    }
+
+    public void setDropTiming(long ownerProtectionTime, long existenceTime) {
+        this.ownerProtectionTime = ownerProtectionTime;
+        this.existenceTime = existenceTime;
+        this.customDropTiming = true;
     }
 
     private boolean findPlayerByID(long id) {
