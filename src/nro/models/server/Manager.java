@@ -253,7 +253,7 @@ public final class Manager {
         ResultSet rs = null;
         try (Connection con = LocalManager.getConnection();) {
             // load part
-            ps = con.prepareStatement("select * from part");
+            ps = con.prepareStatement("select * from part order by id");
             rs = ps.executeQuery();
             List<Part> parts = new ArrayList<>();
             while (rs.next()) {
@@ -268,22 +268,11 @@ public final class Manager {
                             Byte.parseByte(String.valueOf(pd.get(2)))));
                     pd.clear();
                 }
-                parts.add(part);
+                addPartAtItsId(parts, part);
                 dataArray.clear();
             }
             addHero1BienHinhParts(parts);
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/update_data/part"));
-            dos.writeShort(parts.size());
-            for (Part part : parts) {
-                dos.writeByte(part.type);
-                for (PartDetail partDetail : part.partDetails) {
-                    dos.writeShort(partDetail.iconId);
-                    dos.writeByte(partDetail.dx);
-                    dos.writeByte(partDetail.dy);
-                }
-            }
-            dos.flush();
-            dos.close();
+            writePartFile(parts);
         } catch (Exception e) {
             System.err.print("\nError at 299\n");
             e.printStackTrace();
@@ -314,6 +303,54 @@ public final class Manager {
             part.partDetails.add(new PartDetail(iconId, dx, dy));
         }
         return part;
+    }
+
+    private static void addPartAtItsId(List<Part> parts, Part part) {
+        if (part.id != parts.size()) {
+            throw new IllegalStateException("Part id must be continuous. Expected " + parts.size()
+                    + " but found " + part.id);
+        }
+        parts.add(part);
+    }
+
+    private static int getPartDetailCount(int type) {
+        switch (type) {
+            case 0:
+                return 3;
+            case 1:
+                return 17;
+            case 2:
+                return 14;
+            case 3:
+                return 2;
+            default:
+                throw new IllegalArgumentException("Unsupported part type: " + type);
+        }
+    }
+
+    private static void writePartFile(List<Part> parts) throws IOException {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/update_data/part"))) {
+            dos.writeShort(parts.size());
+            for (int partId = 0; partId < parts.size(); partId++) {
+                Part part = parts.get(partId);
+                int expectedCount = getPartDetailCount(part.type);
+                int actualCount = part.partDetails.size();
+                if (actualCount != expectedCount) {
+                    Logger.error("Part " + partId + " type " + part.type + " has " + actualCount
+                            + " details; writing exactly " + expectedCount + " to protect following parts");
+                }
+                dos.writeByte(part.type);
+                for (int detailIndex = 0; detailIndex < expectedCount; detailIndex++) {
+                    PartDetail detail = detailIndex < actualCount
+                            ? part.partDetails.get(detailIndex)
+                            : new PartDetail(0, (byte) 0, (byte) 0);
+                    dos.writeShort(detail.iconId);
+                    dos.writeByte(detail.dx);
+                    dos.writeByte(detail.dy);
+                }
+            }
+            dos.flush();
+        }
     }
 
     private static JSONArray parseJsonArray(String data, String source) {
@@ -349,7 +386,7 @@ public final class Manager {
         ResultSet rs = null;
         try (Connection ConnectionDatabase = LocalManager.getConnection()) {
             // load part
-            ps = ConnectionDatabase.prepareStatement("select * from part");
+            ps = ConnectionDatabase.prepareStatement("select * from part order by id");
             rs = ps.executeQuery();
             List<Part> parts = new ArrayList<>();
             while (rs.next()) {
@@ -364,21 +401,11 @@ public final class Manager {
                             Byte.parseByte(String.valueOf(pd.get(2)))));
                     pd.clear();
                 }
-                parts.add(part);
+                addPartAtItsId(parts, part);
                 dataArray.clear();
             }
             addHero1BienHinhParts(parts);
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/update_data/part"));
-            dos.writeShort(parts.size());
-            for (Part part : parts) {
-                dos.writeByte(part.type);
-                for (PartDetail partDetail : part.partDetails) {
-                    dos.writeShort(partDetail.iconId);
-                    dos.writeByte(partDetail.dx);
-                    dos.writeByte(partDetail.dy);
-                }
-            }
-            dos.flush();
+            writePartFile(parts);
             Logger.success(Logger.PURPLE + "Successfully loaded part (" + parts.size() + ")\n");
 
             // load bg item template
