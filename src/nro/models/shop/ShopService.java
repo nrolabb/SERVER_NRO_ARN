@@ -4,6 +4,7 @@ import nro.models.consts.ConstAchievement;
 import nro.models.item.Item;
 import nro.models.player.Inventory;
 import nro.models.player.Player;
+import nro.models.player_system.Template;
 import nro.models.clan.Clan;
 import nro.models.shop.ItemShop;
 import nro.models.shop.Shop;
@@ -21,6 +22,7 @@ import nro.models.player_badges.BadgesData;
 import nro.models.player_badges.BadgesService;
 import nro.models.player_badges.BagesTemplate;
 import nro.models.services.AchievementService;
+import nro.models.services.ActivePointService;
 import nro.models.services.ClanService;
 import nro.models.services.ItemService;
 import nro.models.services.Service;
@@ -39,10 +41,11 @@ import nro.models.utils.TimeUtil;
  */
 public class ShopService {
 
-    private static final byte COST_GOLD = 0;
-    private static final byte COST_GEM = 1;
-    private static final byte COST_RUBY = 3;
-    private static final byte COST_COUPON = 4;
+    private static final byte COST_GOLD = ShopSellType.GOLD;
+    private static final byte COST_GEM = ShopSellType.GEM;
+    private static final byte COST_RUBY = ShopSellType.RUBY;
+    // Kept only for the legacy packet helpers; new purchases use ShopSellType.
+    private static final byte COST_COUPON = ShopSellType.CLAN_POINT;
 
     private static final byte NORMAL_SHOP = 0;
     private static final byte SPEC_SHOP = 3;
@@ -87,9 +90,8 @@ public class ShopService {
                     openShopType1(player, shop);
                     break;
                 case NORMAL_SHOP:
-                    openShopType0(player, shop);
-                    break;
                 case SPEC_SHOP:
+                    // A single packet format lets every item select its own currency.
                     openShopType3(player, shop);
                     break;
             }
@@ -342,7 +344,7 @@ public class ShopService {
                     msg.writer().writeByte(tab.itemShops.size());
                     for (ItemShop itemShop : tab.itemShops) {
                         msg.writer().writeShort(itemShop.temp.id);
-                        msg.writer().writeShort(itemShop.iconSpec);
+                        msg.writer().writeShort(resolveSellIcon(itemShop));
                         msg.writer().writeInt(itemShop.cost);
                         msg.writer().writeByte(itemShop.options.size());
                         for (Item.ItemOption option : itemShop.options) {
@@ -370,6 +372,20 @@ public class ShopService {
                 }
             }
         }
+    }
+
+    private int resolveSellIcon(ItemShop itemShop) {
+        return switch (itemShop.typeSell) {
+            case ShopSellType.GOLD -> ItemService.gI().getTemplate((short) 76).iconID;
+            case ShopSellType.GEM -> ItemService.gI().getTemplate((short) 77).iconID;
+            case ShopSellType.RUBY -> ItemService.gI().getTemplate((short) 861).iconID;
+            case ShopSellType.SPECIFIC_ITEM -> {
+                Template.ItemTemplate currency = ItemService.gI().getTemplate((short) itemShop.iconSpec);
+                yield currency == null ? -1 : Short.toUnsignedInt(currency.iconID);
+            }
+            case ShopSellType.CLAN_POINT, ShopSellType.ACTIVE_POINT -> itemShop.iconSpec;
+            default -> -1;
+        };
     }
 
     private void openShopType4(Player player, String tagName, List<Item> items) {
@@ -588,6 +604,12 @@ public class ShopService {
             Service.gI().sendThongBao(player, "Không thể thực hiện");
             return;
         }
+
+        // Vật phẩm mua bằng điểm bang hội luôn được chuyển thẳng vào kho bang.
+        if (is.typeSell == ShopSellType.CLAN_POINT) {
+            buyItemForClanBox(player, is);
+            return;
+        }
         if (!subMoneyByItemShop(player, is)) {
             return;
         }
@@ -679,6 +701,13 @@ public class ShopService {
             return;
         }
 
+        // Route by sell type before every legacy tab-specific or personal-bag path.
+        // Type 4 purchases belong to the clan and must never reach addItemBag().
+        if (is.typeSell == ShopSellType.CLAN_POINT) {
+            buyItemForClanBox(player, is);
+            return;
+        }
+
         // Đổi bằng phiếu giảm giá
 
         if (is.tabShop.id == 50) {
@@ -766,7 +795,7 @@ public class ShopService {
         }
 
         // Đổi bằng điểm sự kiện
-        if (is.tabShop.id == 59) {
+        if (is.tabShop.id == 59 && is.typeSell != ShopSellType.ACTIVE_POINT) {
             int eventPointPrice = 0;
 
             switch (is.temp.id) {
@@ -836,7 +865,8 @@ public class ShopService {
             return;
         }
         // Đổi bằng điểm Capsule Bang
-        if (is.tabShop.id == 60 || is.tabShop.id == 61 || is.tabShop.id == 62) {
+        if ((is.tabShop.id == 60 || is.tabShop.id == 61 || is.tabShop.id == 62)
+                && is.typeSell != ShopSellType.CLAN_POINT) {
             int capsuleClanPointPrice = 0;
 
             switch (is.temp.id) {
@@ -925,16 +955,8 @@ public class ShopService {
             return;
         }
 
-        // Shop thường
-        if (shop.typeShop == ShopService.NORMAL_SHOP) {
-            if (!subMoneyByItemShop(player, is)) {
-                return;
-            }
-        } // Shop đặc biệt
-        else if (shop.typeShop == ShopService.SPEC_SHOP) {
-            if (!this.subIemByItemShop(player, is)) {
-                return;
-            }
+        if (!payItemShop(player, is)) {
+            return;
         }
 
         // Tạo item và xử lý đặc biệt
@@ -944,9 +966,21 @@ public class ShopService {
             item = ItemService.gI().createNewItem((short) 521);
             item.itemOptions.addAll(is.options);
         }
-        InventoryService.gI().addItemBag(player, item);
-        InventoryService.gI().sendItemBags(player);
-        Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name);
+        if (is.typeSell == ShopSellType.CLAN_POINT) {
+            // Safety guard: a clan-priced item must never enter the personal bag,
+            // even if this purchase reached the common delivery path.
+            if (!ClanService.gI().addItemClanBox(player.clan, item)) {
+                Service.gI().sendThongBao(player, "Kho bang đã đầy, không thể chứa thêm!");
+                return;
+            }
+            ClanService.gI().sendClanBoxUpdate(player);
+            player.clan.sendMyClanForAllMember();
+            Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name + " vào kho bang");
+        } else {
+            InventoryService.gI().addItemBag(player, item);
+            InventoryService.gI().sendItemBags(player);
+            Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name);
+        }
 
         if (itemTempId == 1523 || itemTempId == 1524 || itemTempId == 521) {
             updateAutoTrainPurchase(player, itemTempId);
@@ -1036,48 +1070,90 @@ public class ShopService {
         Service.gI().Send_Info_NV(pl);
     }
 
-    private boolean subIemByItemShop(Player pl, ItemShop itemShop) {
-        boolean isBuy = false;
-        short itSpec = ItemService.gI().getItemIdByIcon((short) itemShop.iconSpec);
-        int buySpec = itemShop.cost;
-        Item itS = ItemService.gI().createNewItem(itSpec);
-        switch (itS.template.id) {
-            case 76:
-            case 188:
-            case 189:
-            case 190:
-                if (pl.inventory.gold >= buySpec) {
-                    pl.inventory.gold -= buySpec;
-                    isBuy = true;
-                } else {
-                    Service.gI().sendThongBao(pl, "Bạn Không Đủ Vàng Để Mua Vật Phẩm");
-                    isBuy = false;
-                }
-                break;
-            case 77:
-                if (pl.inventory.gem >= buySpec) {
-                    isBuy = true;
-                } else {
-                    Service.gI().sendThongBao(pl, "Bạn Không Đủ Ngọc Để Mua Vật Phẩm");
-                    isBuy = false;
-                }
-                break;
-            default:
-                if (InventoryService.gI().findItemBag(pl, itSpec) == null
-                        || !InventoryService.gI().findItemBag(pl, itSpec).isNotNullItem()) {
-                    Service.gI().sendThongBao(pl, "Không tìm thấy " + itS.template.name);
-                    isBuy = false;
-                } else if (InventoryService.gI().findItemBag(pl, itSpec).quantity < buySpec) {
-                    Service.gI().sendThongBao(pl, "Bạn không có đủ " + buySpec + " " + itS.template.name);
-                    isBuy = false;
-                } else {
-                    InventoryService.gI().subQuantityItemsBag(pl, InventoryService.gI().findItemBag(pl, itSpec),
-                            buySpec);
-                    isBuy = true;
-                }
-                break;
+    private boolean payItemShop(Player player, ItemShop itemShop) {
+        int cost = itemShop.cost;
+        if (cost < 0) {
+            Service.gI().sendThongBao(player, "Đơn giá không hợp lệ");
+            return false;
         }
-        return isBuy;
+        switch (itemShop.typeSell) {
+            case ShopSellType.GOLD -> {
+                if (player.inventory.gold < cost) return insufficient(player, "vàng");
+                player.inventory.gold -= cost;
+            }
+            case ShopSellType.GEM -> {
+                if (player.inventory.gem < cost) return insufficient(player, "ngọc xanh");
+                player.inventory.gem -= cost;
+            }
+            case ShopSellType.RUBY -> {
+                if (player.inventory.ruby < cost) return insufficient(player, "ruby");
+                player.inventory.ruby -= cost;
+            }
+            case ShopSellType.CLAN_POINT -> {
+                if (player.clan == null) return insufficient(player, "điểm bang hội");
+                if (player.clan.capsuleClan < cost) return insufficient(player, "điểm bang hội");
+                player.clan.capsuleClan -= cost;
+                player.clan.update();
+            }
+            case ShopSellType.ACTIVE_POINT -> {
+                if (player.activePoint < cost) return insufficient(player, "điểm active");
+                player.activePoint -= cost;
+                ActivePointService.gI().save(player);
+                Service.gI().sendNangDong(player);
+            }
+            case ShopSellType.SPECIFIC_ITEM -> {
+                short currencyItemId = (short) itemShop.iconSpec;
+                Template.ItemTemplate currency = ItemService.gI().getTemplate(currencyItemId);
+                if (currency == null) {
+                    Service.gI().sendThongBao(player, "Item đơn giá không tồn tại: " + itemShop.iconSpec);
+                    return false;
+                }
+                Item bagItem = InventoryService.gI().findItemBag(player, currencyItemId);
+                if (bagItem == null || !bagItem.isNotNullItem() || bagItem.quantity < cost) {
+                    return insufficient(player, currency.name);
+                }
+                InventoryService.gI().subQuantityItemsBag(player, bagItem, cost);
+            }
+            default -> {
+                Service.gI().sendThongBao(player, "Loại đơn giá shop không được hỗ trợ: " + itemShop.typeSell);
+                return false;
+            }
+        }
+        Service.gI().sendMoney(player);
+        return true;
+    }
+
+    private void buyItemForClanBox(Player player, ItemShop itemShop) {
+        if (player.clan == null) {
+            Service.gI().sendThongBao(player, "Bạn không có trong bang hội!");
+            return;
+        }
+        if (player.clan.getRole(player) != Clan.LEADER && player.clan.getRole(player) != Clan.DEPUTY) {
+            Service.gI().sendThongBao(player, "Chỉ bang chủ hoặc bang phó mới có thể mua vật phẩm cho bang hội!");
+            return;
+        }
+        if (itemShop.cost < 0 || player.clan.capsuleClan < itemShop.cost) {
+            Service.gI().sendThongBao(player, "Bang hội không đủ điểm Capsule Bang!");
+            return;
+        }
+
+        Item item = ItemService.gI().createItemFromItemShop(itemShop);
+        if (!ClanService.gI().addItemClanBox(player.clan, item)) {
+            Service.gI().sendThongBao(player, "Kho bang đã đầy, không thể chứa thêm!");
+            return;
+        }
+
+        player.clan.capsuleClan -= itemShop.cost;
+        player.clan.update();
+        ClanService.gI().sendClanBoxUpdate(player);
+        player.clan.sendMyClanForAllMember();
+        Service.gI().sendThongBao(player,
+                "Đã mua " + itemShop.temp.name + " vào kho bang với " + itemShop.cost + " điểm Capsule Bang.");
+    }
+
+    private boolean insufficient(Player player, String currencyName) {
+        Service.gI().sendThongBao(player, "Bạn không có đủ " + currencyName);
+        return false;
     }
 
     public void showConfirmSellItem(Player pl, int where, int index) {
