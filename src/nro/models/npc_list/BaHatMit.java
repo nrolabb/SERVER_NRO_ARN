@@ -119,6 +119,8 @@ public class BaHatMit extends Npc {
                                 : "Nâng cấp\nBông tai\nPorata cấp\n3");
                     }
 
+                    menu.add("Ép\nLinh Thạch");
+
                     // Thêm thưởng bùa nếu còn lượt hôm nay (đặt lên đầu để case 0 vẫn là thưởng bùa)
                     if (DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
                         menu.add(0, "Thưởng\nBùa 1h\nngẫu nhiên");
@@ -330,6 +332,13 @@ public class BaHatMit extends Npc {
                                 select++;
                             }
                         }
+                        boolean hasBt3Menu = InventoryService.gI().findItem(player, 1819);
+                        boolean hasBt2Menu = InventoryService.gI().findItemBongTaiCap2(player)
+                                || InventoryService.gI().findItem(player, 921);
+                        // Giữ index chức năng Ép Linh Thạch ổn định khi mục Bông tai cấp 3 không xuất hiện.
+                        if (!hasBt2Menu && !hasBt3Menu && select == 6) {
+                            select++;
+                        }
                         switch (select) {
                             case 0:
                                 if (DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
@@ -384,10 +393,13 @@ public class BaHatMit extends Npc {
                                     // Mở tab "Nâng cấp lên BT3"
                                     CombineService.gI().openTabCombine(player, CombineService.NANG_CAP_BONG_TAI3);
                                 } else {
-                                    Service.gI().sendThongBao(player, "Cần có Bông tai Porata cấp 2 hoặc 3.");
+                                    CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
                                 }
                                 break;
                             }
+                            case 8:
+                                CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
+                                break;
                        }
                     
                      } else if
@@ -448,7 +460,7 @@ public class BaHatMit extends Npc {
                     } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
                         switch (player.combineNew.typeCombine) {
                             case CombineService.NANG_CAP_BONG_TAI3, CombineService.NANG_CHI_SO_BONG_TAI3, CombineService.NANG_CAP_BONG_TAI, CombineService.NANG_CHI_SO_BONG_TAI, CombineService.LAM_PHEP_NHAP_DA, CombineService.NHAP_NGOC_RONG,
-                            CombineService.GIAM_DINH_SACH, CombineService.TAY_SACH, CombineService.NANG_CAP_SACH_TUYET_KY, CombineService.HOI_PHUC_SACH, CombineService.PHAN_RA_SACH
+                            CombineService.GIAM_DINH_SACH, CombineService.TAY_SACH, CombineService.NANG_CAP_SACH_TUYET_KY, CombineService.HOI_PHUC_SACH, CombineService.PHAN_RA_SACH, CombineService.EP_LINH_THACH
                              -> {
                                 if (select == 0) {
                                     CombineService.gI().startCombine(player);

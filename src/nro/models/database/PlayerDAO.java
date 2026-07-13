@@ -360,6 +360,7 @@ public class PlayerDAO {
 
     public static void updatePlayer(Player player) {
         if (player != null && player.idMark.isLoadedAllDataPlayer()) {
+            synchronized (player) {
             long st = System.currentTimeMillis();
             try {
                 JSONArray dataArray = new JSONArray();
@@ -1094,6 +1095,7 @@ player.reward_500_2207 ? 1 : 0,
                 }
             } catch (Exception e) {
                 Logger.logException(PlayerDAO.class, e, "Lỗi save player " + player.name);
+            }
             }
 
         }

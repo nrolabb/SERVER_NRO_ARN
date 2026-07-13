@@ -36,6 +36,7 @@ import nro.models.radar.Card;
 import nro.models.services.RadarService;
 import nro.models.map.service.NpcManager;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetService;
 import nro.models.matches.PVPService;
 import nro.models.services.AchievementService;
 import nro.models.shop.ShopService;
@@ -872,6 +873,7 @@ public class Controller implements IMessageHandler {
                             Service.gI().sendTimeSkill(player);
                             TrainingService.gI().tnsmLuyenTapUp(player);
                             player.sendNewPet();
+                            PuppetService.gI().onEquipmentChanged(player);
                             if (player.getSession() != null && player.getSession().tongnap > 0) {
                                 AchievementService.gI().checkDoneTask(player, ConstAchievement.LAN_DAU_NAP_NGOC);
                             }

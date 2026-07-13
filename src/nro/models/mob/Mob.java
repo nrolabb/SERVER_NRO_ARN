@@ -15,6 +15,7 @@ import nro.models.map.Zone;
 import nro.models.player.Location;
 import nro.models.player.Pet;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetBoss;
 import nro.models.network.Message;
 import java.io.IOException;
 import nro.models.server.Maintenance;
@@ -362,7 +363,8 @@ public class Mob {
         try {
             List<Player> players = this.zone.getNotBosses();
             for (Player pl : players) {
-                if (!pl.isDie() && !pl.isBoss && !pl.isNewPet && (pl.satellite == null || !pl.satellite.isDefend)
+                if (!pl.isDie() && !pl.isBoss && (!pl.isNewPet || pl instanceof PuppetBoss)
+                        && (pl.satellite == null || !pl.satellite.isDefend)
                         && (pl.effectSkin == null || !pl.effectSkin.isVoHinh)
                         && (this.tempId > 18 || (this.tempId > 9 && this.type == 4)) || isBigBoss()) {
                     int dis = Util.getDistance(pl, this);

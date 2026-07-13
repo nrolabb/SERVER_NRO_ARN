@@ -710,7 +710,7 @@ public class ShopService {
 
         // Đổi bằng phiếu giảm giá
 
-        if (is.tabShop.id == 50) {
+        if (is.tabShop.id == 50 && is.typeSell != ShopSellType.SPECIFIC_ITEM) {
 
             // 1️⃣ kiểm tra phiếu
             Item pGG = InventoryService.gI().findItem(player.inventory.itemsBag, 459);
@@ -745,19 +745,19 @@ public class ShopService {
         }
 
         // Đổi danh hiệu
-        if (is.tabShop.id == 44) {
+        if (is.tabShop.id == 44 && is.typeSell != ShopSellType.SPECIFIC_ITEM) {
             buyDanhHieu(player, is);
             return;
         }
 
         // Đổi danh hiệu khác
-        if (is.tabShop.id == 45) {
+        if (is.tabShop.id == 45 && is.typeSell != ShopSellType.SPECIFIC_ITEM) {
             changeDanhHieu(player, is);
             return;
         }
 
         // Shop chipi
-        if (is.tabShop.id == 49) {
+        if (is.tabShop.id == 49 && is.typeSell != ShopSellType.SPECIFIC_ITEM) {
             Item item = ItemService.gI().createItemFromItemShop(is);
             if (Util.isTrue(5, 100)) {
                 item.itemOptions.add(new ItemOption(73, 0)); // HSD vĩnh viễn
@@ -770,7 +770,7 @@ public class ShopService {
         }
 
         // Shop kỹ năng
-        if (shop.typeShop == ShopService.KINANG_SHOP) {
+        if (shop.typeShop == ShopService.KINANG_SHOP && is.typeSell != ShopSellType.SPECIFIC_ITEM) {
             learnKyNang(player, is);
             return;
         }
@@ -1108,11 +1108,10 @@ public class ShopService {
                     Service.gI().sendThongBao(player, "Item đơn giá không tồn tại: " + itemShop.iconSpec);
                     return false;
                 }
-                Item bagItem = InventoryService.gI().findItemBag(player, currencyItemId);
-                if (bagItem == null || !bagItem.isNotNullItem() || bagItem.quantity < cost) {
+                if (countItemInBag(player, currencyItemId) < cost) {
                     return insufficient(player, currency.name);
                 }
-                InventoryService.gI().subQuantityItemsBag(player, bagItem, cost);
+                subItemInBag(player, currencyItemId, cost);
             }
             default -> {
                 Service.gI().sendThongBao(player, "Loại đơn giá shop không được hỗ trợ: " + itemShop.typeSell);
@@ -1121,6 +1120,34 @@ public class ShopService {
         }
         Service.gI().sendMoney(player);
         return true;
+    }
+
+    private int countItemInBag(Player player, short itemId) {
+        long total = 0;
+        for (Item item : player.inventory.itemsBag) {
+            if (item != null && item.isNotNullItem() && item.template.id == itemId) {
+                total += item.quantity;
+                if (total >= Integer.MAX_VALUE) {
+                    return Integer.MAX_VALUE;
+                }
+            }
+        }
+        return (int) total;
+    }
+
+    private void subItemInBag(Player player, short itemId, int quantity) {
+        int remaining = quantity;
+        // Use a copy because consuming a whole stack removes it from itemsBag.
+        for (Item item : new ArrayList<>(player.inventory.itemsBag)) {
+            if (remaining <= 0) {
+                break;
+            }
+            if (item != null && item.isNotNullItem() && item.template.id == itemId) {
+                int amount = Math.min(item.quantity, remaining);
+                InventoryService.gI().subQuantityItemsBag(player, item, amount);
+                remaining -= amount;
+            }
+        }
     }
 
     private void buyItemForClanBox(Player player, ItemShop itemShop) {

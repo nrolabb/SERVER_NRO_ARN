@@ -55,6 +55,7 @@ public class CombineService {
     public static final int CHE_TAO_TRANG_BI_THIEN_SU = 515;
     public static final int NANG_CHI_SO_BONG_TAI = 517;
     public static final int GHEP_TRANG_BI_KICH_HOAT = 518;
+    public static final int EP_LINH_THACH = 519;
     public static final int NANG_CAP_BONG_TAI3 = 455;
     public static final int NANG_CHI_SO_BONG_TAI3 = 457;
     private static CombineService instance;
@@ -166,6 +167,9 @@ public class CombineService {
             case GHEP_TRANG_BI_KICH_HOAT:
                 GhepTrangBiKichHoat.showInfoCombine(player);
                 break;
+            case EP_LINH_THACH:
+                EpLinhThach.showInfoCombine(player);
+                break;
         }
     }
 
@@ -250,6 +254,9 @@ public class CombineService {
                 break;
             case GHEP_TRANG_BI_KICH_HOAT:
                 GhepTrangBiKichHoat.thucHienGhep(player);
+                break;
+            case EP_LINH_THACH:
+                EpLinhThach.epLinhThach(player);
                 break;
         }
         
@@ -668,6 +675,8 @@ public class CombineService {
                         + "trở thành 1 đá nâng cấp";
             case GHEP_TRANG_BI_KICH_HOAT:
                 return "Ta sẽ phù phép\nmảnh kích hoạt\nthành trang bị kích hoạt";
+            case EP_LINH_THACH:
+                return "Ta sẽ giúp ngươi\nép Linh Thạch\nlên cấp cao hơn";
             default:
                 return "";
         }
@@ -746,6 +755,11 @@ public class CombineService {
                         + "Thành công nhận trang bị đúng loại mảnh\n"
                         + "đúng hành tinh và đúng set kích hoạt\n"
                         + "Sau đó chọn 'Nâng cấp'";
+            case EP_LINH_THACH:
+                return "Vào hành trang\n"
+                        + "Chọn 5 Linh Thạch cùng cấp (cấp 1-3)\n"
+                        + "Tỉ lệ: cấp 1→2 30%, cấp 2→3 20%, cấp 3→4 5%\n"
+                        + "Thất bại chỉ mất điểm tiềm năng";
             default:
                 return "";
         }

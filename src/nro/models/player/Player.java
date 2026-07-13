@@ -67,6 +67,7 @@ import nro.models.minigame.ChonAiDay_Gold;
 import nro.models.npc.DuaHauEgg;
 import nro.models.player_badges.Badges;
 import nro.models.player_badges.BadgesData;
+import nro.models.puppet.PuppetBoss;
 import nro.models.services.ItemTimeService;
 import nro.models.task.BadgesTask;
 import nro.models.task.BadgesTaskService;
@@ -193,6 +194,7 @@ public class Player implements Runnable {
     public List<Zone> mapCapsule;
     public Pet pet;
     public NewPet newPet;
+    public PuppetBoss puppetBoss;
     public MobMe mobMe;
     public Location location;
     public SetClothes setClothes;
@@ -451,6 +453,9 @@ public class Player implements Runnable {
                     }
                     if (magicTree != null) {
                         magicTree.update();
+                    }
+                    if (puppetBoss != null) {
+                        puppetBoss.update();
                     }
                     if (this.zone != null && hasEffect(this, 7143)) {
                         activeEffects.entrySet().removeIf(entry -> System.currentTimeMillis() >= entry.getValue());
@@ -1835,6 +1840,10 @@ public class Player implements Runnable {
         if (newPet != null) {
             newPet.dispose();
             newPet = null;
+        }
+        if (puppetBoss != null) {
+            puppetBoss.dispose();
+            puppetBoss = null;
         }
         if (mapBlackBall != null) {
             mapBlackBall.clear();

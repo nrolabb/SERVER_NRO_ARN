@@ -5,6 +5,7 @@ import nro.models.item.Item;
 import static nro.models.item.ItemTime.*;
 import nro.models.player.Fusion;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetService;
 import nro.models.network.Message;
 import java.io.IOException;
 import nro.models.map.phoban.BanDoKhoBau;
@@ -147,6 +148,7 @@ public class ItemTimeService {
         if (player.itemTime.isUseRX) {
             sendItemTime(player, 8579, player.itemTime.timeRX / 1000);
         }
+        PuppetService.gI().sendEquippedTimer(player);
     }
 
     public void turnOnTDLT(Player player, Item item) {

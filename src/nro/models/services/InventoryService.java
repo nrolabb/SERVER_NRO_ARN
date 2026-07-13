@@ -6,6 +6,7 @@ import nro.models.npc.MabuEgg;
 import nro.models.player.Inventory;
 import nro.models.player.Pet;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetService;
 import nro.models.network.Message;
 import nro.models.services.ItemService;
 import nro.models.services.Service;
@@ -295,7 +296,7 @@ public class InventoryService {
 
         // Kiểm tra các loại item hợp lệ
         switch (item.template.type) {
-            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 36, 72 -> {
+            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 29, 36, 72 -> {
             }
             default -> {
                 Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Trang bị không phù hợp!1");
@@ -327,6 +328,23 @@ public class InventoryService {
         if (item.template.id == 1966 && !player.isPet) {
             Service.gI().sendThongBaoOK(player, "Bông tai này chỉ dành cho Đệ Tử!");
             return sItem;
+        }
+
+        if (item.template.type == 29) {
+            if (!PuppetService.gI().isPuppetItemId(item.template.id)) {
+                Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player,
+                        "Vật phẩm này không phải khôi lỗi");
+                return sItem;
+            }
+            if (!PuppetService.gI().isPuppetItem(item.template.id)) {
+                Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player,
+                        "Khôi lỗi chưa có cấu hình trong bảng puppet_template");
+                return sItem;
+            }
+            if (player.isPet) {
+                Service.gI().sendThongBaoOK(((Pet) player).master, "Đệ tử không thể sử dụng khôi lỗi");
+                return sItem;
+            }
         }
 
         // Kiểm tra yêu cầu sức mạnh
@@ -374,6 +392,9 @@ public class InventoryService {
                 break;
             case 25:
                 index = 11;
+                break;
+            case 29:
+                index = PuppetService.BODY_SLOT;
                 break;
         }
         if (player.isPet && (item.template.type == 11 || item.template.type == 25)) {
@@ -423,6 +444,9 @@ public class InventoryService {
             sendItemBody(player);
             Service.gI().point(player);
             Service.gI().Send_Caitrang(player);
+            if (!player.isPet) {
+                PuppetService.gI().onEquipmentChanged(player);
+            }
         }
     }
 
@@ -448,6 +472,9 @@ public class InventoryService {
             Service.gI().Send_Caitrang(player);
             Service.gI().sendFlagBag(player);
             Service.gI().point(player);
+            if (!player.isPet && index == PuppetService.BODY_SLOT) {
+                PuppetService.gI().onEquipmentChanged(player);
+            }
         }
     }
 

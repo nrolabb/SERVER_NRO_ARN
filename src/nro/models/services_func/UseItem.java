@@ -30,6 +30,7 @@ import nro.models.map.Zone;
 import nro.models.player.Inventory;
 import nro.models.map.service.NpcService;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetService;
 import nro.models.skill.Skill;
 import nro.models.network.Message;
 import nro.models.map.service.ChangeMapService;
@@ -260,6 +261,18 @@ public class UseItem {
 
     private void useItem(Player pl, Item item, int indexBag) {
         if (item != null && item.isNotNullItem()) {
+            // Nhận diện trực tiếp theo item id, sau đó PuppetService mới tra
+            // id_temp trong bảng puppet_template để lấy cấu hình triệu hồi.
+            switch (item.template.id) {
+                case 2027, 2028, 2029, 2030 -> {
+                    PuppetService.gI().charge(pl, item);
+                    return;
+                }
+                case 2041, 2042, 2043, 2044, 2045 -> {
+                    PuppetService.gI().usePuppetItem(pl, item, indexBag);
+                    return;
+                }
+            }
             for (nro.models.player_system.Template.SetKichHoatTemplate temp : Manager.SET_KICH_HOAT_TEMPLATES) {
                 if (temp.typeManh == item.template.type) {
                     Service.gI().sendThongBao(pl, "Vật phẩm này chỉ dùng để ghép trang bị kích hoạt tại đảo Kame!");

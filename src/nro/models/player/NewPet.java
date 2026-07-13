@@ -76,7 +76,7 @@ public class NewPet extends Player {
     @Override
     public void update() {
         super.update();
-        if (this.isDie()) {
+        if (this.isDie() && autoReviveWhenDead()) {
             Service.gI().hsChar(this, nPoint.hpMax, nPoint.mpMax);
         }
         if (master != null && master.zone != null && (this.zone == null || this.zone != master.zone) && !MapService.gI().isMapOffline(master.zone.map.mapId)) {
@@ -86,6 +86,11 @@ public class NewPet extends Player {
             return;
         }
         moveIdle();
+    }
+
+    /** Cho lớp con tự xử lý cái chết thay vì luôn hồi sinh miễn phí. */
+    protected boolean autoReviveWhenDead() {
+        return true;
     }
 
     public void followMaster() {

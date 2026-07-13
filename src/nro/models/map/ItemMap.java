@@ -5,6 +5,7 @@ import java.util.List;
 import nro.models.player_system.Template.ItemTemplate;
 import nro.models.item.Item.ItemOption;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetRewardContext;
 import nro.models.utils.Util;
 import nro.models.map.service.ItemMapService;
 import nro.models.services.ItemService;
@@ -46,7 +47,12 @@ public class ItemMap {
         this.quantity = quantity;
         this.x = x;
         this.y = y;
-        this.playerId = playerId != -1 ? Math.abs(playerId) : playerId;
+        Long puppetOwnerId = PuppetRewardContext.getOwnerId();
+        this.playerId = puppetOwnerId != null ? puppetOwnerId : (playerId != -1 ? Math.abs(playerId) : playerId);
+        if (puppetOwnerId != null) {
+            this.ownerProtectionTime = this.existenceTime + 1000;
+            this.customDropTiming = true;
+        }
         this.createTime = System.currentTimeMillis();
         this.options = new ArrayList<>();
         this.isBlackBall = ItemMapService.gI().isBlackBall(this.itemTemplate.id);
@@ -65,7 +71,12 @@ public class ItemMap {
         this.quantity = quantity;
         this.x = x;
         this.y = y;
-        this.playerId = playerId != -1 ? Math.abs(playerId) : playerId;
+        Long puppetOwnerId = PuppetRewardContext.getOwnerId();
+        this.playerId = puppetOwnerId != null ? puppetOwnerId : (playerId != -1 ? Math.abs(playerId) : playerId);
+        if (puppetOwnerId != null) {
+            this.ownerProtectionTime = this.existenceTime + 1000;
+            this.customDropTiming = true;
+        }
         this.createTime = System.currentTimeMillis();
         this.options = new ArrayList<>();
         this.isBlackBall = ItemMapService.gI().isBlackBall(this.itemTemplate.id);
@@ -87,6 +98,9 @@ public class ItemMap {
         this.isNamecBall = itemMap.isNamecBall;
         this.lastTimeMoveToPlayer = itemMap.lastTimeMoveToPlayer;
         this.createTime = System.currentTimeMillis();
+        this.ownerProtectionTime = itemMap.ownerProtectionTime;
+        this.existenceTime = itemMap.existenceTime;
+        this.customDropTiming = itemMap.customDropTiming;
         this.zone.addItem(this);
     }
 

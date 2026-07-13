@@ -13,6 +13,8 @@ import nro.models.mob.MobMe;
 import nro.models.mob_bigboss.GauTuongCuop;
 import nro.models.player.Pet;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetBoss;
+import nro.models.puppet.PuppetRewardContext;
 import nro.models.player.NewSkill;
 import nro.models.network.Message;
 import java.io.IOException;
@@ -924,7 +926,17 @@ public class SkillService {
                 dameAttack /= 3;
             }
         }
-        int dameHit = plInjure.injured(plAtt, miss ? 0 : dameAttack, false, false);
+        Player damageOwner = plAtt instanceof PuppetBoss ? ((PuppetBoss) plAtt).master : plAtt;
+        Long previousPuppetOwner = plAtt instanceof PuppetBoss
+                ? PuppetRewardContext.begin(damageOwner.id) : null;
+        int dameHit;
+        try {
+            dameHit = plInjure.injured(damageOwner, miss ? 0 : dameAttack, false, false);
+        } finally {
+            if (plAtt instanceof PuppetBoss) {
+                PuppetRewardContext.end(previousPuppetOwner);
+            }
+        }
         if (plAtt.playerSkill == null) {
             return;
         }
@@ -1012,7 +1024,21 @@ public class SkillService {
 
         hutHPMP(plAtt, dameHit, null, mob);
         sendPlayerAttackMob(plAtt, mob);
-        mob.injured(plAtt, dameHit, dieWhenHpFull);
+        Player damageOwner = plAtt instanceof PuppetBoss ? ((PuppetBoss) plAtt).master : plAtt;
+        if (plAtt instanceof PuppetBoss) {
+            // Quái ghi nhận khôi lỗi là kẻ địch để có thể đánh trả, nhưng toàn
+            // bộ tiềm năng và drop vẫn được tính cho damageOwner (chủ nhân).
+            mob.addTemporaryEnemies(plAtt);
+        }
+        Long previousPuppetOwner = plAtt instanceof PuppetBoss
+                ? PuppetRewardContext.begin(damageOwner.id) : null;
+        try {
+            mob.injured(damageOwner, dameHit, dieWhenHpFull);
+        } finally {
+            if (plAtt instanceof PuppetBoss) {
+                PuppetRewardContext.end(previousPuppetOwner);
+            }
+        }
     }
 
     public void sendPlayerPrepareSkill(Player player, int affterMiliseconds) {
@@ -1242,6 +1268,11 @@ public class SkillService {
     }
 
     public boolean canAttackPlayer2(Player p1, Player p2) {
+
+        if (p1 instanceof PuppetBoss && p2.isBoss && !(p2 instanceof PuppetBoss)
+                || p2 instanceof PuppetBoss && p1.isBoss && !(p1 instanceof PuppetBoss)) {
+            return true;
+        }
 
         if (p1.isNewPet || p2.isNewPet || (p1 instanceof NonInteractiveNPC) || (p2 instanceof NonInteractiveNPC)) {
             return false;

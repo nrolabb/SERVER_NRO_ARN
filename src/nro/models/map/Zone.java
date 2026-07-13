@@ -8,6 +8,7 @@ import nro.models.mob.Mob;
 import nro.models.npc.Npc;
 import nro.models.map.service.NpcManager;
 import nro.models.player.Player;
+import nro.models.puppet.PuppetBoss;
 import nro.models.network.Message;
 import nro.models.boss.luyen_tap_tu_dong.TrainingBoss;
 import nro.models.consts.ConstMob;
@@ -229,7 +230,9 @@ public class Zone {
                 this.nonInteractiveNPCs.add(player);
             }
 
-            if (!player.isBoss && !this.notBosses.contains(player) && !player.isNewPet && !(player instanceof NonInteractiveNPC)) {
+            if (!player.isBoss && !this.notBosses.contains(player)
+                    && (!player.isNewPet || player instanceof PuppetBoss)
+                    && !(player instanceof NonInteractiveNPC)) {
                 this.notBosses.add(player);
             }
 
