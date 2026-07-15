@@ -138,6 +138,7 @@ public class ServerManager {
             new Thread(ChonAiDay_Gold.gI(), "Thread MiniGame").start();
             new Thread(ConSoMayManGold.gI(), "ConSoMayManGoldThread").start();
             new Thread(ConSoMayManGem.gI(), "ConSoMayManGemThread").start();
+            new Thread(AdminCommandManager.gI(), "Admin Command Thread").start();
 
             Client.gI().startAutoSave();
             startTopUpdater();

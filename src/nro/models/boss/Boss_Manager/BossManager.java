@@ -112,10 +112,15 @@ import nro.models.server.ServerManager;
 import nro.models.utils.Functions;
 import nro.models.utils.Logger;
 
+import java.io.FileWriter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 public class BossManager implements Runnable {
 
     private static BossManager instance;
     public static byte ratioReward = 10;
+    private long lastTimeWriteJSON = 0;
 
     public static BossManager gI() {
         if (instance == null) {
@@ -458,6 +463,39 @@ public class BossManager implements Runnable {
                 for (Boss boss : this.bosses) {
                     boss.update();
                 }
+                
+                if (st - lastTimeWriteJSON > 2000) {
+                    lastTimeWriteJSON = st;
+                    try {
+                        JSONArray bossList = new JSONArray();
+                        for (Boss boss : this.bosses) {
+                            if (boss == null || boss.isDie()) continue;
+                            JSONObject obj = new JSONObject();
+                            obj.put("id", boss.id);
+                            
+                            try {
+                                obj.put("name", boss.data[0].getName());
+                            } catch (Exception ex) {
+                                obj.put("name", "Unknown");
+                            }
+                            
+                            obj.put("status", boss.bossStatus.toString());
+                            if (boss.zone != null && boss.zone.map != null) {
+                                obj.put("map", boss.zone.map.mapName);
+                                obj.put("zone", boss.zone.zoneId);
+                            } else {
+                                obj.put("map", "N/A");
+                                obj.put("zone", "N/A");
+                            }
+                            bossList.add(obj);
+                        }
+                        try (FileWriter file = new FileWriter("C:\\NROServer\\lighthakai\\website\\nroforum\\bosses.json")) {
+                            file.write(bossList.toJSONString());
+                            file.flush();
+                        }
+                    } catch (Exception e) {}
+                }
+                
                 long sleepTime = 1500 - (System.currentTimeMillis() - st);
                 Thread.sleep(Math.max(sleepTime, 10));
             } catch (InterruptedException ie) {
