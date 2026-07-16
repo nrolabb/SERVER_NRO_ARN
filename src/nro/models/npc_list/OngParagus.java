@@ -20,9 +20,9 @@ public class OngParagus extends Npc {
             if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
                 this.createOtherMenu(player, ConstNpc.BASE_MENU,
                         "Con cố gắng theo Quy Lão Kame học thành tài,\nđừng lo lắng cho ta.",
-                        "Nhập\nGiftcode"
-                        ,
+                        "Nhập\nGiftcode",
                         "Mở\nTV Free",
+                        "Nhận quà\nVòng Quay",
                         "Đóng"
                     );
             }
@@ -74,6 +74,13 @@ public void confirmMenu(Player player, int select) {
     Service.gI().sendThongBao(player,
             "Mở TV Free thành cong!!");
 }
+            case 2 -> {
+                nro.models.services.SpinRewardService.gI().showConfirmClaim(player, this);
+            }
+        }
+    } else if (player.idMark.getIndexMenu() == ConstNpc.CONFIRM_CLAIM_SPIN_REWARD) {
+        if (select == 0) {
+            nro.models.services.SpinRewardService.gI().claimReward(player);
         }
     }
 }}

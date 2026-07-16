@@ -11,13 +11,13 @@ import nro.models.network.Message;
 import nro.models.services.ItemService;
 import nro.models.services.Service;
 import nro.models.services_dungeon.NgocRongNamecService;
-import nro.models.map.service.ChangeMapService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import nro.models.consts.ConstTaskBadges;
+import nro.models.consts.ConstPlayer;
 import nro.models.services_dungeon.BlackBallWarService;
 import nro.models.map.service.ItemMapService;
 import nro.models.task.BadgesTaskService;
@@ -294,6 +294,12 @@ public class InventoryService {
             return sItem;
         }
 
+        if (item.template.type == 27 && !PetService.gI().isFollowerPetItem(item)) {
+            Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player,
+                    "Vật phẩm này không phải pet đi theo!");
+            return sItem;
+        }
+
         // Kiểm tra các loại item hợp lệ
         switch (item.template.type) {
             case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 29, 36, 72 -> {
@@ -433,13 +439,19 @@ public class InventoryService {
     }
 
     public void itemBagToBody(Player player, int index) {
-        if (index < 0) {
+        if (index < 0 || index >= player.inventory.itemsBag.size()) {
             Service.gI().sendThongBao(player, "Không thể thực hiện");
             return;
         }
         Item item = player.inventory.itemsBag.get(index);
         if (item.isNotNullItem()) {
             player.inventory.itemsBag.set(index, putItemBody(player, item));
+            if (!player.isPet
+                    && player.inventory.itemsBody.size() > ConstPlayer.FOLLOWER_PET_SLOT
+                    && player.inventory.itemsBody.get(ConstPlayer.FOLLOWER_PET_SLOT) == item
+                    && PetService.gI().isFollowerPetItem(item)) {
+                PetService.gI().summonFollowerPet(player, item);
+            }
             sendItemBags(player);
             sendItemBody(player);
             Service.gI().point(player);
@@ -451,19 +463,23 @@ public class InventoryService {
     }
 
     public void itemBodyToBag(Player player, int index) {
+        if (index < 0 || index >= player.inventory.itemsBody.size()) {
+            Service.gI().sendThongBao(player, "Không thể thực hiện");
+            return;
+        }
         Item item = player.inventory.itemsBody.get(index);
         if (item.isNotNullItem()) {
             if (index == 12) {
                 Service.gI().sendPetFollow(player, (short) 0);
             }
-            if (index == 7 && !player.isPet && item.template.type != 25) {
-                if (player.newPet != null) {
-                    ChangeMapService.gI().exitMap(player.newPet);
-                    player.newPet.dispose();
-                    player.newPet = null;
-                }
+            Item itemRemaining = putItemBag(player, item);
+            player.inventory.itemsBody.set(index, itemRemaining);
+            if (!itemRemaining.isNotNullItem()
+                    && !player.isPet
+                    && index == ConstPlayer.FOLLOWER_PET_SLOT
+                    && PetService.gI().isFollowerPetItem(item)) {
+                PetService.gI().removeFollowerPet(player);
             }
-            player.inventory.itemsBody.set(index, putItemBag(player, item));
             sendItemBags(player);
             sendItemBody(player);
             Service.gI().player(player);
@@ -595,10 +611,17 @@ public class InventoryService {
     }
 
     public void itemBodyToBox(Player player, int index) {
-        if (index < 0 || index >= player.inventory.itemsBody.size()) {
+        if (index >= 0 && index < player.inventory.itemsBody.size()) {
             Item item = player.inventory.itemsBody.get(index);
             if (item.isNotNullItem()) {
-                player.inventory.itemsBody.set(index, putItemBox(player, item));
+                Item itemRemaining = putItemBox(player, item);
+                player.inventory.itemsBody.set(index, itemRemaining);
+                if (!itemRemaining.isNotNullItem()
+                        && !player.isPet
+                        && index == ConstPlayer.FOLLOWER_PET_SLOT
+                        && PetService.gI().isFollowerPetItem(item)) {
+                    PetService.gI().removeFollowerPet(player);
+                }
                 sortItems(player.inventory.itemsBag);
                 sendItemBody(player);
                 sendItemBox(player);

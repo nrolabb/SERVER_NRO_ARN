@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import nro.models.boss.Boss_Manager.BossManager;
 import nro.models.data.LocalManager;
+import nro.models.managers.GiftCodeManager;
 import nro.models.utils.Logger;
 
 public class AdminCommandManager implements Runnable {
@@ -26,7 +27,7 @@ public class AdminCommandManager implements Runnable {
         while (isRunning && ServerManager.isRunning) {
             try {
                 processCommands();
-                Thread.sleep(2000); // Quét mỗi 2 giây
+                Thread.sleep(250); // Đồng bộ lệnh từ admin panel gần như tức thì
             } catch (Exception e) {
                 Logger.error("Error AdminCommandManager: " + e.getMessage());
             }
@@ -67,6 +68,10 @@ public class AdminCommandManager implements Runnable {
                 } catch (NumberFormatException e) {
                     Logger.error("Invalid boss ID: " + commandValue);
                 }
+                break;
+            case "RELOAD_GIFTCODE":
+                GiftCodeManager.gI().loadGiftCodeFromDB();
+                Logger.success("Admin Panel reloaded giftcodes");
                 break;
             default:
                 Logger.error("Unknown command from admin panel: " + commandName);

@@ -219,6 +219,7 @@ public class ConstNpc {
     public static final int RUONG_GO = 531;
     public static final int DAT_CUOC_HAT_MIT = 532;
     public static final int MENU_CLAN_DUNGEON = 31721001;
+    public static final int CONFIRM_CLAIM_SPIN_REWARD = 534;
 
     public static final int BUY_BACK = 533;
     public static final int MENU_OPTION_USE_ITEM726 = 726;

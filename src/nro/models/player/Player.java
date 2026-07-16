@@ -1495,9 +1495,15 @@ public class Player implements Runnable {
     }
 
     public void sendNewPet() {
-        if (isPl() && inventory != null && inventory.itemsBody.get(7) != null) {
-            Item it = inventory.itemsBody.get(7);
+        if (isPl() && inventory != null
+                && inventory.itemsBody.size() > ConstPlayer.FOLLOWER_PET_SLOT
+                && inventory.itemsBody.get(ConstPlayer.FOLLOWER_PET_SLOT) != null) {
+            Item it = inventory.itemsBody.get(ConstPlayer.FOLLOWER_PET_SLOT);
             if (it != null && it.isNotNullItem() && newPet == null) {
+                if (PetService.gI().summonFollowerPet(this, it)) {
+                    Service.gI().point(this);
+                    return;
+                }
                 switch (it.template.id) {
                     case 892 -> {
                         PetService.Pet2(this, 882, 883, 884);
@@ -1736,7 +1742,7 @@ public class Player implements Runnable {
                         Service.gI().point(this);
                     }
                     case 1765 -> {
-                        PetService.Pet2(this, 1662, 1663, 1764);
+                        PetService.Pet2(this, 1662, 1663, 1664);
                         Service.gI().point(this);
                     }
                     case 1729 -> {
@@ -1773,6 +1779,10 @@ public class Player implements Runnable {
                     }
                     case 1771 -> {
                         PetService.Pet2(this, 1680, 1681, 1682);
+                        Service.gI().point(this);
+                    }
+                    case 1900 -> {
+                        PetService.Pet2(this, 1968, 1969, 1970);
                         Service.gI().point(this);
                     }
                 }

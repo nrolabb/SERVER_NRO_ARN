@@ -289,6 +289,10 @@ public class UseItem {
                 return;
             }
             if (item.template.strRequire <= pl.nPoint.power) {
+                if (PetService.gI().isFollowerPetItem(item)) {
+                    InventoryService.gI().itemBagToBody(pl, indexBag);
+                    return;
+                }
                 switch (item.template.type) {
                     case 33: // card
                         UseCard(pl, item);

@@ -91,6 +91,7 @@ public final class Manager {
     public static final List<ArrHead2Frames> ARR_HEAD_2_FRAMES = new ArrayList<>();
     public static final Map<String, Byte> IMAGES_BY_NAME = new HashMap<>();
     public static final List<ItemTemplate> ITEM_TEMPLATES = new ArrayList<>();
+    private static final Map<Integer, Byte> PART_TYPES = new ConcurrentHashMap<>();
     public static final List<MobTemplate> MOB_TEMPLATES = new ArrayList<>();
     public static final List<NpcTemplate> NPC_TEMPLATES = new ArrayList<>();
     public static final List<TaskMain> TASKS = new ArrayList<>();
@@ -134,6 +135,11 @@ public final class Manager {
             instance = new Manager();
         }
         return instance;
+    }
+
+    public static boolean isPartType(int partId, int expectedType) {
+        Byte actualType = PART_TYPES.get(partId);
+        return actualType != null && actualType == expectedType;
     }
 
     public static boolean hasNewTopScores() {
@@ -389,10 +395,12 @@ public final class Manager {
             ps = ConnectionDatabase.prepareStatement("select * from part order by id");
             rs = ps.executeQuery();
             List<Part> parts = new ArrayList<>();
+            PART_TYPES.clear();
             while (rs.next()) {
                 Part part = new Part();
                 part.id = rs.getShort("id");
                 part.type = rs.getByte("type");
+                PART_TYPES.put((int) part.id, (byte) part.type);
                 dataArray = parseJsonArray(rs.getString("data"), "part.data id=" + part.id);
                 for (int j = 0; j < dataArray.size(); j++) {
                     JSONArray pd = parseJsonArrayElement(dataArray.get(j), "part.data id=" + part.id + " detail=" + j);
@@ -816,6 +824,7 @@ public final class Manager {
 
                 Logger.success(
                         Logger.RED + "Successfully loaded map item template (" + ITEM_TEMPLATES.size() + " items)\n");
+                validateFollowerPetTemplates();
 
             } catch (SQLException e) {
                 Logger.error("Error loading item templates: " + e.getMessage());
@@ -1129,6 +1138,33 @@ public final class Manager {
 
         Logger.log(Logger.PURPLE, "Total database loading time: " + (System.currentTimeMillis() - st) + " (ms)\n");
 
+    }
+
+    private static void validateFollowerPetTemplates() {
+        int valid = 0;
+        for (ItemTemplate template : ITEM_TEMPLATES) {
+            if (template.type != 27) {
+                continue;
+            }
+            boolean noParts = template.head < 0 && template.body < 0 && template.leg < 0;
+            if (noParts) {
+                continue;
+            }
+            boolean complete = template.head >= 0 && template.body >= 0 && template.leg >= 0;
+            boolean correctTypes = complete
+                    && isPartType(template.head, 0)
+                    && isPartType(template.body, 1)
+                    && isPartType(template.leg, 2);
+            if (!correctTypes) {
+                Logger.warningln("Invalid follower pet template: item=" + template.id
+                        + ", head=" + template.head
+                        + ", body=" + template.body
+                        + ", leg=" + template.leg);
+                continue;
+            }
+            valid++;
+        }
+        Logger.successln("Successfully validated follower pet templates (" + valid + " valid)");
     }
 
     private void loadSetKichHoat(Connection con) {

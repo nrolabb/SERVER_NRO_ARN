@@ -2,6 +2,8 @@ package nro.models.consts;
 
 public class ConstPlayer {
 
+    public static final int FOLLOWER_PET_SLOT = 9;
+
     public static final int HERO1_BIEN_HINH_FRAME_COUNT = 44;
     public static final int HERO1_BIEN_HINH_ICON_START = 32101;
     public static short HERO1_BIEN_HINH_HEAD = -1;
