@@ -50,12 +50,48 @@ public class EffectSkillService {
         if (skill == null || skill.template == null || skill.template.id != Skill.BIEN_HINH) {
             return;
         }
+        player.effectSkill.isPreparingBienHinh = true;
+        player.effectSkill.lastTimePrepareBienHinh = System.currentTimeMillis();
+        player.effectSkill.pendingBienHinhSkillLevel = skill.point;
+        player.effectSkill.showPreviewBienHinh = false;
+        player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
+        sendEffectCharge(player, skill.skillId);
+        Service.gI().sendEffAllPlayer(player, 284, 1, -1, -1);
+
         List<Skill> bienHinhSkills = SkillUtil.findSkills(Skill.BIEN_HINH);
         Skill baseSkill = bienHinhSkills == null ? skill : bienHinhSkills.stream()
                 .filter(s -> s.point == skill.point)
                 .findFirst()
                 .orElse(skill);
-        int skillLevel = skill.point;
+        boolean lastLevel = player.effectSkill.levelBienHinh >= skill.point - 1;
+        if (!lastLevel && baseSkill.coolDown > 0) {
+            skill.coolDown = baseSkill.coolDown * 5 / 100;
+        } else {
+            skill.coolDown = baseSkill.coolDown;
+        }
+    }
+
+    public void finishBienHinh(Player player) {
+        if (!player.effectSkill.isPreparingBienHinh) {
+            return;
+        }
+        int pendingSkillLevel = player.effectSkill.pendingBienHinhSkillLevel;
+        sendEffectStopCharge(player);
+        player.effectSkill.isPreparingBienHinh = false;
+        player.effectSkill.lastTimePrepareBienHinh = 0;
+        player.effectSkill.pendingBienHinhSkillLevel = 0;
+        player.effectSkill.showPreviewBienHinh = false;
+        player.effectSkill.lastTimePreviewBienHinh = 0;
+
+        List<Skill> bienHinhSkills = SkillUtil.findSkills(Skill.BIEN_HINH);
+        Skill baseSkill = bienHinhSkills == null ? null : bienHinhSkills.stream()
+                .filter(s -> s.point == pendingSkillLevel)
+                .findFirst()
+                .orElse(null);
+        if (baseSkill == null) {
+            return;
+        }
+        int skillLevel = pendingSkillLevel;
         boolean lastLevel = player.effectSkill.levelBienHinh >= skillLevel - 1;
 
         player.effectSkill.isBienHinh = true;
@@ -67,14 +103,31 @@ public class EffectSkillService {
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
 
-        if (!lastLevel && baseSkill.coolDown > 0) {
-            skill.coolDown = baseSkill.coolDown * 5 / 100;
-        } else {
-            skill.coolDown = baseSkill.coolDown;
+        if (player.gender != ConstPlayer.TRAI_DAT) {
+            sendEffectBienHinh(player);
         }
+        Service.gI().Send_Caitrang(player);
+        Service.gI().point(player);
+        player.nPoint.setFullHpMp();
+        PlayerService.gI().sendInfoHpMp(player);
+        ItemTimeService.gI().sendItemTimeBienHinh(player, player.effectSkill.levelBienHinh);
+    }
+
+    public void cancelPrepareBienHinh(Player player) {
+        if (!player.effectSkill.isPreparingBienHinh) {
+            return;
+        }
+        sendEffectStopCharge(player);
+        player.effectSkill.isPreparingBienHinh = false;
+        player.effectSkill.lastTimePrepareBienHinh = 0;
+        player.effectSkill.pendingBienHinhSkillLevel = 0;
+        player.effectSkill.showPreviewBienHinh = false;
+        player.effectSkill.lastTimePreviewBienHinh = 0;
+        Service.gI().Send_Caitrang(player);
     }
 
     public void downBienHinh(Player player) {
+        cancelPrepareBienHinh(player);
         player.effectSkill.isBienHinh = false;
         player.effectSkill.levelBienHinh = 0;
         player.effectSkill.frameBienHinh = 0;
@@ -616,12 +669,19 @@ public class EffectSkillService {
 
     public void sendEffectCharge(Player player) {
         Skill skill = SkillUtil.getSkillbyId(player, Skill.TAI_TAO_NANG_LUONG);
+        if (skill == null) {
+            return;
+        }
+        sendEffectCharge(player, skill.skillId);
+    }
+
+    public void sendEffectCharge(Player player, short skillId) {
         Message msg;
         try {
             msg = new Message(-45);
             msg.writer().writeByte(1);
             msg.writer().writeInt((int) player.id);
-            msg.writer().writeShort(skill.skillId);
+            msg.writer().writeShort(skillId);
             Service.gI().sendMessAllPlayerInMap(player, msg);
             msg.cleanup();
         } catch (Exception e) {

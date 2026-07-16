@@ -797,6 +797,17 @@ public class Player implements Runnable {
                 && ConstPlayer.HERO1_BIEN_HINH_LEG >= 0;
     }
 
+    private boolean isPreviewBienHinh() {
+        return effectSkill != null
+                && effectSkill.isPreparingBienHinh
+                && effectSkill.showPreviewBienHinh
+                && effectSkill.pendingBienHinhSkillLevel > 0;
+    }
+
+    private int getPreviewBienHinhLevel() {
+        return Math.min(effectSkill.pendingBienHinhSkillLevel, effectSkill.levelBienHinh + 1);
+    }
+
     public byte getAura() {
         if (isUseHero1BienHinh()) {
             return -1;
@@ -903,6 +914,12 @@ public class Player implements Runnable {
     }
 
     public short getHead() {
+        if (isPreviewBienHinh()) {
+            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_HEAD >= 0) {
+                return ConstPlayer.HERO1_BIEN_HINH_HEAD;
+            }
+            return ConstPlayer.HEADBIENHINH[gender][getPreviewBienHinhLevel() - 1];
+        }
         if (isUseHero1BienHinh()) {
             return ConstPlayer.HERO1_BIEN_HINH_HEAD;
         }
@@ -982,6 +999,12 @@ public class Player implements Runnable {
     }
 
     public short getBody() {
+        if (isPreviewBienHinh()) {
+            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_BODY_START >= 0) {
+                return ConstPlayer.getHero1BienHinhBody(ConstPlayer.HERO1_BIEN_HINH_FRAME_COUNT);
+            }
+            return ConstPlayer.BODYBIENHINH[gender];
+        }
         if (isUseHero1BienHinh()) {
             return ConstPlayer.getHero1BienHinhBody(effectSkill.frameBienHinh);
         }
@@ -1067,6 +1090,12 @@ public class Player implements Runnable {
     }
 
     public short getLeg() {
+        if (isPreviewBienHinh()) {
+            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_LEG >= 0) {
+                return ConstPlayer.HERO1_BIEN_HINH_LEG;
+            }
+            return ConstPlayer.LEGBIENHINH[gender];
+        }
         if (isUseHero1BienHinh()) {
             return ConstPlayer.HERO1_BIEN_HINH_LEG;
         }

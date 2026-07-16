@@ -658,16 +658,9 @@ public class SkillService {
                 affterUseSkill(player, player.playerSkill.skillSelect.template.id);
                 break;
             case Skill.BIEN_HINH:
-                if (player.effectSkill.levelBienHinh < player.playerSkill.skillSelect.point) {
+                if (!player.effectSkill.isPreparingBienHinh
+                        && player.effectSkill.levelBienHinh < player.playerSkill.skillSelect.point) {
                     EffectSkillService.gI().setBienHinh(player);
-                    if (player.gender != ConstPlayer.TRAI_DAT) {
-                        EffectSkillService.gI().sendEffectBienHinh(player);
-                    }
-                    Service.gI().Send_Caitrang(player);
-                    Service.gI().point(player);
-                    player.nPoint.setFullHpMp();
-                    PlayerService.gI().sendInfoHpMp(player);
-                    ItemTimeService.gI().sendItemTimeBienHinh(player, player.effectSkill.levelBienHinh);
                     affterUseSkill(player, player.playerSkill.skillSelect.template.id);
                 }
                 break;

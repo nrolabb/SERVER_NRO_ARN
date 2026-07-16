@@ -131,6 +131,11 @@ public class EffectSkill {
     public int levelBienHinh;
     public int frameBienHinh;
     public long lastTimeFrameBienHinh;
+    public boolean isPreparingBienHinh;
+    public long lastTimePrepareBienHinh;
+    public int pendingBienHinhSkillLevel;
+    public boolean showPreviewBienHinh;
+    public long lastTimePreviewBienHinh;
 
     //Intrinsic
     public boolean isIntrinsic;
@@ -152,6 +157,9 @@ public class EffectSkill {
     }
 
     public void removeSkillEffectWhenDie() {
+        if (isPreparingBienHinh) {
+            EffectSkillService.gI().cancelPrepareBienHinh(player);
+        }
         if (isMonkey) {
             EffectSkillService.gI().monkeyDown(player);
         }
@@ -198,6 +206,14 @@ public class EffectSkill {
     }
 
     public void update() {
+        if (isPreparingBienHinh && Util.canDoWithTime(lastTimePreviewBienHinh, 150)) {
+            showPreviewBienHinh = !showPreviewBienHinh;
+            lastTimePreviewBienHinh = System.currentTimeMillis();
+            Service.gI().Send_Caitrang(player);
+        }
+        if (isPreparingBienHinh && Util.canDoWithTime(lastTimePrepareBienHinh, 2000)) {
+            EffectSkillService.gI().finishBienHinh(player);
+        }
         if (isBienHinh && player.gender == ConstPlayer.TRAI_DAT
                 && frameBienHinh > 0
                 && frameBienHinh < ConstPlayer.HERO1_BIEN_HINH_FRAME_COUNT
