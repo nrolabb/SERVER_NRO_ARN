@@ -18,7 +18,6 @@ import nro.models.combine.NangCapVatPham;
 import nro.models.consts.ConstDailyGift;
 import nro.models.daily_Giftcode.DailyGiftService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import nro.models.shop.ShopService;
 import nro.models.utils.Util;
@@ -29,6 +28,16 @@ import nro.models.utils.Util;
  *
  */
 public class BaHatMit extends Npc {
+
+    private static final int VILLAGE_GIFT_CHARM = 0;
+    private static final int VILLAGE_SKILL_BOOK = 1;
+    private static final int VILLAGE_CHARM_SHOP = 2;
+    private static final int VILLAGE_UPGRADE_ITEM = 3;
+    private static final int VILLAGE_PORATA_2 = 4;
+    private static final int VILLAGE_MERGE_STONE = 5;
+    private static final int VILLAGE_MERGE_DRAGON_BALL = 6;
+    private static final int VILLAGE_PORATA_3 = 7;
+    private static final int VILLAGE_INFUSE_SPIRIT_STONE = 8;
 
     public BaHatMit(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
@@ -86,44 +95,9 @@ public class BaHatMit extends Npc {
                             "Ngươi tìm ta có việc gì?",
                             "Quay về", "Từ chối");
                 default -> {
-                    // Cờ kiểm tra BT
-                    final boolean hasBt1or2 = InventoryService.gI().findItem(player, 454) || InventoryService.gI().findItem(player, 921);
-                    final boolean hasBt2 = InventoryService.gI().findItemBongTaiCap2(player) || InventoryService.gI().findItem(player, 921);
-                    final boolean hasBt3 = InventoryService.gI().findItem(player, 1819); // BT Porata cấp 3
-
-                    // Base menu
-                    List<String> menu = new ArrayList<>(Arrays.asList(
-                            "Sách\nTuyệt Kỹ",
-                            "Cửa hàng\nBùa",
-                            "Nâng cấp\nVật phẩm",
-                            "Làm phép\nNhập đá",
-                            "Nhập\nNgọc Rồng"
-                    ));
-
-                    // Nếu có BT1/2 thì chèn mục BT2 đúng slot (để mapping select giữ nguyên)
-                    if (hasBt1or2) {
-                        menu = new ArrayList<>(Arrays.asList(
-                                "Sách\nTuyệt Kỹ",
-                                "Cửa hàng\nBùa",
-                                "Nâng cấp\nVật phẩm",
-                                hasBt2 ? "Mở chỉ số\nBông tai\nPorata cấp\n2" : "Nâng cấp\nBông tai\nPorata",
-                                "Làm phép\nNhập đá",
-                                "Nhập\nNgọc Rồng"
-                        ));
-                    }
-
-                    // Thêm mục BT3 ở CUỐI danh sách (case 7 trong handler)
-                    if (hasBt2 || hasBt3) {
-                        menu.add(hasBt3
-                                ? "Mở chỉ số\nBông tai\nPorata cấp\n3"
-                                : "Nâng cấp\nBông tai\nPorata cấp\n3");
-                    }
-
-                    menu.add("Ép\nLinh Thạch");
-
-                    // Thêm thưởng bùa nếu còn lượt hôm nay (đặt lên đầu để case 0 vẫn là thưởng bùa)
-                    if (DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
-                        menu.add(0, "Thưởng\nBùa 1h\nngẫu nhiên");
+                    List<String> menu = new ArrayList<>();
+                    for (int action : getVillageBaseMenuActions(player)) {
+                        menu.add(getVillageBaseMenuLabel(player, action));
                     }
 
                     this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi tìm ta có việc gì?", menu.toArray(new String[0]));
@@ -324,23 +298,13 @@ public class BaHatMit extends Npc {
                 }
                 case 42, 43, 44, 84 -> {
                     if (player.idMark.isBaseMenu()) {
-                        if (!DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
-                            select++;
+                        List<Integer> actions = getVillageBaseMenuActions(player);
+                        if (select < 0 || select >= actions.size()) {
+                            return;
                         }
-                        if (!InventoryService.gI().findItem(player, 454) && !InventoryService.gI().findItem(player, 921)) {
-                            if (select >= 3) {
-                                select++;
-                            }
-                        }
-                        boolean hasBt3Menu = InventoryService.gI().findItem(player, 1819);
-                        boolean hasBt2Menu = InventoryService.gI().findItemBongTaiCap2(player)
-                                || InventoryService.gI().findItem(player, 921);
-                        // Giữ index chức năng Ép Linh Thạch ổn định khi mục Bông tai cấp 3 không xuất hiện.
-                        if (!hasBt2Menu && !hasBt3Menu && select == 6) {
-                            select++;
-                        }
-                        switch (select) {
-                            case 0:
+                        int action = actions.get(select);
+                        switch (action) {
+                            case VILLAGE_GIFT_CHARM:
                                 if (DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
                                     int idItem = Util.nextInt(213, 219);
                                     player.charms.addTimeCharms(idItem, 60);
@@ -351,7 +315,7 @@ public class BaHatMit extends Npc {
                                     Service.gI().sendThongBao(player, "Hôm nay bạn đã nhận bùa miễn phí rồi!!!");
                                 }
                                 break;
-                            case 1:
+                            case VILLAGE_SKILL_BOOK:
                                 createOtherMenu(player, ConstNpc.MENU_SACH_TUYET_KY, "Ta có thể giúp gì cho ngươi ?",
                                         // "Đóng thành\nSách cũ",
                                         "Đổi Sách\nTuyệt kỹ",
@@ -361,29 +325,29 @@ public class BaHatMit extends Npc {
                                         // "Hồi phục\nSách",
                                         "Phân rã\nSách");
                                 break;
-                            case 2:
+                            case VILLAGE_CHARM_SHOP:
                                 createOtherMenu(player, ConstNpc.MENU_OPTION_SHOP_BUA, "Bùa của ta rất lợi hại, nhìn ngươi yếu đuối thế này, chắc muốn mua bùa để " + "mạnh mẽ à, mua không ta bán cho, xài rồi lại thích cho mà xem.",
                                         // "Bùa\n1 giờ",
                                         // "Bùa\n8 giờ",
                                         "Bùa\n1 tháng", "Đóng");
                                 break;
-                            case 3:
+                            case VILLAGE_UPGRADE_ITEM:
                                 CombineService.gI().openTabCombine(player, CombineService.NANG_CAP_VAT_PHAM);
                                 break;
-                            case 4:
+                            case VILLAGE_PORATA_2:
                                 if (InventoryService.gI().findItemBongTaiCap2(player)) {
                                     CombineService.gI().openTabCombine(player, CombineService.NANG_CHI_SO_BONG_TAI);
                                 } else {
                                     CombineService.gI().openTabCombine(player, CombineService.NANG_CAP_BONG_TAI);
                                 }
                                 break;
-                            case 5:
+                            case VILLAGE_MERGE_STONE:
                                 CombineService.gI().openTabCombine(player, CombineService.LAM_PHEP_NHAP_DA);
                                 break;
-                            case 6:
+                            case VILLAGE_MERGE_DRAGON_BALL:
                                 CombineService.gI().openTabCombine(player, CombineService.NHAP_NGOC_RONG);
                                 break;
-                            case 7: {
+                            case VILLAGE_PORATA_3: {
                                 boolean hasBt3 = InventoryService.gI().findItem(player, 1819);
                                 boolean hasBt2 = InventoryService.gI().findItemBongTaiCap2(player) || InventoryService.gI().findItem(player, 921);
                                 if (hasBt3) {
@@ -397,7 +361,7 @@ public class BaHatMit extends Npc {
                                 }
                                 break;
                             }
-                            case 8:
+                            case VILLAGE_INFUSE_SPIRIT_STONE:
                                 CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
                                 break;
                        }
@@ -478,5 +442,51 @@ public class BaHatMit extends Npc {
                 }
             }
         }
+    }
+
+    private List<Integer> getVillageBaseMenuActions(Player player) {
+        List<Integer> actions = new ArrayList<>();
+        boolean hasPorata1Or2 = InventoryService.gI().findItem(player, 454)
+                || InventoryService.gI().findItem(player, 921);
+        boolean hasPorata2 = InventoryService.gI().findItemBongTaiCap2(player)
+                || InventoryService.gI().findItem(player, 921);
+        boolean hasPorata3 = InventoryService.gI().findItem(player, 1819);
+
+        if (DailyGiftService.checkDailyGift(player, ConstDailyGift.NHAN_BUA_MIEN_PHI)) {
+            actions.add(VILLAGE_GIFT_CHARM);
+        }
+        actions.add(VILLAGE_SKILL_BOOK);
+        actions.add(VILLAGE_CHARM_SHOP);
+        actions.add(VILLAGE_UPGRADE_ITEM);
+        if (hasPorata1Or2) {
+            actions.add(VILLAGE_PORATA_2);
+        }
+        actions.add(VILLAGE_MERGE_STONE);
+        actions.add(VILLAGE_MERGE_DRAGON_BALL);
+        if (hasPorata2 || hasPorata3) {
+            actions.add(VILLAGE_PORATA_3);
+        }
+        actions.add(VILLAGE_INFUSE_SPIRIT_STONE);
+        return actions;
+    }
+
+    private String getVillageBaseMenuLabel(Player player, int action) {
+        return switch (action) {
+            case VILLAGE_GIFT_CHARM -> "Thưởng\nBùa 1h\nngẫu nhiên";
+            case VILLAGE_SKILL_BOOK -> "Sách\nTuyệt Kỹ";
+            case VILLAGE_CHARM_SHOP -> "Cửa hàng\nBùa";
+            case VILLAGE_UPGRADE_ITEM -> "Nâng cấp\nVật phẩm";
+            case VILLAGE_PORATA_2 -> InventoryService.gI().findItemBongTaiCap2(player)
+                    || InventoryService.gI().findItem(player, 921)
+                            ? "Mở chỉ số\nBông tai\nPorata cấp\n2"
+                            : "Nâng cấp\nBông tai\nPorata";
+            case VILLAGE_MERGE_STONE -> "Làm phép\nNhập đá";
+            case VILLAGE_MERGE_DRAGON_BALL -> "Nhập\nNgọc Rồng";
+            case VILLAGE_PORATA_3 -> InventoryService.gI().findItem(player, 1819)
+                    ? "Mở chỉ số\nBông tai\nPorata cấp\n3"
+                    : "Nâng cấp\nBông tai\nPorata cấp\n3";
+            case VILLAGE_INFUSE_SPIRIT_STONE -> "Ép\nLinh Thạch";
+            default -> "";
+        };
     }
 }

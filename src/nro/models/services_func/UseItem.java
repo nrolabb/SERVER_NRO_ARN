@@ -300,6 +300,9 @@ public class UseItem {
                     case 7: // sách học, nâng skill
                         learnSkill(pl, item);
                         break;
+                    case 37: // sách học kỹ năng đặc biệt
+                        learnSpecialSkill(pl, item);
+                        break;
                     case 6: // đậu thần
                         this.eatPea(pl);
                         break;
@@ -2043,6 +2046,48 @@ public class UseItem {
         } catch (Exception e) {
             Logger.logException(UseItem.class, e);
         }
+    }
+
+    private void learnSpecialSkill(Player pl, Item item) {
+        int skillId = switch (item.template.id) {
+            case 1341 -> Skill.SUPER_KAME;
+            case 1342 -> Skill.MA_PHONG_BA;
+            case 1343 -> Skill.LIEN_HOAN_CHUONG;
+            default -> -1;
+        };
+
+        if (skillId == -1 || (item.template.gender != pl.gender && item.template.gender != 3)) {
+            Service.gI().sendThongBao(pl, "Không thể thực hiện");
+            return;
+        }
+
+        Skill currentSkill = SkillUtil.getSkillbyId(pl, skillId);
+        int currentLevel = currentSkill != null ? currentSkill.point : 0;
+        int nextLevel = currentLevel + 1;
+        Skill newSkill = SkillUtil.createSkill(skillId, nextLevel);
+        if (newSkill == null) {
+            Service.gI().sendThongBao(pl, currentLevel > 0
+                    ? "Kỹ năng đã đạt cấp tối đa!"
+                    : "Kỹ năng chưa được cấu hình!");
+            return;
+        }
+
+        SkillUtil.setSkill(pl, newSkill);
+        InventoryService.gI().subQuantityItemsBag(pl, item, 1);
+
+        Message msg = null;
+        try {
+            msg = Service.gI().messageSubCommand((byte) (currentLevel == 0 ? 23 : 62));
+            msg.writer().writeShort(newSkill.skillId);
+            pl.sendMessage(msg);
+        } catch (IOException e) {
+            Logger.logException(UseItem.class, e);
+        } finally {
+            if (msg != null) {
+                msg.cleanup();
+            }
+        }
+        InventoryService.gI().sendItemBags(pl);
     }
 
     private void useTDLT(Player pl, Item item) {
