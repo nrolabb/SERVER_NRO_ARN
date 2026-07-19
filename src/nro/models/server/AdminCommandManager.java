@@ -63,10 +63,13 @@ public class AdminCommandManager implements Runnable {
             case "SPAWN_BOSS":
                 try {
                     int bossId = Integer.parseInt(commandValue);
-                    BossManager.gI().createBoss(bossId);
+                    if (BossManager.gI().createBoss(bossId) == null) {
+                        throw new IllegalArgumentException("Boss ID khong duoc ho tro: " + bossId);
+                    }
                     Logger.success("Admin Panel gọi Spawn Boss ID: " + bossId);
                 } catch (NumberFormatException e) {
                     Logger.error("Invalid boss ID: " + commandValue);
+                    throw e;
                 }
                 break;
             case "RELOAD_GIFTCODE":

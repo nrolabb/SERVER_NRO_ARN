@@ -31,7 +31,7 @@ public class MatTroi extends Boss {
     private long st;
 
     public MatTroi() throws Exception {
-        super(BossID.Virut, new BossData(
+        super(BossID.MAT_TROI, new BossData(
                 "Mặt Trời " + Util.nextInt(1, 49),
                 ConstPlayer.TRAI_DAT,
                 new short[]{1501, 1502, 1503, -1, -1, -1},
