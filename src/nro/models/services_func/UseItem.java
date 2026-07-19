@@ -1937,6 +1937,16 @@ public class UseItem {
                 pl.itemTime.isEatMeal = true;
                 ItemTimeService.gI().removeItemTime(pl, pl.itemTime.iconMeal);
                 pl.itemTime.iconMeal = item.template.iconID;
+                pl.itemTime.isUseCayKem = false;
+                if (item.template.id == ConstItem.KEM_DAU) {
+                    pl.itemTime.isMatTroiDebuff = false;
+                    ItemTimeService.gI().removeItemTime(pl, 12953);
+                    pl.itemTime.lastTimeUseCayKem = pl.itemTime.lastTimeEatMeal;
+                    pl.itemTime.isUseCayKem = true;
+                    pl.itemTime.iconCayKem = item.template.iconID;
+                    Service.gI().sendThongBao(pl,
+                            "Kem dâu đã loại bỏ và ngăn debuff Mặt Trời trong thời gian hiệu lực");
+                }
                 break;
             case 880:
             case 881:

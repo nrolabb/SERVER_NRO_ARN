@@ -5,6 +5,7 @@ import nro.models.radar.OptionCard;
 import nro.models.radar.Card;
 import nro.models.data.LocalManager;
 import nro.models.consts.ConstPlayer;
+import nro.models.consts.ConstItem;
 import nro.models.data.DataGame;
 import nro.models.clan.Clan;
 import nro.models.clan.ClanMember;
@@ -575,6 +576,9 @@ public class MrBlue {
             long timeNuocMia1 = 0;
             long timeNuocMia2 = 0;
             long timeNuocMia3 = 0;
+            long matTroiDebuffEndTime = 0;
+            long cayKemEndTime = 0;
+            int iconCayKem = 0;
             int timeBoHuyet = Integer.parseInt(String.valueOf(dataArray.get(0)));
             int timeBoHuyet2 = Integer.parseInt(String.valueOf(dataArray.get(1)));
             int timeBoKhi = Integer.parseInt(String.valueOf(dataArray.get(2)));
@@ -645,6 +649,15 @@ public class MrBlue {
 }
             if (dataArray.size() > 30) {
             }
+            if (dataArray.size() > 31) {
+                matTroiDebuffEndTime = Long.parseLong(String.valueOf(dataArray.get(31)));
+            }
+            if (dataArray.size() > 32) {
+                cayKemEndTime = Long.parseLong(String.valueOf(dataArray.get(32)));
+            }
+            if (dataArray.size() > 33) {
+                iconCayKem = Integer.parseInt(String.valueOf(dataArray.get(33)));
+            }
 
             player.itemTime.lastTimeBoHuyet = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeBoHuyet);
             player.itemTime.lastTimeBoKhi = System.currentTimeMillis() - (ItemTime.TIME_ITEM - timeBoKhi);
@@ -700,6 +713,21 @@ public class MrBlue {
             player.itemTime.isUseNuocMia1 = timeNuocMia1 != 0;
             player.itemTime.isUseNuocMia2 = timeNuocMia2 != 0;
             player.itemTime.isUseNuocMia3 = timeNuocMia3 != 0;
+            long now = System.currentTimeMillis();
+            if (matTroiDebuffEndTime > now) {
+                player.itemTime.isMatTroiDebuff = true;
+                player.itemTime.lastTimeMatTroiDebuff
+                        = matTroiDebuffEndTime - ItemTime.TIME_MAT_TROI_DEBUFF;
+            }
+            if (cayKemEndTime > now
+                    && iconCayKem == ItemService.gI().getTemplate((short) ConstItem.KEM_DAU).iconID) {
+                player.itemTime.isUseCayKem = true;
+                player.itemTime.lastTimeUseCayKem = cayKemEndTime - ItemTime.TIME_CAY_KEM;
+                player.itemTime.iconCayKem = iconCayKem;
+                player.itemTime.isEatMeal = true;
+                player.itemTime.lastTimeEatMeal = player.itemTime.lastTimeUseCayKem;
+                player.itemTime.iconMeal = iconCayKem;
+            }
             dataArray.clear();
 
             //data nhiệm vụ

@@ -234,6 +234,18 @@ public class PlayerDAO {
             dataArray.add(0); //
             dataArray.add(0); //
             dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //
+            dataArray.add(0); //thá»i Ä‘iá»ƒm káº¿t thÃºc debuff Máº·t Trá»i
+            dataArray.add(0); //thá»i Ä‘iá»ƒm káº¿t thÃºc báº£o vá»‡ Cáº£y kem
+            dataArray.add(0); //icon Cáº£y kem
             String itemTime = dataArray.toJSONString();
             dataArray.clear();
             int taskIndex = (Manager.TEST) ? 28 : 0;
@@ -635,6 +647,11 @@ public class PlayerDAO {
                 dataArray.add((player.itemTime.isUseKilis ? (ItemTime.TIME_KILIS - (System.currentTimeMillis() - player.itemTime.lastTimeUseKilis)) : 0));
                 dataArray.add(0);
                 dataArray.add(0);
+                dataArray.add(player.itemTime.hasMatTroiDebuff()
+                        ? player.itemTime.lastTimeMatTroiDebuff + ItemTime.TIME_MAT_TROI_DEBUFF : 0);
+                dataArray.add(player.itemTime.hasCayKemProtection()
+                        ? player.itemTime.lastTimeUseCayKem + ItemTime.TIME_CAY_KEM : 0);
+                dataArray.add(player.itemTime.iconCayKem);
                 String itemTime = dataArray.toJSONString();
                 dataArray.clear();
 

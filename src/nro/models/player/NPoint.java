@@ -1250,6 +1250,10 @@ public class NPoint {
             dame /= 2;
         }
 
+        if (this.player.itemTime != null && this.player.itemTime.hasMatTroiDebuff()) {
+            dame /= 2;
+        }
+
         if (dame > 2_147_483_647) {
             dame = 2_147_483_647;
         }
