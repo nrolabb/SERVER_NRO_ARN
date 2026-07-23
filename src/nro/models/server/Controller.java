@@ -485,9 +485,11 @@ public class Controller implements IMessageHandler {
                             break;
                         }
                         int shenronType = player.zone.shenronType;
-                        if (idT == 25 && shenronType != -1 && player.zone.map.mapId != 0 && player.zone.map.mapId != 7
-                                && player.zone.map.mapId != 14) {
-                            idT = shenronType == 1 ? 59 : shenronType == 0 ? 59 : 60;
+                        if (idT == 25 && shenronType != -1) {
+                            if (shenronType == 2) idT = 50;
+                            else if (shenronType == 1) idT = 51;
+                            else if (shenronType == 0) idT = 59;
+                            else idT = 60;
                         }
                         DataGame.sendEffectTemplate(_session, effId, idT);
                     }

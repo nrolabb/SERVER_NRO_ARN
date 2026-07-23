@@ -288,6 +288,10 @@ public class UseItem {
                 }
                 return;
             }
+            if (item.template.id == nro.models.consts.ConstItem.NGOC_RONG_SIEU_CAP) {
+                nro.models.services.shenron.Shenron_Super_Service.gI().openMenuSummonShenron(pl);
+                return;
+            }
             if (item.template.strRequire <= pl.nPoint.power) {
                 if (PetService.gI().isFollowerPetItem(item)) {
                     InventoryService.gI().itemBagToBody(pl, indexBag);
@@ -1933,6 +1937,16 @@ public class UseItem {
                 pl.itemTime.isEatMeal = true;
                 ItemTimeService.gI().removeItemTime(pl, pl.itemTime.iconMeal);
                 pl.itemTime.iconMeal = item.template.iconID;
+                pl.itemTime.isUseCayKem = false;
+                if (item.template.id == ConstItem.KEM_DAU) {
+                    pl.itemTime.isMatTroiDebuff = false;
+                    ItemTimeService.gI().removeItemTime(pl, 12953);
+                    pl.itemTime.lastTimeUseCayKem = pl.itemTime.lastTimeEatMeal;
+                    pl.itemTime.isUseCayKem = true;
+                    pl.itemTime.iconCayKem = item.template.iconID;
+                    Service.gI().sendThongBao(pl,
+                            "Kem dâu đã loại bỏ và ngăn debuff Mặt Trời trong thời gian hiệu lực");
+                }
                 break;
             case 880:
             case 881:
@@ -1989,6 +2003,8 @@ public class UseItem {
             }
         } else if (tempId >= Shenron_Service.NGOC_RONG_1_SAO && tempId <= Shenron_Service.NGOC_RONG_7_SAO) {
             Shenron_Service.gI().openMenuSummonShenron(pl, 0);
+        } else if (tempId >= nro.models.consts.ConstItem.BI_NGO_1_SAO && tempId <= nro.models.consts.ConstItem.BI_NGO_7_SAO) {
+            nro.models.services.shenron.Shenron_Halloween_Service.gI().openMenuSummonShenron(pl);
         }
     }
 

@@ -31,6 +31,8 @@ public class ItemTime {
     public static final int TIME_CMS = 3600000;
     public static final int TIME_DK = 1800000;
     public static final int TIME_NCD = 1800000;
+    public static final int TIME_MAT_TROI_DEBUFF = 3 * 60 * 1000;
+    public static final int TIME_CAY_KEM = TIME_EAT_MEAL;
 
     private Player player;
 
@@ -113,11 +115,25 @@ public class ItemTime {
     public long totalCoBonLaTime;
     public long timeLengthCoBonLa;
 
+    public boolean isMatTroiDebuff;
+    public long lastTimeMatTroiDebuff;
+    public boolean isUseCayKem;
+    public long lastTimeUseCayKem;
+    public int iconCayKem;
+
     public ItemTime(Player player) {
         this.player = player;
     }
 
     public void update() {
+        if (isMatTroiDebuff && Util.canDoWithTime(lastTimeMatTroiDebuff, TIME_MAT_TROI_DEBUFF)) {
+            isMatTroiDebuff = false;
+            ItemTimeService.gI().removeItemTime(player, 12953);
+            Service.gI().point(player);
+        }
+        if (isUseCayKem && Util.canDoWithTime(lastTimeUseCayKem, TIME_CAY_KEM)) {
+            isUseCayKem = false;
+        }
         if (isEatMeal) {
             if (Util.canDoWithTime(lastTimeEatMeal, TIME_EAT_MEAL)) {
                 isEatMeal = false;
@@ -272,6 +288,15 @@ public class ItemTime {
                 isUseRX = false;
             }
         }
+    }
+
+    public boolean hasMatTroiDebuff() {
+        return isMatTroiDebuff && !Util.canDoWithTime(lastTimeMatTroiDebuff, TIME_MAT_TROI_DEBUFF);
+    }
+
+    public boolean hasCayKemProtection() {
+        return isUseCayKem && isEatMeal && iconMeal == iconCayKem
+                && !Util.canDoWithTime(lastTimeUseCayKem, TIME_CAY_KEM);
     }
 
     public void dispose() {

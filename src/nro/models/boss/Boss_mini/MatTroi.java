@@ -1,20 +1,19 @@
 package nro.models.boss.Boss_mini;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import nro.models.boss.Boss;
 import nro.models.boss.BossData;
 import nro.models.boss.BossID;
 import nro.models.consts.BossStatus;
+import nro.models.consts.ConstItem;
 import nro.models.consts.ConstPlayer;
 import nro.models.consts.ConstTaskBadges;
 import nro.models.item.Item;
 import nro.models.map.ItemMap;
 import nro.models.map.service.ChangeMapService;
 import nro.models.player.Player;
-import nro.models.server.Client;
 import nro.models.services.ItemTimeService;
+import nro.models.services.ItemService;
 import nro.models.services.Service;
 import nro.models.services.SkillService;
 import nro.models.skill.Skill;
@@ -27,11 +26,11 @@ import nro.models.utils.Util;
  */
 public class MatTroi extends Boss {
 
-    private final Map<Long, Long> globalEffectTimers = new ConcurrentHashMap<>();
     private long st;
+    private long lastTimeScanDebuff;
 
     public MatTroi() throws Exception {
-        super(BossID.Virut, new BossData(
+        super(BossID.MAT_TROI, new BossData(
                 "Mặt Trời " + Util.nextInt(1, 49),
                 ConstPlayer.TRAI_DAT,
                 new short[]{1501, 1502, 1503, -1, -1, -1},
@@ -52,40 +51,25 @@ public class MatTroi extends Boss {
     }
 
     private void applyEffect(Player player) {
-        long effectEndTime = System.currentTimeMillis() + 30000;
-        globalEffectTimers.put(player.id, effectEndTime);
-        ItemTimeService.gI().sendItemTime(player, 12953, 60);
-        this.chat("Nóng vãi lồn, " + player.name + " Đã bị bỏng nhiệt ");
-    }
-
-    private void checkGlobalEffects() {
-        long currentTime = System.currentTimeMillis();
-
-        globalEffectTimers.forEach((playerId, effectEndTime) -> {
-            if (currentTime >= effectEndTime) {
-                Player player = Client.gI().getPlayer(playerId);
-                if (player != null) {
-                    if (!player.isDie()) {
-                        // Kiểm tra xác suất 30% để player bị chết
-                        if (Util.isTrue(80, 100)) {
-                            player.injured(null, player.nPoint.hp, true, false);
-                        }
-                    }
-                }
-                globalEffectTimers.remove(playerId);
-            }
-        });
+        if (player.itemTime == null || player.itemTime.hasCayKemProtection()
+                || player.itemTime.hasMatTroiDebuff()) {
+            return;
+        }
+        player.itemTime.lastTimeMatTroiDebuff = System.currentTimeMillis();
+        player.itemTime.isMatTroiDebuff = true;
+        ItemTimeService.gI().sendItemTime(player, 12953,
+                nro.models.item.ItemTime.TIME_MAT_TROI_DEBUFF / 1000);
+        Service.gI().point(player);
+        this.chat(player.name + " đã bị sức nóng Mặt Trời làm giảm 50% sức đánh");
     }
 
     private void updateOdo() {
         try {
-            if (Util.isTrue(30, 100)) {
-                List<Player> playersMap = this.zone.getNotBosses();
-                for (Player pl : playersMap) {
-                    if (pl != null && pl.nPoint != null && !this.equals(pl) && !pl.isBoss && !pl.isDie()
-                            && Util.getDistance(this, pl) <= 200) {
-                        applyEffect(pl);
-                    }
+            List<Player> playersMap = this.zone.getNotBosses();
+            for (Player pl : playersMap) {
+                if (pl != null && pl.nPoint != null && !this.equals(pl) && !pl.isBoss && !pl.isDie()
+                        && Util.getDistance(this, pl) <= 200) {
+                    applyEffect(pl);
                 }
             }
         } catch (Exception e) {
@@ -108,10 +92,7 @@ public class MatTroi extends Boss {
                 if (Util.getDistance(this, pl) <= 40) {
                     SkillService.gI().useSkill(this, pl, null, -1, null);
                     checkPlayerDie(pl);
-                    if (!globalEffectTimers.containsKey(pl.id)
-                            || System.currentTimeMillis() >= globalEffectTimers.get(pl.id)) {
-                        this.updateOdo();
-                    }
+                    this.updateOdo();
                 } else {
                     this.moveToPlayer(pl);
                 }
@@ -139,6 +120,13 @@ public class MatTroi extends Boss {
             itemMap.options.add(new Item.ItemOption(93, Util.nextInt(2, 5)));
 
             Service.gI().dropItemMap(this.zone, itemMap);
+        }
+        for (int i = 0; i < 5; i++) {
+            Item iceCream = ItemService.gI().createNewItem((short) ConstItem.KEM_DAU);
+            ItemMap iceCreamMap = new ItemMap(this.zone, iceCream.template.id, 1,
+                    x + (i - 2) * 15, y, plKill.id);
+            iceCreamMap.options.addAll(iceCream.itemOptions);
+            Service.gI().dropItemMap(this.zone, iceCreamMap);
         }
     }
 
@@ -190,10 +178,13 @@ public class MatTroi extends Boss {
         if (this.typePk == ConstPlayer.NON_PK) {
             this.changeToTypePK();
         }
+        if (Util.canDoWithTime(lastTimeScanDebuff, 500)) {
+            lastTimeScanDebuff = System.currentTimeMillis();
+            this.updateOdo();
+        }
         this.attack();
         if (Util.canDoWithTime(st, 900000)) {
             this.changeStatus(BossStatus.LEAVE_MAP);
-            this.checkGlobalEffects();
         }
     }
 

@@ -245,6 +245,12 @@ public class ConstNpc {
     public static final int SUMMON_SHENRON_EVENT_NOEL = 31720225;
     public static final int SHOW_SHENRON_EVENT_CONFIRM_NOEL = 3170026;
     public static final int SHENRON_EVENT_CONFIRM_NOEL = 3172039;
+    public static final int SUMMON_SHENRON_HALLOWEEN_EVENT = 31720240;
+    public static final int SHOW_SHENRON_HALLOWEEN_EVENT_CONFIRM = 31720241;
+    public static final int SHENRON_HALLOWEEN_EVENT_CONFIRM = 31720242;
+    public static final int SUMMON_SHENRON_SUPER_EVENT = 31720250;
+    public static final int SHOW_SHENRON_SUPER_EVENT_CONFIRM = 31720251;
+    public static final int SHENRON_SUPER_EVENT_CONFIRM = 31720252;
 
     public static final int SUB_MENU = 31720025;
     public static final int TAP_TU_DONG_CONFIRM = 31720026;

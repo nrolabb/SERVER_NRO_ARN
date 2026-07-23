@@ -136,6 +136,10 @@ public class ItemTimeService {
         if (player.itemTime.isUseBuaSanta) {
             sendItemTime(player, 13540, (int) ((TIME_BUA_SANTA - (System.currentTimeMillis() - player.itemTime.lastTimeBuaSanta)) / 1000));
         }
+        if (player.itemTime.hasMatTroiDebuff()) {
+            sendItemTime(player, 12953,
+                    (int) ((TIME_MAT_TROI_DEBUFF - (System.currentTimeMillis() - player.itemTime.lastTimeMatTroiDebuff)) / 1000));
+        }
         if (player.itemTime.isEatMeal) {
             sendItemTime(player, player.itemTime.iconMeal, (int) ((TIME_EAT_MEAL - (System.currentTimeMillis() - player.itemTime.lastTimeEatMeal)) / 1000));
         }

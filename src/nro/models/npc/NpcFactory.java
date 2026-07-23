@@ -284,7 +284,21 @@ public class NpcFactory {
                             player.shenronEvent.showConfirmShenron((byte) select);
                         }
                         break;
+                    case ConstNpc.SHOW_SHENRON_SUPER_EVENT_CONFIRM:
+                        if (player.shenronEvent != null) {
+                            player.shenronEvent.showConfirmShenron((byte) select);
+                        }
+                        break;
                     case ConstNpc.SHENRON_EVENT_CONFIRM:
+                        if (player.shenronEvent != null) {
+                            if (select == 0) {
+                                player.shenronEvent.confirmWish();
+                            } else if (select == 1) {
+                                player.shenronEvent.sendBlackGokuhesShenron();
+                            }
+                        }
+                        break;
+                    case ConstNpc.SHENRON_SUPER_EVENT_CONFIRM:
                         if (player.shenronEvent != null) {
                             if (select == 0) {
                                 player.shenronEvent.confirmWish();
@@ -335,6 +349,16 @@ public class NpcFactory {
                     case ConstNpc.SUMMON_SHENRON_EVENT -> {
                         if (select == 0) {
                             Shenron_Service.gI().summonShenron(player);
+                        }
+                    }
+                    case ConstNpc.SUMMON_SHENRON_HALLOWEEN_EVENT -> {
+                        if (select == 0) {
+                            nro.models.services.shenron.Shenron_Halloween_Service.gI().summonShenron(player);
+                        }
+                    }
+                    case ConstNpc.SUMMON_SHENRON_SUPER_EVENT -> {
+                        if (select == 0) {
+                            nro.models.services.shenron.Shenron_Super_Service.gI().summonShenron(player);
                         }
                     }
                     case ConstNpc.MAKE_MATCH_PVP -> {

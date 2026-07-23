@@ -36,6 +36,14 @@ public void openBaseMenu(Player player) {
         return;
     }
 
+    // Con đường rắn độc
+    if (player.zone.map.mapId == 141) {
+        this.createOtherMenu(player, ConstNpc.BASE_MENU,
+                "Con đã hạ hết đối thủ chưa?",
+                "Đến gặp\nThần mèo Karin");
+        return;
+    }
+
     // Check nhiệm vụ Fide
     if (player.playerTask.taskMain.id < 21) {
         this.createOtherMenu(player, ConstNpc.IGNORE_MENU,
@@ -56,7 +64,8 @@ public void openBaseMenu(Player player) {
             "Quay Tay",
             "Nhận Quà",
             "BXH\nQuay Tay",
-            "Rương");
+            "Rương",
+            "Đến\nKaio");
 }
 
   @Override
@@ -73,6 +82,26 @@ public void confirmMenu(Player player, int select) {
         }
         return;
     }
+
+    // Con đường rắn độc
+    if (player.zone.map.mapId == 141) {
+        if (player.idMark.isBaseMenu()) {
+            switch (select) {
+                case 0 -> {
+                    if (player.clan == null || player.clan.ConDuongRanDoc == null
+                            || !player.clan.ConDuongRanDoc.allMobsDead) {
+                        Service.gI().sendThongBao(player, "Chưa hạ hết đối thủ");
+                        return;
+                    }
+                    ChangeMapService.gI().changeMapYardrat(player,
+                            ChangeMapService.gI().getMapCanJoin(player, 45), 295, 408);
+                    Service.gI().sendThongBao(player, "Hãy xuống gặp thần mèo Karin");
+                }
+            }
+        }
+        return;
+    }
+
 if (player.playerTask.taskMain.id < 21) {
     this.createOtherMenu(player, ConstNpc.IGNORE_MENU,
             "Hãy hoàn thành nhiệm vụ TĐST",
@@ -86,6 +115,7 @@ if (player.playerTask.taskMain.id < 21) {
             case 1 -> showMilestoneMenu(player);
             case 2 -> showTopLucky(player);
             case 3 -> ShopService.gI().opendShop(player, "ITEMS_LUCKY_ROUND", true);
+            case 4 -> ChangeMapService.gI().changeMap(player, 48, -1, 354, 240);
         }
     }
 

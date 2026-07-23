@@ -44,6 +44,7 @@ public class Shenron_Event {
     public static final byte TIME_UP = 1;
 
     public static final byte DRAGON_EVENT = 1;
+    public static final byte DRAGON_SUPER_EVENT = 50;
 
     public long lastTimeShenronWait;
     public static int timeResummonShenron = 60000;
@@ -54,6 +55,18 @@ public class Shenron_Event {
 
     public static final String[] SHENRON_WISHES
             = new String[]{"Điều ước 1", "Điều ước 2", "Điều ước 3", "Điều ước 4"};
+
+    public static final String SHENRON_HALLOWEEN_SAY
+            = "Ta là Rồng Bí Ngô, ngươi có 5 phút để đưa ra 1 điều ước:\n1) Rồng Xương (+10% chỉ số).\n2) 20 Triệu Vàng.\n3) 1000 Ngọc Xanh.\n4) Đổi chiêu đệ tử.";
+
+    public static final String[] SHENRON_HALLOWEEN_WISHES
+            = new String[]{"Rồng Xương", "20Tr Vàng", "1000 Ngọc", "Đổi chiêu đệ"};
+
+    public static final String SHENRON_SUPER_SAY
+            = "Ta là Rồng Siêu Cấp, ngươi có 5 phút để đưa ra 1 điều ước VIP:\n1) Gói Tài Sản (50Tr Vàng & 5000 Ngọc).\n2) Đổi Nội Tại VIP.\n3) Cải trang Black Gohan Rose.\n4) Đệ tử siêu cấp (+20 Tỷ SM).";
+
+    public static final String[] SHENRON_SUPER_WISHES
+            = new String[]{"Tài Sản VIP", "Nội Tại VIP", "Cải Trang", "+20Tỷ SM đệ"};
 
     public boolean shenronLeave;
 
@@ -86,12 +99,18 @@ public class Shenron_Event {
     }
 
     public void reSummonShenron() {
-        activeShenron(true, DRAGON_EVENT);
+        activeShenron(true, player.idMark.getShenronType() == 2 ? DRAGON_SUPER_EVENT : DRAGON_EVENT);
         sendBlackGokuhesShenron();
     }
 
     public void sendBlackGokuhesShenron() {
-        NpcService.gI().createMenuRongThieng(player, ConstNpc.SHOW_SHENRON_EVENT_CONFIRM, SHENRONEVENT_SAY, SHENRON_WISHES);
+        if (player.idMark.getShenronType() == 1) {
+            NpcService.gI().createMenuRongThieng(player, ConstNpc.SHOW_SHENRON_EVENT_CONFIRM, SHENRON_HALLOWEEN_SAY, SHENRON_HALLOWEEN_WISHES);
+        } else if (player.idMark.getShenronType() == 2) {
+            NpcService.gI().createMenuRongThieng(player, ConstNpc.SHOW_SHENRON_SUPER_EVENT_CONFIRM, SHENRON_SUPER_SAY, SHENRON_SUPER_WISHES);
+        } else {
+            NpcService.gI().createMenuRongThieng(player, ConstNpc.SHOW_SHENRON_EVENT_CONFIRM, SHENRONEVENT_SAY, SHENRON_WISHES);
+        }
     }
 
     public void showConfirmShenron(byte select) {
@@ -101,8 +120,18 @@ public class Shenron_Event {
             case 0:
                 wish = SHENRON_WISHES[select];
                 break;
+            case 1:
+                wish = SHENRON_HALLOWEEN_WISHES[select];
+                break;
+            case 2:
+                wish = SHENRON_SUPER_WISHES[select];
+                break;
         }
-        NpcService.gI().createMenuRongThieng(player, ConstNpc.SHENRON_EVENT_CONFIRM, "Ngươi có chắc muốn ước?", wish, "Từ chối");
+        if (player.idMark.getShenronType() == 2) {
+            NpcService.gI().createMenuRongThieng(player, ConstNpc.SHENRON_SUPER_EVENT_CONFIRM, "Ngươi có chắc muốn ước?", wish, "Từ chối");
+        } else {
+            NpcService.gI().createMenuRongThieng(player, ConstNpc.SHENRON_EVENT_CONFIRM, "Ngươi có chắc muốn ước?", wish, "Từ chối");
+        }
     }
 
     public void activeShenron(boolean appear, byte type) {
@@ -249,6 +278,103 @@ public class Shenron_Event {
                             sendBlackGokuhesShenron();
                             return;
                         }
+                }
+                break;
+            case 1:
+                switch (this.select) {
+                    case 0: // Rồng Xương
+                        int timeRX = player.itemTime.timeRX / 1000 + 1800;
+                        int maxTimeInSeconds = 32767;
+                        if (timeRX >= maxTimeInSeconds) {
+                            Service.gI().sendThongBao(player, "Ước ít thôi con :v");
+                            sendBlackGokuhesShenron();
+                            return;
+                        }
+                        player.itemTime.isUseRX = true;
+                        player.itemTime.timeRX = timeRX * 1000;
+                        player.itemTime.lastTimeUseRX = System.currentTimeMillis();
+                        ItemTimeService.gI().sendItemTime(player, 6581, timeRX);
+                        player.nPoint.calPoint();
+                        player.nPoint.setHp((int) player.nPoint.hpMax);
+                        player.nPoint.setMp((int) player.nPoint.mpMax);
+                        Service.gI().point(player);
+                        Service.gI().Send_Info_NV(player);
+                        break;
+                    case 1: // 20Tr Vàng
+                        player.inventory.gold += 20000000;
+                        Service.gI().sendMoney(player);
+                        Service.gI().sendThongBao(player, "Bạn nhận được 20 triệu vàng");
+                        break;
+                    case 2: // 1000 Ngọc
+                        player.inventory.gem += 1000;
+                        Service.gI().sendMoney(player);
+                        Service.gI().sendThongBao(player, "Bạn nhận được 1000 ngọc xanh");
+                        break;
+                    case 3: // Đổi chiêu 3-4 đệ tử
+                        if (player.pet != null) {
+                            if (player.pet.playerSkill.skills.get(2).skillId != -1) {
+                                player.pet.openSkill3();
+                                if (player.pet.playerSkill.skills.get(3).skillId != -1) {
+                                    player.pet.openSkill4();
+                                }
+                            } else {
+                                Service.gI().sendThongBao(player, "Ít nhất đệ tử ngươi phải có chiêu 3 chứ!");
+                                sendBlackGokuhesShenron();
+                                return;
+                            }
+                        } else {
+                            Service.gI().sendThongBao(player, "Ngươi làm gì có đệ tử?");
+                            sendBlackGokuhesShenron();
+                            return;
+                        }
+                        break;
+                }
+                break;
+            case 2:
+                switch (this.select) {
+                    case 0: // Tài Sản VIP
+                        player.inventory.gold += 50000000;
+                        player.inventory.gem += 5000;
+                        Service.gI().sendMoney(player);
+                        Service.gI().sendThongBao(player, "Bạn nhận được 50 triệu vàng và 5000 ngọc xanh");
+                        break;
+                    case 1: // Nội Tại VIP
+                        if (player.nPoint.power >= 1_000_000_000L) {
+                            IntrinsicService.gI().doinoitai(player);
+                        } else {
+                            Service.gI().sendThongBao(player, "Cần 1 Tỷ Sức Mạnh để đổi nội tại");
+                            sendBlackGokuhesShenron();
+                            return;
+                        }
+                        break;
+                    case 2: // Cải Trang
+                        if (InventoryService.gI().getCountEmptyBag(player) > 0) {
+                            Item avtVip = ItemService.gI().createNewItem((short) 883); // Black Gohan Rose
+                            avtVip.itemOptions.add(new Item.ItemOption(50, 30));
+                            avtVip.itemOptions.add(new Item.ItemOption(77, 30));
+                            avtVip.itemOptions.add(new Item.ItemOption(103, 30));
+                            avtVip.itemOptions.add(new Item.ItemOption(93, 30)); // 30 days
+                            InventoryService.gI().addItemBag(player, avtVip);
+                            InventoryService.gI().sendItemBags(player);
+                        } else {
+                            Service.gI().sendThongBao(player, "Hành trang đã đầy");
+                            reSummonShenron();
+                            return;
+                        }
+                        break;
+                    case 3: // +20Tỷ SM đệ
+                        if (player.pet != null) {
+                            player.pet.nPoint.power += 20_000_000_000L;
+                            player.pet.nPoint.tiemNang += 20_000_000_000L;
+                            Service.gI().point(player);
+                            Service.gI().Send_Info_NV(player);
+                            Service.gI().sendThongBao(player, "Đệ tử của bạn nhận được 20 Tỷ Sức Mạnh và Tiềm Năng");
+                        } else {
+                            Service.gI().sendThongBao(player, "Ngươi làm gì có đệ tử?");
+                            sendBlackGokuhesShenron();
+                            return;
+                        }
+                        break;
                 }
                 break;
         }

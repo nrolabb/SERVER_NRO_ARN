@@ -172,7 +172,7 @@ public class LocalManager {
     config.setDriverClassName(DRIVER);
 
     config.setJdbcUrl(String.format(
-        "jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=UTC&cachePrepStmts=true&prepStmtCacheSize=250&prepStmtCacheSqlLimit=2048",
+        "jdbc:mysql://%s:%s/%s?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=UTC&cachePrepStmts=true&prepStmtCacheSize=250&prepStmtCacheSqlLimit=2048&allowPublicKeyRetrieval=true",
         DB_HOST, DB_PORT, databaseName
     ));
 

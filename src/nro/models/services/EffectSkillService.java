@@ -96,16 +96,10 @@ public class EffectSkillService {
 
         player.effectSkill.isBienHinh = true;
         player.effectSkill.levelBienHinh = Math.min(skillLevel, player.effectSkill.levelBienHinh + 1);
-        if (player.gender == ConstPlayer.TRAI_DAT) {
-            player.effectSkill.frameBienHinh = 1;
-            player.effectSkill.lastTimeFrameBienHinh = System.currentTimeMillis();
-        }
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
 
-        if (player.gender != ConstPlayer.TRAI_DAT) {
-            sendEffectBienHinh(player);
-        }
+        sendEffectBienHinh(player);
         Service.gI().Send_Caitrang(player);
         Service.gI().point(player);
         player.nPoint.setFullHpMp();

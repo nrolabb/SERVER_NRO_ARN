@@ -1,7 +1,6 @@
 package nro.models.player;
 
 import lombok.Setter;
-import nro.models.consts.ConstPlayer;
 import nro.models.mob.Mob;
 import nro.models.services.EffectSkillService;
 import nro.models.services.ItemTimeService;
@@ -213,14 +212,6 @@ public class EffectSkill {
         }
         if (isPreparingBienHinh && Util.canDoWithTime(lastTimePrepareBienHinh, 2000)) {
             EffectSkillService.gI().finishBienHinh(player);
-        }
-        if (isBienHinh && player.gender == ConstPlayer.TRAI_DAT
-                && frameBienHinh > 0
-                && frameBienHinh < ConstPlayer.HERO1_BIEN_HINH_FRAME_COUNT
-                && Util.canDoWithTime(lastTimeFrameBienHinh, 1000)) {
-            frameBienHinh++;
-            lastTimeFrameBienHinh = System.currentTimeMillis();
-            Service.gI().Send_Caitrang(player);
         }
         if (isBienHinh && Util.canDoWithTime(lastTimeBienHinh, timeBienHinh)) {
             EffectSkillService.gI().downBienHinh(player);

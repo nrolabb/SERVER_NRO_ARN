@@ -787,16 +787,6 @@ public class Player implements Runnable {
         return -1;
     }
 
-    private boolean isUseHero1BienHinh() {
-        return effectSkill != null
-                && effectSkill.isBienHinh
-                && gender == ConstPlayer.TRAI_DAT
-                && effectSkill.frameBienHinh > 0
-                && ConstPlayer.HERO1_BIEN_HINH_HEAD >= 0
-                && ConstPlayer.HERO1_BIEN_HINH_BODY_START >= 0
-                && ConstPlayer.HERO1_BIEN_HINH_LEG >= 0;
-    }
-
     private boolean isPreviewBienHinh() {
         return effectSkill != null
                 && effectSkill.isPreparingBienHinh
@@ -809,9 +799,6 @@ public class Player implements Runnable {
     }
 
     public byte getAura() {
-        if (isUseHero1BienHinh()) {
-            return -1;
-        }
         if (this.effectSkill != null && this.effectSkill.isBienHinh) {
             return ConstPlayer.AURABIENHINH[this.gender][this.effectSkill.levelBienHinh - 1];
         }
@@ -915,13 +902,7 @@ public class Player implements Runnable {
 
     public short getHead() {
         if (isPreviewBienHinh()) {
-            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_HEAD >= 0) {
-                return ConstPlayer.HERO1_BIEN_HINH_HEAD;
-            }
             return ConstPlayer.HEADBIENHINH[gender][getPreviewBienHinhLevel() - 1];
-        }
-        if (isUseHero1BienHinh()) {
-            return ConstPlayer.HERO1_BIEN_HINH_HEAD;
         }
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
                 || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
@@ -1000,13 +981,7 @@ public class Player implements Runnable {
 
     public short getBody() {
         if (isPreviewBienHinh()) {
-            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_BODY_START >= 0) {
-                return ConstPlayer.getHero1BienHinhBody(ConstPlayer.HERO1_BIEN_HINH_FRAME_COUNT);
-            }
             return ConstPlayer.BODYBIENHINH[gender];
-        }
-        if (isUseHero1BienHinh()) {
-            return ConstPlayer.getHero1BienHinhBody(effectSkill.frameBienHinh);
         }
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
                 || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
@@ -1091,13 +1066,7 @@ public class Player implements Runnable {
 
     public short getLeg() {
         if (isPreviewBienHinh()) {
-            if (gender == ConstPlayer.TRAI_DAT && ConstPlayer.HERO1_BIEN_HINH_LEG >= 0) {
-                return ConstPlayer.HERO1_BIEN_HINH_LEG;
-            }
             return ConstPlayer.LEGBIENHINH[gender];
-        }
-        if (isUseHero1BienHinh()) {
-            return ConstPlayer.HERO1_BIEN_HINH_LEG;
         }
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
                 || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
