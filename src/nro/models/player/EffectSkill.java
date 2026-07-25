@@ -219,8 +219,9 @@ public class EffectSkill {
         if (isBienHinh && Util.canDoWithTime(lastTimeBienHinh, timeBienHinh)) {
             EffectSkillService.gI().downBienHinh(player);
         }
-        if (isBienHinh && wasSpineBienHinh && !nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player)) {
-            EffectSkillService.gI().downBienHinh(player);
+        if (isBienHinh && wasSpineBienHinh != nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player)) {
+            wasSpineBienHinh = !wasSpineBienHinh;
+            Service.gI().Send_Caitrang(player);
         }
         if (isMonkey && (Util.canDoWithTime(lastTimeUpMonkey, timeMonkey))) {
             EffectSkillService.gI().monkeyDown(player);
