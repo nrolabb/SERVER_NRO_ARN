@@ -130,6 +130,7 @@ public class EffectSkill {
     public int levelBienHinh;
     public int frameBienHinh;
     public long lastTimeFrameBienHinh;
+    public boolean wasSpineBienHinh;
     public boolean isPreparingBienHinh;
     public long lastTimePrepareBienHinh;
     public int timePrepareBienHinh;
@@ -216,6 +217,9 @@ public class EffectSkill {
             EffectSkillService.gI().finishBienHinh(player);
         }
         if (isBienHinh && Util.canDoWithTime(lastTimeBienHinh, timeBienHinh)) {
+            EffectSkillService.gI().downBienHinh(player);
+        }
+        if (isBienHinh && wasSpineBienHinh && !nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player)) {
             EffectSkillService.gI().downBienHinh(player);
         }
         if (isMonkey && (Util.canDoWithTime(lastTimeUpMonkey, timeMonkey))) {

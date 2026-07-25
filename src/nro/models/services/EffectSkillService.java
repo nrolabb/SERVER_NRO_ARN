@@ -111,6 +111,7 @@ public class EffectSkillService {
         player.effectSkill.levelBienHinh = Math.min(skillLevel, player.effectSkill.levelBienHinh + 1);
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
+        player.effectSkill.wasSpineBienHinh = isUseSpineBienHinh(player);
 
         sendEffectBienHinh(player);
         Service.gI().Send_Caitrang(player);
@@ -140,6 +141,7 @@ public class EffectSkillService {
         player.effectSkill.levelBienHinh = 0;
         player.effectSkill.frameBienHinh = 0;
         player.effectSkill.lastTimeFrameBienHinh = 0;
+        player.effectSkill.wasSpineBienHinh = false;
         sendEffectBienHinh(player);
         Service.gI().Send_Caitrang(player);
         Service.gI().point(player);
