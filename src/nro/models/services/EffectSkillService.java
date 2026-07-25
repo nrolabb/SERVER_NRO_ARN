@@ -1,6 +1,7 @@
 package nro.models.services;
 
 import nro.models.consts.ConstPlayer;
+import nro.models.item.Item;
 import nro.models.mob.Mob;
 import nro.models.player.Player;
 import nro.models.skill.Skill;
@@ -20,6 +21,10 @@ import nro.models.map.MaBuHold;
  */
 
 public class EffectSkillService {
+
+    public static final int TIME_TRANSFORM_BIEN_HINH_SPINE = 4000;
+    public static final String BIEN_HINH_SPINE_PATH = "Skills/Skill_1/Hero_1";
+    public static final String BIEN_HINH_SPINE_ANIM = "Skill";
 
     public static final byte TURN_ON_EFFECT = 1;
     public static final byte TURN_OFF_EFFECT = 0;
@@ -52,11 +57,18 @@ public class EffectSkillService {
         }
         player.effectSkill.isPreparingBienHinh = true;
         player.effectSkill.lastTimePrepareBienHinh = System.currentTimeMillis();
+        player.effectSkill.timePrepareBienHinh = isUseSpineBienHinh(player) ? 2500 : 2000;
         player.effectSkill.pendingBienHinhSkillLevel = skill.point;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
-        sendEffectCharge(player, skill.skillId);
-        Service.gI().sendEffAllPlayer(player, 284, 1, -1, -1);
+        if (isUseSpineBienHinh(player)) {
+            String skin = getBienHinhSpineSkin(Math.min(skill.point, player.effectSkill.levelBienHinh + 1));
+            SpineService.gI().sendSpineSkillEffect(player, BIEN_HINH_SPINE_PATH, BIEN_HINH_SPINE_ANIM, skin,
+                    TIME_TRANSFORM_BIEN_HINH_SPINE);
+        } else {
+            sendEffectCharge(player, skill.template.id);
+            Service.gI().sendEffAllPlayer(player, 284, 1, -1, -1);
+        }
 
         List<Skill> bienHinhSkills = SkillUtil.findSkills(Skill.BIEN_HINH);
         Skill baseSkill = bienHinhSkills == null ? skill : bienHinhSkills.stream()
@@ -79,6 +91,7 @@ public class EffectSkillService {
         sendEffectStopCharge(player);
         player.effectSkill.isPreparingBienHinh = false;
         player.effectSkill.lastTimePrepareBienHinh = 0;
+        player.effectSkill.timePrepareBienHinh = 0;
         player.effectSkill.pendingBienHinhSkillLevel = 0;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = 0;
@@ -114,6 +127,7 @@ public class EffectSkillService {
         sendEffectStopCharge(player);
         player.effectSkill.isPreparingBienHinh = false;
         player.effectSkill.lastTimePrepareBienHinh = 0;
+        player.effectSkill.timePrepareBienHinh = 0;
         player.effectSkill.pendingBienHinhSkillLevel = 0;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = 0;
@@ -142,11 +156,34 @@ public class EffectSkillService {
             msg = new Message(-45);
             msg.writer().writeByte(6);
             msg.writer().writeInt((int) player.id);
-            msg.writer().writeShort(skill.skillId);
+            msg.writer().writeShort(skill.template.id);
             Service.gI().sendMessAllPlayerInMap(player, msg);
             msg.cleanup();
         } catch (Exception e) {
             nro.models.utils.Logger.logException(EffectSkillService.class, e);
+        }
+    }
+
+    public boolean isUseSpineBienHinh(Player player) {
+        if (player == null || player.inventory == null || player.inventory.itemsBody == null
+                || player.inventory.itemsBody.size() <= 5) {
+            return false;
+        }
+        Item item = player.inventory.itemsBody.get(5);
+        if (item == null || !item.isNotNullItem()) {
+            return false;
+        }
+        return item.template.id == 2079 || item.template.id == 2144 || item.template.id == 2143;
+    }
+
+    public String getBienHinhSpineSkin(int skillLevel) {
+        switch (skillLevel) {
+            case 1: return "V5";
+            case 2: return "V6";
+            case 3: return "V2";
+            case 4: return "V1";
+            case 5: return "V4";
+            default: return "V1";
         }
     }
 

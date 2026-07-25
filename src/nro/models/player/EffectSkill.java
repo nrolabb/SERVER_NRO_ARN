@@ -132,9 +132,11 @@ public class EffectSkill {
     public long lastTimeFrameBienHinh;
     public boolean isPreparingBienHinh;
     public long lastTimePrepareBienHinh;
+    public int timePrepareBienHinh;
     public int pendingBienHinhSkillLevel;
     public boolean showPreviewBienHinh;
     public long lastTimePreviewBienHinh;
+
 
     //Intrinsic
     public boolean isIntrinsic;
@@ -205,12 +207,12 @@ public class EffectSkill {
     }
 
     public void update() {
-        if (isPreparingBienHinh && Util.canDoWithTime(lastTimePreviewBienHinh, 150)) {
+        if (isPreparingBienHinh && !nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player) && Util.canDoWithTime(lastTimePreviewBienHinh, 150)) {
             showPreviewBienHinh = !showPreviewBienHinh;
             lastTimePreviewBienHinh = System.currentTimeMillis();
             Service.gI().Send_Caitrang(player);
         }
-        if (isPreparingBienHinh && Util.canDoWithTime(lastTimePrepareBienHinh, 2000)) {
+        if (isPreparingBienHinh && Util.canDoWithTime(lastTimePrepareBienHinh, timePrepareBienHinh > 0 ? timePrepareBienHinh : 2000)) {
             EffectSkillService.gI().finishBienHinh(player);
         }
         if (isBienHinh && Util.canDoWithTime(lastTimeBienHinh, timeBienHinh)) {

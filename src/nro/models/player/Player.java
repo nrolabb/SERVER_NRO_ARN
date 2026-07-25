@@ -943,6 +943,13 @@ public class Player implements Runnable {
             return idOutfitHalloween[effectSkill.idOutfitHalloween][this.gender][0];
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
+            if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
+                short[] HEADS = {2259, 2261, 2265, 2263, 2264};
+                int lvl = effectSkill.levelBienHinh - 1;
+                if (lvl >= 0 && lvl < HEADS.length) {
+                    return HEADS[lvl];
+                }
+            }
             return ConstPlayer.HEADBIENHINH[this.gender][effectSkill.levelBienHinh - 1];
         }
         if (effectSkill != null && effectSkill.isMonkey) {
@@ -1023,6 +1030,9 @@ public class Player implements Runnable {
             return idOutfitHalloween[effectSkill.idOutfitHalloween][this.gender][1];
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
+            if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
+                return 2257;
+            }
             return ConstPlayer.BODYBIENHINH[this.gender];
         }
         if (effectSkill != null && effectSkill.isMonkey) {
@@ -1108,6 +1118,9 @@ public class Player implements Runnable {
             return idOutfitHalloween[effectSkill.idOutfitHalloween][this.gender][2];
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
+            if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
+                return 2258;
+            }
             return ConstPlayer.LEGBIENHINH[this.gender];
         }
         if (effectSkill != null && effectSkill.isMonkey) {
