@@ -2,7 +2,6 @@ package nro.models.services.shenron;
 
 import nro.models.network.Message;
 import nro.models.consts.ConstNpc;
-import nro.models.consts.ConstPlayer;
 import nro.models.item.Item;
 import nro.models.player.Player;
 import lombok.Getter;
@@ -11,10 +10,10 @@ import nro.models.map.Zone;
 import nro.models.server.Client;
 import nro.models.services.ItemService;
 import nro.models.services.InventoryService;
-import nro.models.services.ItemTimeService;
 import nro.models.map.service.NpcService;
 import nro.models.services.Service;
 import nro.models.services.IntrinsicService;
+import nro.models.skill.Skill;
 import nro.models.utils.SkillUtil;
 import nro.models.utils.Util;
 
@@ -51,16 +50,16 @@ public class Shenron_Event {
     public static int timeShenronWait = 60000;
 
     public static final String SHENRONEVENT_SAY
-            = "Ta sẽ ban cho người 1 điều ước, ngươi có 5 phút, hãy chọn đi:\n1) Đổi skill 3, 4 đệ tử (có thể trùng skill trước đó).\n2) Thay đổi nội tại.\n3) Cải trang siêu thần HSD 90 ngày.\n4) Cải trang Black Gohan Rose HSD 90 ngày.";
+            = "Ta là Rồng Băng, ngươi có 5 phút để đưa ra 1 điều ước:\n1) Đổi skill 1, 2 đệ tử.\n2) Đổi skill 2, 3 đệ tử.\n3) Đổi skill 3, 4 đệ tử.\n4) Đổi skill 4, 5 đệ tử.";
 
     public static final String[] SHENRON_WISHES
-            = new String[]{"Điều ước 1", "Điều ước 2", "Điều ước 3", "Điều ước 4"};
+            = new String[]{"Đổi skill 1-2 đệ", "Đổi skill 2-3 đệ", "Đổi skill 3-4 đệ", "Đổi skill 4-5 đệ"};
 
     public static final String SHENRON_HALLOWEEN_SAY
-            = "Ta là Rồng Bí Ngô, ngươi có 5 phút để đưa ra 1 điều ước:\n1) Rồng Xương (+10% chỉ số).\n2) 20 Triệu Vàng.\n3) 1000 Ngọc Xanh.\n4) Đổi chiêu đệ tử.";
+            = "Ta là Rồng Xương, ngươi có 5 phút để đưa ra 1 điều ước:\n1) Đổi skill 1, 2 đệ tử.\n2) Đổi skill 2, 3 đệ tử.\n3) Đổi skill 3, 4 đệ tử.\n4) Đổi skill 4, 5 đệ tử.";
 
     public static final String[] SHENRON_HALLOWEEN_WISHES
-            = new String[]{"Rồng Xương", "20Tr Vàng", "1000 Ngọc", "Đổi chiêu đệ"};
+            = new String[]{"Đổi skill 1-2 đệ", "Đổi skill 2-3 đệ", "Đổi skill 3-4 đệ", "Đổi skill 4-5 đệ"};
 
     public static final String SHENRON_SUPER_SAY
             = "Ta là Rồng Siêu Cấp, ngươi có 5 phút để đưa ra 1 điều ước VIP:\n1) Gói Tài Sản (50Tr Vàng & 5000 Ngọc).\n2) Đổi Nội Tại VIP.\n3) Cải trang Black Gohan Rose.\n4) Đệ tử siêu cấp (+20 Tỷ SM).";
@@ -159,172 +158,97 @@ public class Shenron_Event {
         }
     }
 
+    private boolean changePetSkills(int firstSkill, int secondSkill) {
+        if (player.pet == null) {
+            Service.gI().sendThongBao(player, "Ngươi làm gì có đệ tử?");
+            sendBlackGokuhesShenron();
+            return false;
+        }
+        if (!hasPetSkill(firstSkill) || !hasPetSkill(secondSkill)) {
+            Service.gI().sendThongBao(player, "Ít nhất đệ tử ngươi phải có chiêu " + secondSkill + " chứ!");
+            sendBlackGokuhesShenron();
+            return false;
+        }
+        openPetSkill(firstSkill);
+        openPetSkill(secondSkill);
+        return true;
+    }
+
+    private boolean hasPetSkill(int skillNumber) {
+        int index = skillNumber - 1;
+        return player.pet.playerSkill.skills.size() > index
+                && player.pet.playerSkill.skills.get(index).skillId != -1;
+    }
+
+    private void openPetSkill(int skillNumber) {
+        switch (skillNumber) {
+            case 1:
+                Skill skill = SkillUtil.createSkill(Util.nextInt(0, 2) * 2, 1);
+                if (skill != null) {
+                    skill.coolDown = 1000;
+                    player.pet.playerSkill.skills.set(0, skill);
+                }
+                break;
+            case 2:
+                player.pet.openSkill2();
+                break;
+            case 3:
+                player.pet.openSkill3();
+                break;
+            case 4:
+                player.pet.openSkill4();
+                break;
+            case 5:
+                player.pet.openSkill5();
+                break;
+        }
+    }
+
     public void confirmWish() {
         switch (player.idMark.getShenronType()) {
             case 0:
                 switch (this.select) {
-                     case 0: //thay chiêu 3-4 đệ tử
-                        if (player.pet != null) {
-                            if (player.pet.playerSkill.skills.get(2).skillId != -1) {
-                                player.pet.openSkill3();
-                                if (player.pet.playerSkill.skills.get(3).skillId != -1) {
-                                    player.pet.openSkill4();
-                                }
-                            } else {
-                                Service.gI().sendThongBao(player, "Ít nhất đệ tử ngươi phải có chiêu 3 chứ!");
-                                sendBlackGokuhesShenron();
-                                return;
-                            }
-                        } else {
-                            Service.gI().sendThongBao(player, "Ngươi làm gì có đệ tử?");
-                            sendBlackGokuhesShenron();
+                    case 0:
+                        if (!changePetSkills(1, 2)) {
                             return;
                         }
                         break;
                     case 1:
-                        if (player.getSession().player.nPoint.power >= 10_000_000_000L) {
-                        IntrinsicService.gI().doinoitai(player);
-                          } else {
-                            Service.gI().sendThongBao(player, "10Tỷ Sức Mạnh?");
-                            sendBlackGokuhesShenron();
+                        if (!changePetSkills(2, 3)) {
                             return;
                         }
                         break;
-                        
                     case 2:
-                        if (InventoryService.gI().getCountEmptyBag(player) > 0) {
-                            byte gender = this.player.gender;
-                            Item avtVip = ItemService.gI().createNewItem((short) (gender == ConstPlayer.TRAI_DAT ? 905
-                                    : gender == ConstPlayer.NAMEC ? 907 : 911));
-                            avtVip.itemOptions.add(new Item.ItemOption(50, 22));
-                            avtVip.itemOptions.add(new Item.ItemOption(47, 400));
-                            avtVip.itemOptions.add(new Item.ItemOption(108, 30));
-                            avtVip.itemOptions.add(new Item.ItemOption(33, 1));
-                            avtVip.itemOptions.add(new Item.ItemOption(93, 90));
-                            InventoryService.gI().addItemBag(player, avtVip);
-                            InventoryService.gI().sendItemBags(player);
-                        } else {
-                            Service.gI().sendThongBao(player, "Hành trang đã đầy");
-                            reSummonShenron();
+                        if (!changePetSkills(3, 4)) {
                             return;
                         }
                         break;
                     case 3:
-                        if (InventoryService.gI().getCountEmptyBag(player) > 0) {
-                            byte gender = this.player.gender;
-                            Item avtVip = ItemService.gI().createNewItem((short) (gender == ConstPlayer.TRAI_DAT ? 883
-                                    : gender == ConstPlayer.NAMEC ? 883 : 883));
-                            avtVip.itemOptions.add(new Item.ItemOption(50, 24));
-                            avtVip.itemOptions.add(new Item.ItemOption(14, 3));
-                            avtVip.itemOptions.add(new Item.ItemOption(103, 19));
-                            avtVip.itemOptions.add(new Item.ItemOption(80, 10));
-                            avtVip.itemOptions.add(new Item.ItemOption(93, 90));
-                            InventoryService.gI().addItemBag(player, avtVip);
-                            InventoryService.gI().sendItemBags(player);
-                        } else {
-                            Service.gI().sendThongBao(player, "Hành trang đã đầy");
-                            reSummonShenron();
+                        if (!changePetSkills(4, 5)) {
                             return;
                         }
                         break;
-                    case 4:// Tăng hp, ki, sd
-                        int timeRX = player.itemTime.timeRX / 1000 + 1800;
-                        int maxTimeInSeconds = 32767;
-                        if (timeRX >= maxTimeInSeconds) {
-                            Service.gI().sendThongBao(player, "Ước ít thôi con :v");
-                            sendBlackGokuhesShenron();
-                            return;
-                        }
-                        player.itemTime.isUseRX = true;
-                        player.itemTime.timeRX = timeRX * 1000;
-                        player.itemTime.lastTimeUseRX = System.currentTimeMillis();
-                        ItemTimeService.gI().sendItemTime(player, 6581, timeRX);
-                        player.nPoint.calPoint();
-                        player.nPoint.setHp((int) player.nPoint.hpMax);
-                        player.nPoint.setMp((int) player.nPoint.mpMax);
-                        Service.gI().point(player);
-                        Service.gI().Send_Info_NV(player);
-                        break;
-                    case 99: //quần đang đeo lên 1 cấp
-                        Item item = this.player.inventory.itemsBody.get(1);
-                        if (item.isNotNullItem()) {
-                            int level = 0;
-                            for (Item.ItemOption io : item.itemOptions) {
-                                if (io.optionTemplate.id == 72) {
-                                    level = io.param;
-                                    if (level < 7) {
-                                        io.param++;
-                                    }
-                                    break;
-                                }
-                            }
-                            if (level < 7) {
-                                if (level == 0) {
-                                    item.itemOptions.add(new Item.ItemOption(72, 1));
-                                }
-                                for (Item.ItemOption io : item.itemOptions) {
-                                    if (InventoryService.gI().optionCanUpgrade(io.optionTemplate.id)) {
-                                        io.param += (io.param * 10 / 100);
-                                    }
-                                }
-                                InventoryService.gI().sendItemBody(player);
-                            } else {
-                                Service.gI().sendThongBao(player, "Quần của ngươi đã đạt cấp tối đa");
-                                sendBlackGokuhesShenron();
-                                return;
-                            }
-                        } else {
-                            Service.gI().sendThongBao(player, "Ngươi hiện tại có mang quần đâu");
-                            sendBlackGokuhesShenron();
-                            return;
-                        }
                 }
                 break;
             case 1:
                 switch (this.select) {
-                    case 0: // Rồng Xương
-                        int timeRX = player.itemTime.timeRX / 1000 + 1800;
-                        int maxTimeInSeconds = 32767;
-                        if (timeRX >= maxTimeInSeconds) {
-                            Service.gI().sendThongBao(player, "Ước ít thôi con :v");
-                            sendBlackGokuhesShenron();
+                    case 0:
+                        if (!changePetSkills(1, 2)) {
                             return;
                         }
-                        player.itemTime.isUseRX = true;
-                        player.itemTime.timeRX = timeRX * 1000;
-                        player.itemTime.lastTimeUseRX = System.currentTimeMillis();
-                        ItemTimeService.gI().sendItemTime(player, 6581, timeRX);
-                        player.nPoint.calPoint();
-                        player.nPoint.setHp((int) player.nPoint.hpMax);
-                        player.nPoint.setMp((int) player.nPoint.mpMax);
-                        Service.gI().point(player);
-                        Service.gI().Send_Info_NV(player);
                         break;
-                    case 1: // 20Tr Vàng
-                        player.inventory.gold += 20000000;
-                        Service.gI().sendMoney(player);
-                        Service.gI().sendThongBao(player, "Bạn nhận được 20 triệu vàng");
+                    case 1:
+                        if (!changePetSkills(2, 3)) {
+                            return;
+                        }
                         break;
-                    case 2: // 1000 Ngọc
-                        player.inventory.gem += 1000;
-                        Service.gI().sendMoney(player);
-                        Service.gI().sendThongBao(player, "Bạn nhận được 1000 ngọc xanh");
+                    case 2:
+                        if (!changePetSkills(3, 4)) {
+                            return;
+                        }
                         break;
-                    case 3: // Đổi chiêu 3-4 đệ tử
-                        if (player.pet != null) {
-                            if (player.pet.playerSkill.skills.get(2).skillId != -1) {
-                                player.pet.openSkill3();
-                                if (player.pet.playerSkill.skills.get(3).skillId != -1) {
-                                    player.pet.openSkill4();
-                                }
-                            } else {
-                                Service.gI().sendThongBao(player, "Ít nhất đệ tử ngươi phải có chiêu 3 chứ!");
-                                sendBlackGokuhesShenron();
-                                return;
-                            }
-                        } else {
-                            Service.gI().sendThongBao(player, "Ngươi làm gì có đệ tử?");
-                            sendBlackGokuhesShenron();
+                    case 3:
+                        if (!changePetSkills(4, 5)) {
                             return;
                         }
                         break;

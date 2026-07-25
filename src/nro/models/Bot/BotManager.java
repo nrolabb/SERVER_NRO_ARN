@@ -1,14 +1,16 @@
 package nro.models.Bot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import nro.models.map.service.ChangeMapService;
 import nro.models.server.ServerManager;
 
 public class BotManager implements Runnable {
 
     public static BotManager i;
 
-    public List<Bot> bot = new ArrayList<>();
+    public List<Bot> bot = Collections.synchronizedList(new ArrayList<>());
 
     public static BotManager gI() {
         if (i == null) {
@@ -17,13 +19,49 @@ public class BotManager implements Runnable {
         return i;
     }
 
+    public List<Bot> getBotsSnapshot() {
+        synchronized (bot) {
+            return new ArrayList<>(bot);
+        }
+    }
+
+    public Bot removeBot(int index) {
+        Bot removed;
+        synchronized (bot) {
+            if (index < 0 || index >= bot.size()) {
+                return null;
+            }
+            removed = bot.remove(index);
+        }
+        removeBotFromMap(removed);
+        return removed;
+    }
+
+    public int removeAllBots() {
+        List<Bot> removedBots;
+        synchronized (bot) {
+            removedBots = new ArrayList<>(bot);
+            bot.clear();
+        }
+        for (Bot removed : removedBots) {
+            removeBotFromMap(removed);
+        }
+        return removedBots.size();
+    }
+
+    private void removeBotFromMap(Bot removed) {
+        if (removed != null && removed.zone != null) {
+            ChangeMapService.gI().exitMap(removed);
+        }
+    }
+
     @Override
     public void run() {
         while (ServerManager.isRunning) {
             try {
                 long st = System.currentTimeMillis();
 
-                for (Bot bot : new ArrayList<>(this.bot)) {
+                for (Bot bot : getBotsSnapshot()) {
                     if (bot != null) {
                         bot.update();
                     }

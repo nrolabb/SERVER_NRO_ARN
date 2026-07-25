@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import nro.models.Bot.BotAttackplayer;
+import nro.models.Bot.Bot;
 import nro.models.Bot.BotManager;
 import nro.models.consts.ConstPlayer;
 import nro.models.data.LocalManager;
@@ -79,6 +80,37 @@ public class Command {
         adminCommands.put("getitem", player -> Input.gI().createFormGetItem(player));
         adminCommands.put("hs", player -> Service.gI().releaseCooldownSkill(player));
         adminCommands.put("d", player -> Service.gI().setPos(player, player.location.x, player.location.y + 10));
+        adminCommands.put("bots", player -> {
+            List<Bot> bots = BotManager.gI().getBotsSnapshot();
+            if (bots.isEmpty()) {
+                Service.gI().sendThongBaoOK(player, "Hiện không có bot nào đang hoạt động.");
+                return;
+            }
+
+            StringBuilder info = new StringBuilder("Danh sách bot: ").append(bots.size());
+            int displayCount = Math.min(bots.size(), 20);
+            for (int i = 0; i < displayCount; i++) {
+                Bot bot = bots.get(i);
+                info.append("\n#").append(i + 1).append(" - ").append(bot.name);
+                info.append(" [").append(bot.getClass().getSimpleName()).append("]");
+                if (bot.zone != null) {
+                    info.append(" - ").append(bot.zone.map.mapName)
+                            .append(" khu ").append(bot.zone.zoneId);
+                } else {
+                    info.append(" - chưa vào map");
+                }
+            }
+            if (bots.size() > displayCount) {
+                info.append("\n... và ").append(bots.size() - displayCount).append(" bot khác");
+            }
+            info.append("\nXóa một bot: delbotxxx (xxx là số thứ tự)");
+            info.append("\nXóa toàn bộ: delbotall");
+            Service.gI().sendThongBaoOK(player, info.toString());
+        });
+        adminCommands.put("delbotall", player -> {
+            int removed = BotManager.gI().removeAllBots();
+            Service.gI().sendThongBaoOK(player, "Đã xóa " + removed + " bot khỏi máy chủ.");
+        });
    adminCommands.put("a", player -> {
 
     // ===== OS BEAN (chỉ khai báo 1 lần) =====
@@ -270,6 +302,55 @@ public class Command {
                         "UP TNSM cho đệ tử = " + power);
             } catch (Exception e) {
                 Service.gI().sendThongBao(player, "Sai cú pháp: upp <số>");
+            }
+        });
+
+        // sp<amount>: buff both power and potential for the master.
+        parameterizedCommands.put("sp", (player, text) -> {
+            try {
+                long amount = Long.parseLong(text.substring(2).trim());
+                if (amount <= 0) {
+                    throw new NumberFormatException();
+                }
+                Service.gI().addSMTN(player, (byte) 2, amount, false);
+                Service.gI().sendThongBao(player, "Đã buff " + amount + " sức mạnh và tiềm năng cho sư phụ.");
+            } catch (NumberFormatException e) {
+                Service.gI().sendThongBao(player, "Sai cú pháp: spxxx (xxx là số nguyên dương)");
+            }
+        });
+
+        // dt<amount>: buff both power and potential for the disciple.
+        parameterizedCommands.put("dt", (player, text) -> {
+            if (player.pet == null) {
+                Service.gI().sendThongBao(player, "Bạn chưa có đệ tử.");
+                return;
+            }
+            try {
+                long amount = Long.parseLong(text.substring(2).trim());
+                if (amount <= 0) {
+                    throw new NumberFormatException();
+                }
+                Service.gI().addSMTN(player.pet, (byte) 2, amount, false);
+                Service.gI().sendThongBao(player, "Đã buff " + amount + " sức mạnh và tiềm năng cho đệ tử.");
+            } catch (NumberFormatException e) {
+                Service.gI().sendThongBao(player, "Sai cú pháp: dtxxx (xxx là số nguyên dương)");
+            }
+        });
+
+        parameterizedCommands.put("delbot", (player, text) -> {
+            try {
+                int position = Integer.parseInt(text.substring("delbot".length()).trim());
+                if (position <= 0) {
+                    throw new NumberFormatException();
+                }
+                Bot removed = BotManager.gI().removeBot(position - 1);
+                if (removed == null) {
+                    Service.gI().sendThongBao(player, "Không tìm thấy bot ở vị trí #" + position + ". Gõ bots để xem danh sách.");
+                    return;
+                }
+                Service.gI().sendThongBaoOK(player, "Đã xóa bot #" + position + ": " + removed.name);
+            } catch (NumberFormatException e) {
+                Service.gI().sendThongBao(player, "Sai cú pháp: delbotxxx (xxx là số thứ tự trong lệnh bots)");
             }
         });
 
