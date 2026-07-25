@@ -902,7 +902,8 @@ public class Player implements Runnable {
 
     public short getHead() {
         if (isPreviewBienHinh()) {
-            return ConstPlayer.HEADBIENHINH[gender][getPreviewBienHinhLevel() - 1];
+            int lvl = Math.max(0, Math.min(getPreviewBienHinhLevel() - 1, ConstPlayer.HEADBIENHINH[gender].length - 1));
+            return ConstPlayer.HEADBIENHINH[gender][lvl];
         }
         if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
                 || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
@@ -950,7 +951,8 @@ public class Player implements Runnable {
                     return HEADS[lvl];
                 }
             }
-            return ConstPlayer.HEADBIENHINH[this.gender][effectSkill.levelBienHinh - 1];
+            int lvlNormal = Math.max(0, Math.min(effectSkill.levelBienHinh - 1, ConstPlayer.HEADBIENHINH[this.gender].length - 1));
+            return ConstPlayer.HEADBIENHINH[this.gender][lvlNormal];
         }
         if (effectSkill != null && effectSkill.isMonkey) {
             return (short) ConstPlayer.HEADMONKEY[effectSkill.levelMonkey - 1];
