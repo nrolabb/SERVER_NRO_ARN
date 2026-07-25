@@ -30,6 +30,8 @@
         <group>
             <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/npc_list/GiuMaDauBo.java</file>
             <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/services/EffectSkillService.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/utils/SkillUtil.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/player/EffectSkill.java</file>
         </group>
     </open-files>
 </project-private>

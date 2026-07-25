@@ -119,7 +119,7 @@ public class RadarService {
             message.writer().writeInt((int) pl.id);
             message.writer().writeShort(id_Aura);
             message.writer().writeByte(id_Eff_Set_Item);
-            Service.gI().sendMessAllPlayer(message);
+            Service.gI().sendMessAllPlayerInMap(pl, message);
             message.cleanup();
         } catch (Exception e) {
         }

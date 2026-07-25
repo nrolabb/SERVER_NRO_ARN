@@ -22,7 +22,7 @@ import nro.models.map.MaBuHold;
 
 public class EffectSkillService {
 
-    public static final int TIME_TRANSFORM_BIEN_HINH_SPINE = 3000;
+    public static final int TIME_TRANSFORM_BIEN_HINH_SPINE = 2600;
     public static final String BIEN_HINH_SPINE_PATH = "Skills/Skill_1/Hero_1";
     public static final String BIEN_HINH_SPINE_ANIM = "Skill";
 
@@ -57,16 +57,17 @@ public class EffectSkillService {
         }
         player.effectSkill.isPreparingBienHinh = true;
         player.effectSkill.lastTimePrepareBienHinh = System.currentTimeMillis();
-        player.effectSkill.timePrepareBienHinh = isUseSpineBienHinh(player) ? 2500 : 2000;
+        player.effectSkill.timePrepareBienHinh = isUseSpineBienHinh(player) ? TIME_TRANSFORM_BIEN_HINH_SPINE - 500
+                : 2000;
         player.effectSkill.pendingBienHinhSkillLevel = skill.point;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
+        sendEffectCharge(player);
         if (isUseSpineBienHinh(player)) {
             String skin = getBienHinhSpineSkin(Math.min(skill.point, player.effectSkill.levelBienHinh + 1));
             SpineService.gI().sendSpineSkillEffect(player, BIEN_HINH_SPINE_PATH, BIEN_HINH_SPINE_ANIM, skin,
                     TIME_TRANSFORM_BIEN_HINH_SPINE);
         } else {
-            sendEffectCharge(player, skill.template.id);
             Service.gI().sendEffAllPlayer(player, 284, 1, -1, -1);
         }
 
@@ -151,21 +152,21 @@ public class EffectSkillService {
     }
 
     public void sendEffectBienHinh(Player player) {
-        Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
-        if (skill == null) {
-            return;
-        }
-        Message msg;
-        try {
-            msg = new Message(-45);
-            msg.writer().writeByte(6);
-            msg.writer().writeInt((int) player.id);
-            msg.writer().writeShort(skill.template.id);
-            Service.gI().sendMessAllPlayerInMap(player, msg);
-            msg.cleanup();
-        } catch (Exception e) {
-            nro.models.utils.Logger.logException(EffectSkillService.class, e);
-        }
+        // Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
+        // if (skill == null) {
+        // return;
+        // }
+        // Message msg;
+        // try {
+        // msg = new Message(-45);
+        // msg.writer().writeByte(6);
+        // msg.writer().writeInt((int) player.id);
+        // msg.writer().writeShort(skill.template.id);
+        // Service.gI().sendMessAllPlayerInMap(player, msg);
+        // msg.cleanup();
+        // } catch (Exception e) {
+        // nro.models.utils.Logger.logException(EffectSkillService.class, e);
+        // }
     }
 
     public boolean isUseSpineBienHinh(Player player) {

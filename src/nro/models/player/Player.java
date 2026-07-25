@@ -799,9 +799,6 @@ public class Player implements Runnable {
     }
 
     public byte getAura() {
-        if (this.effectSkill != null && this.effectSkill.isBienHinh) {
-            return ConstPlayer.AURABIENHINH[this.gender][this.effectSkill.levelBienHinh - 1];
-        }
         if (!isPl() || this.Cards.isEmpty()) {
             return -1;
         }
