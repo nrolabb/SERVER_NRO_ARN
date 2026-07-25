@@ -222,6 +222,12 @@ public class EffectSkill {
         if (isBienHinh && wasSpineBienHinh != nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player)) {
             wasSpineBienHinh = !wasSpineBienHinh;
             Service.gI().Send_Caitrang(player);
+            nro.models.services.EffectSkillService.gI().sendEffectBienHinh(player);
+            int iconLvFirst = (player.gender == nro.models.consts.ConstPlayer.TRAI_DAT) ? 31254 : (player.gender == nro.models.consts.ConstPlayer.NAMEC) ? 31266 : (player.gender == nro.models.consts.ConstPlayer.XAYDA) ? 31260 : 0;
+            int timeIcon = (int) ((lastTimeBienHinh + timeBienHinh - System.currentTimeMillis()) / 1000);
+            if (timeIcon > 0) {
+                nro.models.services.ItemTimeService.gI().sendItemTime(player, iconLvFirst + levelBienHinh - 2, timeIcon);
+            }
         }
         if (isMonkey && (Util.canDoWithTime(lastTimeUpMonkey, timeMonkey))) {
             EffectSkillService.gI().monkeyDown(player);
