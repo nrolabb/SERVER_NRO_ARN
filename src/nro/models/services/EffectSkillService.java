@@ -169,6 +169,9 @@ public class EffectSkillService {
         // }
     }
 
+    public static final List<Integer> ITEM_BIEN_HINH_SPINE = List.of(2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086,
+            2089, 2087, 2088, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099);
+
     public boolean isUseSpineBienHinh(Player player) {
         if (player == null || player.inventory == null || player.inventory.itemsBody == null
                 || player.inventory.itemsBody.size() <= 5) {
@@ -178,7 +181,7 @@ public class EffectSkillService {
         if (item == null || !item.isNotNullItem()) {
             return false;
         }
-        return item.template.id == 2079 || item.template.id == 2144 || item.template.id == 2143;
+        return ITEM_BIEN_HINH_SPINE.contains((int) item.template.id);
     }
 
     public String getBienHinhSpineSkin(int skillLevel) {
