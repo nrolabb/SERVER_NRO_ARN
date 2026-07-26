@@ -37,6 +37,7 @@ public class EffectSkillService {
     public static final byte SLEEP_EFFECT = 41;
     public static final byte STONE_EFFECT = 42;
 
+
     private static EffectSkillService instance;
 
     private EffectSkillService() {
@@ -64,7 +65,8 @@ public class EffectSkillService {
         player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
         sendEffectCharge(player);
         if (isUseSpineBienHinh(player)) {
-            String skin = getBienHinhSpineSkin(Math.min(skill.point, player.effectSkill.levelBienHinh + 1));
+            int targetLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? Math.min(skill.point, player.effectSkill.levelBienHinh + 1) : skill.point;
+            String skin = getBienHinhSpineSkin(targetLevel);
             SpineService.gI().sendSpineSkillEffect(player, BIEN_HINH_SPINE_PATH, BIEN_HINH_SPINE_ANIM, skin,
                     TIME_TRANSFORM_BIEN_HINH_SPINE);
         } else {
@@ -77,7 +79,7 @@ public class EffectSkillService {
                         .filter(s -> s.point == skill.point)
                         .findFirst()
                         .orElse(skill);
-        boolean lastLevel = player.effectSkill.levelBienHinh >= skill.point - 1;
+        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? (player.effectSkill.levelBienHinh >= skill.point - 1) : true;
         if (!lastLevel && baseSkill.coolDown > 0) {
             skill.coolDown = baseSkill.coolDown * 5 / 100;
         } else {
@@ -108,10 +110,10 @@ public class EffectSkillService {
             return;
         }
         int skillLevel = pendingSkillLevel;
-        boolean lastLevel = player.effectSkill.levelBienHinh >= skillLevel - 1;
+        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? (player.effectSkill.levelBienHinh >= skillLevel - 1) : true;
 
         player.effectSkill.isBienHinh = true;
-        player.effectSkill.levelBienHinh = Math.min(skillLevel, player.effectSkill.levelBienHinh + 1);
+        player.effectSkill.levelBienHinh = nro.models.server.ModFunc.isMultiLevelBienHinh ? Math.min(skillLevel, player.effectSkill.levelBienHinh + 1) : skillLevel;
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
         player.effectSkill.wasSpineBienHinh = isUseSpineBienHinh(player);
