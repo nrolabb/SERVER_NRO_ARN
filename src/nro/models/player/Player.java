@@ -961,34 +961,8 @@ public class Player implements Runnable {
             int lvl = Math.max(0, Math.min(getPreviewBienHinhLevel() - 1, ConstPlayer.HEADBIENHINH[gender].length - 1));
             return ConstPlayer.HEADBIENHINH[gender][lvl];
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
-                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-            Item item = inventory.itemsBody.get(5);
-            Item petItem = pet.inventory.itemsBody.get(5);
-            // Check special porata templates
-            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
-                Item itemSlot10 = inventory.itemsBody.get(10);
-                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
-                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
-                    for (PorataTemplate template : specialPorataTemplates) {
-                        if (itemSlot10.template.id == template.masterItemId
-                                && petItemSlot10.template.id == template.petItemId) {
-                            return template.getHeadId(this, itemSlot10);
-                        }
-                    }
-                }
-            }
-
-            boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-            boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
-                    && item.template.id == petItem.template.id;
-            if (hasItem1 && hasItem2 && !sameItem) {
-                return 1578;
-            }
+        if (effectSkill != null && effectSkill.isMonkey) {
+            return (short) ConstPlayer.HEADMONKEY[effectSkill.levelMonkey - 1];
         }
         if (effectSkill != null && effectSkill.isBinh) {
             return idOutfitMafuba[effectSkill.typeBinh][0];
@@ -1012,11 +986,34 @@ public class Player implements Runnable {
                     Math.min(effectSkill.levelBienHinh - 1, ConstPlayer.HEADBIENHINH[this.gender].length - 1));
             return ConstPlayer.HEADBIENHINH[this.gender][lvlNormal];
         }
-        if (effectSkill != null && effectSkill.isMonkey) {
-            return (short) ConstPlayer.HEADMONKEY[effectSkill.levelMonkey - 1];
-        } else if (effectSkill != null && effectSkill.isSocola) {
+        if (effectSkill != null && effectSkill.isSocola) {
             return 412;
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
+            if (this.isPl() && this.pet != null) {
+                Item item = inventory.itemsBody.get(5);
+                Item petItem = pet.inventory.itemsBody.get(5);
+                // Check special porata templates
+                if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                    Item itemSlot10 = inventory.itemsBody.get(10);
+                    Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                    if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                        for (PorataTemplate template : specialPorataTemplates) {
+                            if (itemSlot10.template.id == template.masterItemId
+                                    && petItemSlot10.template.id == template.petItemId) {
+                                return template.getHeadId(this, itemSlot10);
+                            }
+                        }
+                    }
+                }
+
+                boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                        && item.template.id == petItem.template.id;
+                if (hasItem1 && hasItem2 && !sameItem) {
+                    return 1578;
+                }
+            }
             if (nPoint != null && nPoint.isGogeta) {
                 return 2100;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
@@ -1050,35 +1047,8 @@ public class Player implements Runnable {
         if (isPreviewBienHinh()) {
             return ConstPlayer.BODYBIENHINH[gender];
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
-                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-            Item item = inventory.itemsBody.get(5);
-            Item petItem = pet.inventory.itemsBody.get(5);
-
-            // Check special porata templates
-            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
-                Item itemSlot10 = inventory.itemsBody.get(10);
-                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
-                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
-                    for (PorataTemplate template : specialPorataTemplates) {
-                        if (itemSlot10.template.id == template.masterItemId
-                                && petItemSlot10.template.id == template.petItemId) {
-                            return template.getBodyId(this, itemSlot10);
-                        }
-                    }
-                }
-            }
-
-            boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-            boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
-                    && item.template.id == petItem.template.id;
-            if (hasItem1 && hasItem2 && !sameItem) {
-                return 1581;
-            }
+        if (effectSkill != null && effectSkill.isMonkey) {
+            return 193;
         }
         if (effectSkill != null && effectSkill.isBinh) {
             return idOutfitMafuba[effectSkill.typeBinh][1];
@@ -1095,13 +1065,37 @@ public class Player implements Runnable {
             }
             return ConstPlayer.BODYBIENHINH[this.gender];
         }
-        if (effectSkill != null && effectSkill.isMonkey) {
-            return 193;
-        } else if (effectSkill != null && effectSkill.isSocola) {
+        if (effectSkill != null && effectSkill.isSocola) {
             return 413;
         } else if (isPhuHoMapMabu && fusion != null && fusion.typeFusion == ConstPlayer.NON_FUSION) {
             return idOutfitGod[this.gender][1];
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
+            if (this.isPl() && this.pet != null) {
+                Item item = inventory.itemsBody.get(5);
+                Item petItem = pet.inventory.itemsBody.get(5);
+
+                // Check special porata templates
+                if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                    Item itemSlot10 = inventory.itemsBody.get(10);
+                    Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                    if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                        for (PorataTemplate template : specialPorataTemplates) {
+                            if (itemSlot10.template.id == template.masterItemId
+                                    && petItemSlot10.template.id == template.petItemId) {
+                                return template.getBodyId(this, itemSlot10);
+                            }
+                        }
+                    }
+                }
+
+                boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                        && item.template.id == petItem.template.id;
+                if (hasItem1 && hasItem2 && !sameItem) {
+                    return 1581;
+                }
+            }
             if (nPoint != null && nPoint.isGogeta) {
                 return 2101;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
@@ -1138,35 +1132,8 @@ public class Player implements Runnable {
         if (isPreviewBienHinh()) {
             return ConstPlayer.LEGBIENHINH[gender];
         }
-        if (this.isPl() && this.pet != null && this.fusion.typeFusion == ConstPlayer.HOP_THE_GOGETA
-                || this.fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
-                || this.fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-            Item item = inventory.itemsBody.get(5);
-            Item petItem = pet.inventory.itemsBody.get(5);
-
-            // Check special porata templates
-            if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
-                Item itemSlot10 = inventory.itemsBody.get(10);
-                Item petItemSlot10 = pet.inventory.itemsBody.get(10);
-                if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
-                    for (PorataTemplate template : specialPorataTemplates) {
-                        if (itemSlot10.template.id == template.masterItemId
-                                && petItemSlot10.template.id == template.petItemId) {
-                            return template.getLegId(this, itemSlot10);
-                        }
-                    }
-                }
-            }
-
-            boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-            boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
-            boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
-                    && item.template.id == petItem.template.id;
-            if (hasItem1 && hasItem2 && !sameItem) {
-                return 1582;
-            }
+        if (effectSkill != null && effectSkill.isMonkey) {
+            return 194;
         }
         if (effectSkill != null && effectSkill.isBinh) {
             return idOutfitMafuba[effectSkill.typeBinh][2];
@@ -1183,13 +1150,37 @@ public class Player implements Runnable {
             }
             return ConstPlayer.LEGBIENHINH[this.gender];
         }
-        if (effectSkill != null && effectSkill.isMonkey) {
-            return 194;
-        } else if (effectSkill != null && effectSkill.isSocola) {
+        if (effectSkill != null && effectSkill.isSocola) {
             return 414;
         } else if (isPhuHoMapMabu && fusion != null && fusion.typeFusion == ConstPlayer.NON_FUSION) {
             return idOutfitGod[this.gender][2];
         } else if (fusion != null && fusion.typeFusion != ConstPlayer.NON_FUSION) {
+            if (this.isPl() && this.pet != null) {
+                Item item = inventory.itemsBody.get(5);
+                Item petItem = pet.inventory.itemsBody.get(5);
+
+                // Check special porata templates
+                if (inventory.itemsBody.size() > 10 && pet.inventory.itemsBody.size() > 10) {
+                    Item itemSlot10 = inventory.itemsBody.get(10);
+                    Item petItemSlot10 = pet.inventory.itemsBody.get(10);
+                    if (itemSlot10.isNotNullItem() && petItemSlot10.isNotNullItem()) {
+                        for (PorataTemplate template : specialPorataTemplates) {
+                            if (itemSlot10.template.id == template.masterItemId
+                                    && petItemSlot10.template.id == template.petItemId) {
+                                return template.getLegId(this, itemSlot10);
+                            }
+                        }
+                    }
+                }
+
+                boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
+                        && item.template.id == petItem.template.id;
+                if (hasItem1 && hasItem2 && !sameItem) {
+                    return 1582;
+                }
+            }
             if (nPoint != null && nPoint.isGogeta) {
                 return 2102;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
