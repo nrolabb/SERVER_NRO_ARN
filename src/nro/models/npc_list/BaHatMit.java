@@ -38,6 +38,7 @@ public class BaHatMit extends Npc {
     private static final int VILLAGE_MERGE_DRAGON_BALL = 6;
     private static final int VILLAGE_PORATA_3 = 7;
     private static final int VILLAGE_INFUSE_SPIRIT_STONE = 8;
+    private static final int VILLAGE_PORATA_DB = 9;
 
     public BaHatMit(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
@@ -361,17 +362,26 @@ public class BaHatMit extends Npc {
                                 }
                                 break;
                             }
+                            case VILLAGE_PORATA_DB: {
+                                boolean hasBtDB = InventoryService.gI().findItem(player, 1965);
+                                if (hasBtDB) {
+                                    // Có BT đặc biệt → hỏi nâng cấp hay mở chỉ số
+                                    createOtherMenu(player, ConstNpc.MENU_PORATA_DB,
+                                            "Ngươi muốn làm gì với Bông tai Porata đặc biệt?",
+                                            "Nâng cấp\nBông tai\nđặc biệt",
+                                            "Mở chỉ số\nBông tai\nđặc biệt");
+                                } else {
+                                    Service.gI().sendThongBao(player, "Cần có Bông tai Porata đặc biệt.");
+                                }
+                                break;
+                            }
                             case VILLAGE_INFUSE_SPIRIT_STONE:
                                 CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
                                 break;
                        }
                     
-                     } else if
-                      (player.idMark.getIndexMenu() == ConstNpc.MENU_SACH_TUYET_KY) {
+                     } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_SACH_TUYET_KY) {
                         switch (select) {
-                            // case 0:
-                            //     CheTaoCuonSachCu.showCombine(player);
-                            //     break;
                             case 0:
                                 DoiSachTuyetKy.showCombine(player);
                                 break;
@@ -384,9 +394,6 @@ public class BaHatMit extends Npc {
                             case 3:
                                 CombineService.gI().openTabCombine(player, CombineService.NANG_CAP_SACH_TUYET_KY);
                                 break;
-                            // case 5:
-                            //     CombineService.gI().openTabCombine(player, CombineService.HOI_PHUC_SACH);
-                            //     break;
                             case 4:
                                 CombineService.gI().openTabCombine(player, CombineService.PHAN_RA_SACH);
                                 break;
@@ -417,14 +424,23 @@ public class BaHatMit extends Npc {
                             // case 0 ->
                             //     ShopService.gI().opendShop(player, "BUA_1H", true);
                             // case 1 ->
-                            //     ShopService.gI().opendShop(player, "BUA_8H", true);
                             case 0 ->
                                 ShopService.gI().opendShop(player, "BUA_1M", true);
+                        }
+                    } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_PORATA_DB) {
+                        switch (select) {
+                            case 0:
+                                CombineService.gI().openTabCombine(player, CombineService.NANG_CAP_BONG_TAI_DB);
+                                break;
+                            case 1:
+                                CombineService.gI().openTabCombine(player, CombineService.NANG_CHI_SO_BONG_TAI_DB);
+                                break;
                         }
                     } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
                         switch (player.combineNew.typeCombine) {
                             case CombineService.NANG_CAP_BONG_TAI3, CombineService.NANG_CHI_SO_BONG_TAI3, CombineService.NANG_CAP_BONG_TAI, CombineService.NANG_CHI_SO_BONG_TAI, CombineService.LAM_PHEP_NHAP_DA, CombineService.NHAP_NGOC_RONG,
-                            CombineService.GIAM_DINH_SACH, CombineService.TAY_SACH, CombineService.NANG_CAP_SACH_TUYET_KY, CombineService.HOI_PHUC_SACH, CombineService.PHAN_RA_SACH, CombineService.EP_LINH_THACH
+                            CombineService.GIAM_DINH_SACH, CombineService.TAY_SACH, CombineService.NANG_CAP_SACH_TUYET_KY, CombineService.HOI_PHUC_SACH, CombineService.PHAN_RA_SACH, CombineService.EP_LINH_THACH,
+                            CombineService.NANG_CAP_BONG_TAI_DB, CombineService.NANG_CHI_SO_BONG_TAI_DB
                              -> {
                                 if (select == 0) {
                                     CombineService.gI().startCombine(player);
@@ -467,6 +483,12 @@ public class BaHatMit extends Npc {
             actions.add(VILLAGE_PORATA_3);
         }
         actions.add(VILLAGE_INFUSE_SPIRIT_STONE);
+
+        boolean hasPoratDB = InventoryService.gI().findItem(player, 1965);
+        if (hasPoratDB) {
+            actions.add(VILLAGE_PORATA_DB);
+        }
+
         return actions;
     }
 
@@ -486,6 +508,7 @@ public class BaHatMit extends Npc {
                     ? "Mở chỉ số\nBông tai\nPorata cấp\n3"
                     : "Nâng cấp\nBông tai\nPorata cấp\n3";
             case VILLAGE_INFUSE_SPIRIT_STONE -> "Ép\nLinh Thạch";
+            case VILLAGE_PORATA_DB -> "Bông tai\nPorata\nĐặc biệt";
             default -> "";
         };
     }

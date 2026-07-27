@@ -58,6 +58,8 @@ public class CombineService {
     public static final int EP_LINH_THACH = 519;
     public static final int NANG_CAP_BONG_TAI3 = 455;
     public static final int NANG_CHI_SO_BONG_TAI3 = 457;
+    public static final int NANG_CAP_BONG_TAI_DB = 458;
+    public static final int NANG_CHI_SO_BONG_TAI_DB = 459;
     private static CombineService instance;
     
     public final Npc baHatMit;
@@ -123,10 +125,16 @@ public class CombineService {
                 NangChiSoBongTai.showInfoCombine(player);
                 break;
             case NANG_CAP_BONG_TAI3:
-                NangCapBongTai3.showInfoCombine(player);
+                NangCapBongTai.showInfoCombineC3(player);
                 break;
             case NANG_CHI_SO_BONG_TAI3:
-                NangChiSoBongTai3.showInfoCombine(player);
+                NangChiSoBongTai.showInfoCombineC3(player);
+                break;
+            case NANG_CAP_BONG_TAI_DB:
+                NangCapBongTai.showInfoCombineDB(player);
+                break;
+            case NANG_CHI_SO_BONG_TAI_DB:
+                NangChiSoBongTai.showInfoCombineDB(player);
                 break;    
             case NANG_CAP_SAO_PHA_LE:
                 NangCapSaoPhaLe.showInfoCombine(player);
@@ -211,10 +219,16 @@ public class CombineService {
                 NangChiSoBongTai.nangChiSoBongTai(player);
                 break;
             case NANG_CAP_BONG_TAI3:
-                NangCapBongTai3.nangCapBongTai(player);
+                NangCapBongTai.nangCapBongTaiC3(player);
                 break;
             case NANG_CHI_SO_BONG_TAI3:
-                NangChiSoBongTai3.nangChiSoBongTai(player);
+                NangChiSoBongTai.nangChiSoBongTaiC3(player);
+                break;
+            case NANG_CAP_BONG_TAI_DB:
+                NangCapBongTai.nangCapBongTaiDB(player);
+                break;
+            case NANG_CHI_SO_BONG_TAI_DB:
+                NangChiSoBongTai.nangChiSoBongTaiDB(player);
                 break;
             case NANG_CAP_SAO_PHA_LE:
                 NangCapSaoPhaLe.nangCapSaoPhaLe(player);
@@ -644,7 +658,11 @@ public class CombineService {
             case NANG_CAP_BONG_TAI3:
                 return "Ta sẽ phù phép\ncho bông tai Porata của ngươi\nthành cấp 3";
             case NANG_CHI_SO_BONG_TAI3:
-                return "Ta sẽ phù phép\ncho bông tai Porata cấp 3 của ngươi\ncó 2 chỉ số ngẫu nhiên";    
+                return "Ta sẽ phù phép\ncho bông tai Porata cấp 3 của ngươi\ncó 2 chỉ số ngẫu nhiên";
+            case NANG_CAP_BONG_TAI_DB:
+                return "Ta sẽ phù phép\ncho bông tai Porata đặc biệt\nnâng cấp lên cấp cao hơn";
+            case NANG_CHI_SO_BONG_TAI_DB:
+                return "Ta sẽ phù phép\ncho bông tai Porata đặc biệt\ncó 2 chỉ số ngẫu nhiên";    
             case NANG_CAP_SAO_PHA_LE:
                 return "Ta sẽ phù phép\ntái chế Đồ Kích hoạt\nthành Capsule";
             case DANH_BONG_SAO_PHA_LE:
@@ -719,7 +737,13 @@ public class CombineService {
                         + "\nSau đó chọn 'Nâng cấp'";
             case NANG_CHI_SO_BONG_TAI3:
                 return "Vào hành trang\nChọn bông tai Porata Cấp 3\nChọn mảnh hồn porata\nSố lượng 99 cái"
-                        + "\nà đá xanh lam để nâng cấp.\nSau đó chọn 'Nâng cấp chỉ số'";    
+                        + "\nvà đá xanh lam để nâng cấp.\nSau đó chọn 'Nâng cấp chỉ số'";
+            case NANG_CAP_BONG_TAI_DB:
+                return "Vào hành trang\nChọn bông tai Porata đặc biệt\nChọn mảnh bông tai đặc biệt\nSố lượng 999 cái"
+                        + "\nCần 50 thỏi vàng\nSau đó chọn 'Nâng cấp'";
+            case NANG_CHI_SO_BONG_TAI_DB:
+                return "Vào hành trang\nChọn bông tai Porata đặc biệt\nChọn mảnh hồn porata\nSố lượng 99 cái"
+                        + "\nvà đá xanh lam để nâng cấp.\nSau đó chọn 'Nâng cấp chỉ số'";    
             case NANG_CAP_SAO_PHA_LE:
                 return "Vào hành trang\nChọn 10 Đồ Kích hoạt HSD\nSau đó chọn 'Nâng cấp'\nNhận 1 Capsule Kích hoạt";
             case DANH_BONG_SAO_PHA_LE:
