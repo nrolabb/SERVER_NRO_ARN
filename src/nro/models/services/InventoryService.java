@@ -451,6 +451,16 @@ public class InventoryService {
         }
         Item item = player.inventory.itemsBag.get(index);
         if (item.isNotNullItem()) {
+            boolean isNewBongTai = (item.template.id == 454 || item.template.id == 921 || item.template.id == 1819 || item.template.id == 1965);
+            if (isNewBongTai) {
+                Item oldItem = player.inventory.itemsBody.get(10);
+                boolean isOldBongTai = oldItem.isNotNullItem() && (oldItem.template.id == 454 || oldItem.template.id == 921 || oldItem.template.id == 1819 || oldItem.template.id == 1965);
+                if (!isOldBongTai && player.pet != null && !player.pet.canFusion()) {
+                    Service.gI().sendThongBao(player, player.pet.getFusionWaitMessage());
+                    return;
+                }
+            }
+            
             Item itemReturn = putItemBody(player, item);
             player.inventory.itemsBag.set(index, itemReturn);
             boolean oldIsBongTai = false;
@@ -576,6 +586,15 @@ public class InventoryService {
             if (player.pet != null && player.pet.nPoint.power >= 1500000) {
                 Item item = player.inventory.itemsBag.get(index);
                 if (item.isNotNullItem()) {
+                    if (item.template.id == 1966) {
+                        Item oldItem = player.pet.inventory.itemsBody.get(10);
+                        boolean isOld1966 = oldItem.isNotNullItem() && oldItem.template.id == 1966;
+                        if (!isOld1966 && !player.pet.canFusion()) {
+                            Service.gI().sendThongBao(player, player.pet.getFusionWaitMessage());
+                            return;
+                        }
+                    }
+
                     Item itemSwap = putItemBody(player.pet, item);
                     player.inventory.itemsBag.set(index, itemSwap);
                     

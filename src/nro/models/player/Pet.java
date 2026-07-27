@@ -57,6 +57,14 @@ public class Pet extends Player {
 
     private static final int TIME_WAIT_AFTER_UNFUSION = 5000;
     private long lastTimeUnfusion;
+    
+    public boolean canFusion() {
+        return Util.canDoWithTime(lastTimeUnfusion, TIME_WAIT_AFTER_UNFUSION);
+    }
+    
+    public String getFusionWaitMessage() {
+        return "Vui lòng đợi " + TimeUtil.getTimeLeft(lastTimeUnfusion, TIME_WAIT_AFTER_UNFUSION / 1000) + " nữa";
+    }
 
     private int indexChat = 0;
     private long lastTimeChat;
