@@ -300,13 +300,16 @@ public class InventoryService {
             return sItem;
         }
 
+        boolean isBongTai = (item.template.id == 454 || item.template.id == 921 || item.template.id == 1819 || item.template.id == 1965 || item.template.id == 1966);
         // Kiểm tra các loại item hợp lệ
-        switch (item.template.type) {
-            case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 29, 36, 72 -> {
-            }
-            default -> {
-                Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Trang bị không phù hợp!1");
-                return sItem;
+        if (!isBongTai) {
+            switch (item.template.type) {
+                case 0, 1, 2, 3, 4, 5, 32, 23, 24, 11, 27, 25, 29, 36, 72 -> {
+                }
+                default -> {
+                    Service.gI().sendThongBaoOK(player.isPet ? ((Pet) player).master : player, "Trang bị không phù hợp!1");
+                    return sItem;
+                }
             }
         }
 
@@ -403,6 +406,9 @@ public class InventoryService {
                 index = PuppetService.BODY_SLOT;
                 break;
         }
+        if (isBongTai) {
+            index = 10;
+        }
         if (player.isPet && (item.template.type == 11 || item.template.type == 25)) {
             Pet pet = (Pet) player;
             if (pet.type != 2 && pet.type != 3 && pet.type != 4) {
@@ -445,7 +451,45 @@ public class InventoryService {
         }
         Item item = player.inventory.itemsBag.get(index);
         if (item.isNotNullItem()) {
-            player.inventory.itemsBag.set(index, putItemBody(player, item));
+            Item itemReturn = putItemBody(player, item);
+            player.inventory.itemsBag.set(index, itemReturn);
+            boolean oldIsBongTai = false;
+            if (itemReturn.isNotNullItem()) {
+                if (itemReturn.template.id == 454 || itemReturn.template.id == 921 || itemReturn.template.id == 1819 || itemReturn.template.id == 1965) {
+                    oldIsBongTai = true;
+                }
+            }
+            
+            boolean newIsBongTai = false;
+            if (item.template.id == 454 || item.template.id == 921 || item.template.id == 1819 || item.template.id == 1965) {
+                newIsBongTai = true;
+            }
+
+            if (oldIsBongTai && !newIsBongTai) {
+                if (player.pet != null) {
+                    player.pet.unFusion();
+                }
+            } else if (!oldIsBongTai && newIsBongTai) {
+                if (player.pet != null) {
+                    if (item.template.id == 454) player.pet.fusion(true);
+                    else if (item.template.id == 921) player.pet.fusion2(true);
+                    else if (item.template.id == 1819) player.pet.fusion3(true);
+                    else if (item.template.id == 1965) player.pet.fusion(true);
+                }
+            } else if (oldIsBongTai && newIsBongTai) {
+                if (player.fusion.typeFusion != ConstPlayer.NON_FUSION && player.pet != null) {
+                    if (item.template.id == 454) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
+                    else if (item.template.id == 921) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA2;
+                    else if (item.template.id == 1819) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA3;
+                    else if (item.template.id == 1965) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
+                    player.nPoint.calPoint();
+                } else if (player.pet != null) {
+                    if (item.template.id == 454) player.pet.fusion(true);
+                    else if (item.template.id == 921) player.pet.fusion2(true);
+                    else if (item.template.id == 1819) player.pet.fusion3(true);
+                    else if (item.template.id == 1965) player.pet.fusion(true);
+                }
+            }
             if (!player.isPet
                     && player.inventory.itemsBody.size() > ConstPlayer.FOLLOWER_PET_SLOT
                     && player.inventory.itemsBody.get(ConstPlayer.FOLLOWER_PET_SLOT) == item
@@ -474,6 +518,13 @@ public class InventoryService {
             }
             Item itemRemaining = putItemBag(player, item);
             player.inventory.itemsBody.set(index, itemRemaining);
+            if (!itemRemaining.isNotNullItem()) {
+                if (item.template.id == 454 || item.template.id == 921 || item.template.id == 1819 || item.template.id == 1965) {
+                    if (player.pet != null) {
+                        player.pet.unFusion();
+                    }
+                }
+            }
             if (!itemRemaining.isNotNullItem()
                     && !player.isPet
                     && index == ConstPlayer.FOLLOWER_PET_SLOT

@@ -850,13 +850,10 @@ public class UseItem {
                                 useTDLT(pl, item);
                                 break;
                             case 454: // bông tai
-                                UseItem.gI().usePorata(pl);
-                                break;
                             case 921: // bông tai
-                                UseItem.gI().usePorata2(pl);
-                                break;
                             case 1819: // bông tai
-                                UseItem.gI().usePorata3(pl);
+                            case 1965: // bông tai đặc biệt
+                                InventoryService.gI().itemBagToBody(pl, indexBag);
                                 break;
                             case 193: // gói 10 viên capsule
                                 openCapsuleUI(pl);

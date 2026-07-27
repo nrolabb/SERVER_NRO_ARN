@@ -1383,6 +1383,23 @@ if (dataArray.size() >= 17) {
             }
             player.nPoint.hp = plHp;
             player.nPoint.mp = plMp;
+            if (player.inventory.itemsBody.size() > 10) {
+                nro.models.item.Item item10 = player.inventory.itemsBody.get(10);
+                if (item10.isNotNullItem()) {
+                    if (item10.template.id == 454) {
+                        player.fusion.typeFusion = nro.models.consts.ConstPlayer.HOP_THE_PORATA;
+                    } else if (item10.template.id == 921) {
+                        player.fusion.typeFusion = nro.models.consts.ConstPlayer.HOP_THE_PORATA2;
+                    } else if (item10.template.id == 1819) {
+                        player.fusion.typeFusion = nro.models.consts.ConstPlayer.HOP_THE_PORATA3;
+                    } else if (item10.template.id == 1965) {
+                        player.fusion.typeFusion = nro.models.consts.ConstPlayer.HOP_THE_PORATA;
+                    }
+                    if (player.pet != null && player.fusion.typeFusion != nro.models.consts.ConstPlayer.NON_FUSION) {
+                        player.pet.status = Pet.FUSION;
+                    }
+                }
+            }
             player.idMark.setLoadedAllDataPlayer(true);
         } catch (Exception e) {
             if (player != null) {
