@@ -48,7 +48,7 @@ public class NangCapBongTai3 {
                 String npcSay = "|2|Bông tai Porata [+3]\n\n";
                 npcSay += "|2|Tỉ lệ thành công: " + RATIO_BONG_TAI + "%\n";
 
-                int currentMvp = InventoryService.gI().getParam(player, ITEM_PARAM_INDEX, ITEM_ID_MANH_VO_BT3);
+                int currentMvp = getQuantity(manhVo);
 
                 if (currentMvp < REQUIRED_MANH_VO_FULL) {
                     npcSay += "|7|Cần " + REQUIRED_MANH_VO_FULL + " " + manhVo.template.name + "\n";
@@ -135,11 +135,11 @@ public class NangCapBongTai3 {
                     bongTai.itemOptions.add(new Item.ItemOption(ITEM_OPTION_ID_CAP, ITEM_OPTION_VALUE_CAP_3));
 
                     // Trừ đủ mảnh vỡ yêu cầu
-                    InventoryService.gI().subParamItemsBag(player, ITEM_ID_MANH_VO_BT3, ITEM_PARAM_INDEX, REQUIRED_MANH_VO_FULL);
+                    subQuantity(player, manhVo, REQUIRED_MANH_VO_FULL);
                     CombineService.gI().sendEffectSuccessCombine(player);
                 } else {
                     // Thất bại: chỉ trừ mảnh vỡ theo mức fail
-                    InventoryService.gI().subParamItemsBag(player, ITEM_ID_MANH_VO_BT3, ITEM_PARAM_INDEX, REQUIRED_MANH_VO_FAIL);
+                    subQuantity(player, manhVo, REQUIRED_MANH_VO_FAIL);
                     CombineService.gI().sendEffectFailCombine(player);
                 }
 
@@ -147,6 +147,40 @@ public class NangCapBongTai3 {
                 Service.gI().sendMoney(player);
                 CombineService.gI().reOpenItemCombine(player);
             }
+        }
+    }
+
+    private static int getQuantity(Item item) {
+        if (item == null) return 0;
+        int q = 0;
+        if (item.itemOptions != null) {
+            for (Item.ItemOption op : item.itemOptions) {
+                if (op.optionTemplate.id == ITEM_PARAM_INDEX) {
+                    q = op.param;
+                    break;
+                }
+            }
+        }
+        if (q == 0) {
+            q = item.quantity;
+        }
+        return q;
+    }
+
+    private static void subQuantity(Player player, Item item, int amount) {
+        boolean hasOption = false;
+        if (item.itemOptions != null) {
+            for (Item.ItemOption op : item.itemOptions) {
+                if (op.optionTemplate.id == ITEM_PARAM_INDEX) {
+                    hasOption = true;
+                    break;
+                }
+            }
+        }
+        if (hasOption) {
+            InventoryService.gI().subParamItemsBag(player, item.template.id, ITEM_PARAM_INDEX, amount);
+        } else {
+            InventoryService.gI().subQuantityItemsBag(player, item, amount);
         }
     }
 }

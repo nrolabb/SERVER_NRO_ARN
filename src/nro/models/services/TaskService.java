@@ -1478,7 +1478,13 @@ public void paySideTask(Player player) {
                         "Bạn nhận được " + Util.numberToMoney(goldReward) + " vàng và "
                         + quantity + " " + ngocXanh.template.name + ", cộng " + pointReward
                         + " điểm nhiệm vụ. Hiện có: " + player.playerTask.sideTask.point + " điểm");
-                ActivePointService.gI().addPoint(player, 1, "nhiệm vụ ngày");
+                int activePointReward = 1;
+                if (player.playerTask.sideTask.level == ConstTask.NORMAL) {
+                    activePointReward = 4;
+                } else if (player.playerTask.sideTask.level == ConstTask.HARD) {
+                    activePointReward = 10;
+                }
+                ActivePointService.gI().addPoint(player, activePointReward, "nhiệm vụ ngày");
 
                 // Reset nhiệm vụ
                 player.playerTask.sideTask.reset();
@@ -1652,7 +1658,7 @@ public void paySideTask(Player player) {
                 player.playerTask.clanTask.reset();
                 Service.gI().sendThongBao(player, "Bạn vừa nhận được "
                         + Util.numberToMoney(capsuleClan) + " capsule bang.");
-                ActivePointService.gI().addPoint(player, 1, "nhiệm vụ bang hội");
+                ActivePointService.gI().addPoint(player, 5, "nhiệm vụ bang hội");
                 if (player.clan != null) {
                     player.clan.capsuleClan += capsuleClan;
                     for (ClanMember cm : player.clan.getMembers()) {

@@ -124,7 +124,7 @@ public class ActivePointService {
             return;
         }
         boss.activePointRewarded = true;
-        addPoint(player, 1, "tiêu diệt boss");
+        addPoint(player, 5, "tiêu diệt boss");
     }
 
     public boolean isActivePointBoss(int bossId) {

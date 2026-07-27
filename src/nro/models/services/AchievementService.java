@@ -8,6 +8,7 @@ import nro.models.player.Player;
 import nro.models.server.Manager;
 import nro.models.skill.Skill;
 import nro.models.utils.Util;
+import nro.models.item.Item;
 
 /**
  *
@@ -55,10 +56,11 @@ public class AchievementService {
         if (InventoryService.gI().getCountEmptyBag(player) > 0) {
             int money = Manager.ACHIEVEMENT_TEMPLATE.get(select).money;
             player.achievement.reward(select);
-            player.inventory.gem += money;
+            Item thoiVang = ItemService.gI().createNewItem((short) 457);
+            thoiVang.quantity = money;
+            InventoryService.gI().addItemBag(player, thoiVang);
             InventoryService.gI().sendItemBags(player);
-            Service.gI().sendMoney(player);
-            Service.gI().sendThongBao(player, "Bạn vừa nhận được " + money + " ngọc.");
+            Service.gI().sendThongBao(player, "Bạn vừa nhận được " + money + " thỏi vàng.");
         } else {
             Service.gI().sendThongBao(player, "Cần tối thiểu 1 ô trống hành trang để nhận thưởng");
             return;

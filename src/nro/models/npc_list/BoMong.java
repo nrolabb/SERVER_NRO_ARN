@@ -64,8 +64,9 @@ public class BoMong extends Npc {
                                         npcSay, "Trả nhiệm\nvụ", "Hủy nhiệm\nvụ");
                             } else {
                                 this.createOtherMenu(player, ConstNpc.MENU_OPTION_LEVEL_SIDE_TASK,
-                                        "Tôi có vài nhiệm vụ theo cấp bậc, càng khó càng nhiều Vàng và Ngọc Xanh\n"
-                                        + "sức cậu có thể làm được cái nào?",
+                                        "Tôi có vài nhiệm vụ theo cấp bậc, càng khó càng nhận được nhiều Vàng, Ngọc Xanh\n"
+                                        + "và Điểm Năng Động (Dễ: +1 điểm, Bình thường: +4 điểm, Khó: +10 điểm)\n"
+                                        + "Sức cậu có thể làm được cái nào?",
                                         "Dễ", "Bình thường", "Khó", "Từ chối");
                             }
                         }
@@ -75,11 +76,14 @@ public class BoMong extends Npc {
                     
                         case 2 -> {
                             this.createOtherMenu(player, ConstNpc.MENU_OPTION_EXCHANGE_SIDE_TASK_POINT,
-                                    "Điểm nhiệm vụ hiện có: " + player.playerTask.sideTask.point
-                                    + "\n500 điểm đổi 400 ngọc xanh"
-                                    + "\n1500 điểm đổi 1500 ngọc xanh"
-                                    + "\n3000 điểm đổi 3500 ngọc xanh",
-                                    "500 điểm", "1500 điểm", "3000 điểm", "Từ chối");
+                                    "Điểm năng động hiện có: " + player.activePoint
+                                    + "\n(Kiếm điểm từ: Nhiệm vụ ngày, Nhiệm vụ bang hội và Tiêu diệt Boss)"
+                                    + "\n100 điểm đổi 1000 Ngọc"
+                                    + "\n200 điểm đổi 2200 Ngọc"
+                                    + "\n300 điểm đổi 3500 Ngọc"
+                                    + "\n100 điểm đổi 1 Capsule bạc"
+                                    + "\n300 điểm đổi 1 Capsule vàng",
+                                    "1000 Ngọc", "2200 Ngọc", "3500 Ngọc", "Capsule bạc", "Capsule vàng", "Từ chối");
                         }
                         case 3 -> {
                             Input.gI().createFormTradeGem(player);
@@ -121,33 +125,37 @@ public class BoMong extends Npc {
                 } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_OPTION_EXCHANGE_SIDE_TASK_POINT) {
                     switch (select) {
                         case 0 ->
-                            exchangeSideTaskPoint(player, 500, 400);
+                            exchangeActivePoint(player, 100, 77, 1000);
                         case 1 ->
-                            exchangeSideTaskPoint(player, 1500, 1500);
+                            exchangeActivePoint(player, 200, 77, 2200);
                         case 2 ->
-                            exchangeSideTaskPoint(player, 3000, 3500);
+                            exchangeActivePoint(player, 300, 77, 3500);
+                        case 3 ->
+                            exchangeActivePoint(player, 100, 573, 1);
+                        case 4 ->
+                            exchangeActivePoint(player, 300, 574, 1);
                     }
                 }
             }
         }
     }
 
-    private void exchangeSideTaskPoint(Player player, int pointCost, int gemQuantity) {
-        if (player.playerTask.sideTask.point < pointCost) {
-            Service.gI().sendThongBao(player, "Bạn không đủ " + pointCost + " điểm nhiệm vụ.");
+    private void exchangeActivePoint(Player player, int pointCost, int itemId, int quantity) {
+        if (player.activePoint < pointCost) {
+            Service.gI().sendThongBao(player, "Bạn không đủ " + pointCost + " điểm năng động.");
             return;
         }
         if (InventoryService.gI().getCountEmptyBag(player) <= 0) {
             Service.gI().sendThongBao(player, "Hành trang không đủ chỗ trống.");
             return;
         }
-        player.playerTask.sideTask.point -= pointCost;
-        Item ngocXanh = ItemService.gI().createNewItem((short) 77);
-        ngocXanh.quantity = gemQuantity;
-        InventoryService.gI().addItemBag(player, ngocXanh);
+        player.activePoint -= pointCost;
+        Item item = ItemService.gI().createNewItem((short) itemId);
+        item.quantity = quantity;
+        InventoryService.gI().addItemBag(player, item);
         InventoryService.gI().sendItemBags(player);
         Service.gI().sendThongBao(player, "Đổi thành công " + pointCost + " điểm lấy "
-                + gemQuantity + " " + ngocXanh.template.name + ". Còn "
-                + player.playerTask.sideTask.point + " điểm.");
+                + quantity + " " + item.template.name + ". Còn "
+                + player.activePoint + " điểm.");
     }
 }
