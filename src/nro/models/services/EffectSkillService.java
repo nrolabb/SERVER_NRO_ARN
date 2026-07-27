@@ -175,7 +175,14 @@ public class EffectSkillService {
             2089, 2087, 2088, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099);
 
     public boolean isUseSpineBienHinh(Player player) {
-        if (player == null || player.inventory == null || player.inventory.itemsBody == null
+        if (player == null) {
+            return false;
+        }
+        if (player.gender == ConstPlayer.XAYDA && player.fusion != null
+                && player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
+            return true;
+        }
+        if (player.inventory == null || player.inventory.itemsBody == null
                 || player.inventory.itemsBody.size() <= 5) {
             return false;
         }
