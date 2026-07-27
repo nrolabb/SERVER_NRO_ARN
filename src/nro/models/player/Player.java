@@ -687,7 +687,7 @@ public class Player implements Runnable {
 
         public short getHeadId(Player player, Item item) {
             if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
-                int level = 1;
+                int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
                         if (op.optionTemplate.id == 72) {
@@ -696,11 +696,11 @@ public class Player implements Runnable {
                         }
                     }
                 }
+                if (level == 0)
+                    return 2270;
                 if (level == 1)
                     return 2289;
-                if (level == 2)
-                    return 2290;
-                if (level >= 3)
+                if (level >= 2)
                     return 2290;
             }
             return this.headId;
@@ -708,7 +708,7 @@ public class Player implements Runnable {
 
         public short getBodyId(Player player, Item item) {
             if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
-                int level = 1;
+                int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
                         if (op.optionTemplate.id == 72) {
@@ -717,9 +717,9 @@ public class Player implements Runnable {
                         }
                     }
                 }
-                if (level == 1)
+                if (level == 0)
                     return 2272;
-                if (level >= 2)
+                if (level >= 1)
                     return 2294;
             }
             return this.bodyId;
@@ -727,7 +727,7 @@ public class Player implements Runnable {
 
         public short getLegId(Player player, Item item) {
             if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
-                int level = 1;
+                int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
                         if (op.optionTemplate.id == 72) {
@@ -736,9 +736,9 @@ public class Player implements Runnable {
                         }
                     }
                 }
-                if (level == 1)
+                if (level == 0)
                     return 2274;
-                if (level >= 2)
+                if (level >= 1)
                     return 2295;
             }
             return this.legId;
