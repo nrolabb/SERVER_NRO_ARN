@@ -94,6 +94,40 @@ public class NangCapBongTai {
             "Bông tai Porata Đặc biệt [+2]"
     );
 
+    /** Config cho nâng cấp BT đệ tử đặc biệt 0→1 */
+    private static final UpgradeConfig CONFIG_DT_0_TO_1 = new UpgradeConfig(
+            1966,           // bongTaiId
+            1966,           // targetId (không đổi template)
+            2100,           // manhVoId (mảnh BT đặc biệt)
+            999,            // requiredManhVo
+            99,             // failManhVo
+            0,              // gold
+            0,              // gem
+            50,             // thoiVang
+            50,             // failThoiVang
+            20,             // ratio %
+            1,              // capValue
+            false,          // changeTemplate
+            "Bông tai Đệ tử Đặc biệt [+1]"
+    );
+
+    /** Config cho nâng cấp BT đệ tử đặc biệt 1→2 */
+    private static final UpgradeConfig CONFIG_DT_1_TO_2 = new UpgradeConfig(
+            1966,           // bongTaiId
+            1966,           // targetId (không đổi template)
+            2100,           // manhVoId (mảnh BT đặc biệt)
+            999,            // requiredManhVo
+            99,             // failManhVo
+            0,              // gold
+            0,              // gem
+            50,             // thoiVang
+            50,             // failThoiVang
+            10,             // ratio %
+            2,              // capValue
+            false,          // changeTemplate
+            "Bông tai Đệ tử Đặc biệt [+2]"
+    );
+
     // ── Record ─────────────────────────────────────────────────
 
     private record UpgradeConfig(
@@ -162,7 +196,7 @@ public class NangCapBongTai {
     private static UpgradeConfig getConfigDB(Player player) {
         Item bongTaiDB = null;
         for (Item item : player.combineNew.itemsCombine) {
-            if (item != null && item.isNotNullItem() && item.template != null && item.template.id == 1965) {
+            if (item != null && item.isNotNullItem() && item.template != null && (item.template.id == 1965 || item.template.id == 1966)) {
                 bongTaiDB = item;
                 break;
             }
@@ -172,10 +206,18 @@ public class NangCapBongTai {
             return CONFIG_DB_0_TO_1;
         }
         int currentCap = getCurrentCap(bongTaiDB);
-        if (currentCap <= 0) {
-            return CONFIG_DB_0_TO_1;
-        } else if (currentCap == 1) {
-            return CONFIG_DB_1_TO_2;
+        if (bongTaiDB.template.id == 1966) {
+            if (currentCap <= 0) {
+                return CONFIG_DT_0_TO_1;
+            } else if (currentCap == 1) {
+                return CONFIG_DT_1_TO_2;
+            }
+        } else {
+            if (currentCap <= 0) {
+                return CONFIG_DB_0_TO_1;
+            } else if (currentCap == 1) {
+                return CONFIG_DB_1_TO_2;
+            }
         }
         return null; // Đã max
     }
@@ -382,8 +424,8 @@ public class NangCapBongTai {
 
     private static void showRequirement(Player player, UpgradeConfig cfg) {
         String msg = "Cần 1 Bông tai Porata";
-        if (cfg.bongTaiId == 1965) {
-            msg = "Cần 1 Bông tai Porata đặc biệt";
+        if (cfg.bongTaiId == 1965 || cfg.bongTaiId == 1966) {
+            msg = "Cần 1 Bông tai Porata đặc biệt (hoặc Đệ tử)";
         } else if (cfg.bongTaiId == 921) {
             msg += " cấp 2";
         } else if (cfg.bongTaiId == 454) {

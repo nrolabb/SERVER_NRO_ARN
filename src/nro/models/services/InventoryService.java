@@ -329,8 +329,8 @@ public class InventoryService {
             }
         }
 
-        // Bông tai đặc biệt: 1965 cho sư phụ, 1966 cho đệ tử
-        if (item.template.id == 1965 && player.isPet) {
+        // Bông tai 454, 921, 1819, 1965 chỉ dành cho sư phụ
+        if ((item.template.id == 454 || item.template.id == 921 || item.template.id == 1819 || item.template.id == 1965) && player.isPet) {
             Service.gI().sendThongBaoOK(((Pet) player).master, "Bông tai này chỉ dành cho Sư Phụ!");
             return sItem;
         }
@@ -471,23 +471,49 @@ public class InventoryService {
                 }
             } else if (!oldIsBongTai && newIsBongTai) {
                 if (player.pet != null) {
-                    if (item.template.id == 454) player.pet.fusion(true);
-                    else if (item.template.id == 921) player.pet.fusion2(true);
-                    else if (item.template.id == 1819) player.pet.fusion3(true);
-                    else if (item.template.id == 1965) player.pet.fusion(true);
+                    boolean petHas1966 = false;
+                    if (player.pet.inventory.itemsBody.size() > 10) {
+                        Item petItem10 = player.pet.inventory.itemsBody.get(10);
+                        if (petItem10.isNotNullItem() && petItem10.template.id == 1966) {
+                            petHas1966 = true;
+                        }
+                    }
+                    if (petHas1966) {
+                        if (item.template.id == 454) player.pet.fusion(true);
+                        else if (item.template.id == 921) player.pet.fusion2(true);
+                        else if (item.template.id == 1819) player.pet.fusion3(true);
+                        else if (item.template.id == 1965) player.pet.fusion(true);
+                    } else {
+                        Service.gI().sendThongBao(player, "Đệ tử phải đeo Bông tai để hợp thể!");
+                    }
                 }
             } else if (oldIsBongTai && newIsBongTai) {
-                if (player.fusion.typeFusion != ConstPlayer.NON_FUSION && player.pet != null) {
-                    if (item.template.id == 454) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
-                    else if (item.template.id == 921) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA2;
-                    else if (item.template.id == 1819) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA3;
-                    else if (item.template.id == 1965) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
-                    player.nPoint.calPoint();
-                } else if (player.pet != null) {
-                    if (item.template.id == 454) player.pet.fusion(true);
-                    else if (item.template.id == 921) player.pet.fusion2(true);
-                    else if (item.template.id == 1819) player.pet.fusion3(true);
-                    else if (item.template.id == 1965) player.pet.fusion(true);
+                if (player.pet != null) {
+                    boolean petHas1966 = false;
+                    if (player.pet.inventory.itemsBody.size() > 10) {
+                        Item petItem10 = player.pet.inventory.itemsBody.get(10);
+                        if (petItem10.isNotNullItem() && petItem10.template.id == 1966) {
+                            petHas1966 = true;
+                        }
+                    }
+                    if (petHas1966) {
+                        if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
+                            if (item.template.id == 454) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
+                            else if (item.template.id == 921) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA2;
+                            else if (item.template.id == 1819) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA3;
+                            else if (item.template.id == 1965) player.fusion.typeFusion = ConstPlayer.HOP_THE_PORATA;
+                            player.nPoint.calPoint();
+                        } else {
+                            if (item.template.id == 454) player.pet.fusion(true);
+                            else if (item.template.id == 921) player.pet.fusion2(true);
+                            else if (item.template.id == 1819) player.pet.fusion3(true);
+                            else if (item.template.id == 1965) player.pet.fusion(true);
+                        }
+                    } else {
+                        if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
+                            player.pet.unFusion();
+                        }
+                    }
                 }
             }
             if (!player.isPet
@@ -552,6 +578,36 @@ public class InventoryService {
                 if (item.isNotNullItem()) {
                     Item itemSwap = putItemBody(player.pet, item);
                     player.inventory.itemsBag.set(index, itemSwap);
+                    
+                    boolean oldIs1966 = false;
+                    if (itemSwap.isNotNullItem() && itemSwap.template.id == 1966) {
+                        oldIs1966 = true;
+                    }
+                    boolean newIs1966 = false;
+                    if (item.template.id == 1966) {
+                        newIs1966 = true;
+                    }
+
+                    if (oldIs1966 && !newIs1966) {
+                        if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
+                            player.pet.unFusion();
+                        }
+                    } else if (!oldIs1966 && newIs1966) {
+                        if (player.inventory.itemsBody.size() > 10) {
+                            Item masterItem10 = player.inventory.itemsBody.get(10);
+                            if (masterItem10.isNotNullItem() && (masterItem10.template.id == 454 || masterItem10.template.id == 921 || masterItem10.template.id == 1819 || masterItem10.template.id == 1965)) {
+                                if (player.fusion.typeFusion == ConstPlayer.NON_FUSION) {
+                                    if (masterItem10.template.id == 454) player.pet.fusion(true);
+                                    else if (masterItem10.template.id == 921) player.pet.fusion2(true);
+                                    else if (masterItem10.template.id == 1819) player.pet.fusion3(true);
+                                    else if (masterItem10.template.id == 1965) player.pet.fusion(true);
+                                }
+                            } else {
+                                Service.gI().sendThongBao(player, "Sư phụ cần đeo Bông tai để hợp thể!");
+                            }
+                        }
+                    }
+
                     sendItemBags(player);
                     sendItemBody(player);
                     if (!itemSwap.equals(item)) {
@@ -573,6 +629,13 @@ public class InventoryService {
         Item item = player.pet.inventory.itemsBody.get(index);
         if (item.isNotNullItem()) {
             player.pet.inventory.itemsBody.set(index, putItemBag(player, item));
+            
+            if (item.template.id == 1966) {
+                if (player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
+                    player.pet.unFusion();
+                }
+            }
+            
             sendItemBags(player);
             sendItemBody(player);
             Service.gI().point(player);

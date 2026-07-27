@@ -1396,7 +1396,16 @@ if (dataArray.size() >= 17) {
                         player.fusion.typeFusion = nro.models.consts.ConstPlayer.HOP_THE_PORATA;
                     }
                     if (player.pet != null && player.fusion.typeFusion != nro.models.consts.ConstPlayer.NON_FUSION) {
-                        player.pet.status = Pet.FUSION;
+                        boolean petHas1966 = false;
+                        if (player.pet.inventory.itemsBody.size() > 10) {
+                            nro.models.item.Item petItem10 = player.pet.inventory.itemsBody.get(10);
+                            if (petItem10.isNotNullItem() && petItem10.template.id == 1966) petHas1966 = true;
+                        }
+                        if (petHas1966) {
+                            player.pet.status = Pet.FUSION;
+                        } else {
+                            player.fusion.typeFusion = nro.models.consts.ConstPlayer.NON_FUSION;
+                        }
                     }
                 }
             }

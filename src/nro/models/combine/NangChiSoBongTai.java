@@ -65,6 +65,19 @@ public class NangChiSoBongTai {
             "Mở chỉ số Bông tai Porata Đặc biệt"
     );
 
+    /** Config cho mở chỉ số BT đệ tử đặc biệt (1966) — giống C3 */
+    private static final StatsConfig CONFIG_DT = new StatsConfig(
+            1966,   // bongTaiId
+            934,    // honBongTaiId
+            935,    // daXanhLamId
+            99,     // requiredHon
+            100,    // gem
+            30,     // ratio %
+            2,      // numStats (2 dòng)
+            -1,     // capValue = -1 → giữ nguyên option cấp hiện tại
+            "Mở chỉ số Bông tai Đệ tử Đặc biệt"
+    );
+
     // ── Record ─────────────────────────────────────────────────
 
     private record StatsConfig(
@@ -103,11 +116,22 @@ public class NangChiSoBongTai {
 
     // ── BT đặc biệt ────────────────────────────────────────
     public static void showInfoCombineDB(Player player) {
-        showInfoCombineInternal(player, CONFIG_DB);
+        showInfoCombineInternal(player, getConfigDB(player));
     }
 
     public static void nangChiSoBongTaiDB(Player player) {
-        nangChiSoInternal(player, CONFIG_DB);
+        nangChiSoInternal(player, getConfigDB(player));
+    }
+
+    private static StatsConfig getConfigDB(Player player) {
+        for (Item item : player.combineNew.itemsCombine) {
+            if (item != null && item.isNotNullItem() && item.template != null) {
+                if (item.template.id == 1966) {
+                    return CONFIG_DT;
+                }
+            }
+        }
+        return CONFIG_DB;
     }
 
     // ══════════════════════════════════════════════════════════
@@ -143,7 +167,7 @@ public class NangChiSoBongTai {
 
         int currentHon = getQuantity(honBongTai);
         String resultText;
-        if (cfg.bongTaiId == 1965) {
+        if (cfg.bongTaiId == 1965 || cfg.bongTaiId == 1966) {
             int cap = getCurrentCap(bongTai);
             if (cap <= 1) {
                 resultText = "+1 dòng chỉ số ngẫu nhiên (Max 10%)";
@@ -227,7 +251,7 @@ public class NangChiSoBongTai {
                 int actualNumStats = cfg.numStats;
                 int actualParamMax = PARAM_MAX;
 
-                if (cfg.bongTaiId == 1965) {
+                if (cfg.bongTaiId == 1965 || cfg.bongTaiId == 1966) {
                     int cap = (preservedCap > 0) ? preservedCap : 1;
                     if (cap == 1) {
                         actualNumStats = 1;
@@ -298,8 +322,8 @@ public class NangChiSoBongTai {
 
     private static void showRequirement(Player player, StatsConfig cfg) {
         String bongTaiName;
-        if (cfg.bongTaiId == 1965) {
-            bongTaiName = "Bông tai Porata đặc biệt";
+        if (cfg.bongTaiId == 1965 || cfg.bongTaiId == 1966) {
+            bongTaiName = "Bông tai Porata đặc biệt (hoặc Đệ tử)";
         } else if (cfg.bongTaiId == 1819) {
             bongTaiName = "Bông tai Porata cấp 3";
         } else {
