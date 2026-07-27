@@ -684,6 +684,65 @@ public class Player implements Runnable {
             this.bodyId = bodyId;
             this.legId = legId;
         }
+
+        public short getHeadId(Player player, Item item) {
+            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+                int level = 1;
+                if (item != null && item.itemOptions != null) {
+                    for (Item.ItemOption op : item.itemOptions) {
+                        if (op.optionTemplate.id == 72) {
+                            level = op.param;
+                            break;
+                        }
+                    }
+                }
+                if (level == 1)
+                    return 2289;
+                if (level == 2)
+                    return 2290;
+                if (level >= 3)
+                    return 2290;
+            }
+            return this.headId;
+        }
+
+        public short getBodyId(Player player, Item item) {
+            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+                int level = 1;
+                if (item != null && item.itemOptions != null) {
+                    for (Item.ItemOption op : item.itemOptions) {
+                        if (op.optionTemplate.id == 72) {
+                            level = op.param;
+                            break;
+                        }
+                    }
+                }
+                if (level == 1)
+                    return 2272;
+                if (level >= 2)
+                    return 2294;
+            }
+            return this.bodyId;
+        }
+
+        public short getLegId(Player player, Item item) {
+            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+                int level = 1;
+                if (item != null && item.itemOptions != null) {
+                    for (Item.ItemOption op : item.itemOptions) {
+                        if (op.optionTemplate.id == 72) {
+                            level = op.param;
+                            break;
+                        }
+                    }
+                }
+                if (level == 1)
+                    return 2274;
+                if (level >= 2)
+                    return 2295;
+            }
+            return this.legId;
+        }
     }
 
     public static List<PorataTemplate> specialPorataTemplates = new ArrayList<>();
@@ -695,15 +754,15 @@ public class Player implements Runnable {
     }
 
     private static final short[][] idOutfitFusion = {
-            { 380, 381, 382 },
-            { 383, 384, 385 },
-            { 391, 392, 393 },
-            { 870, 871, 872 },
-            { 873, 874, 875 },
-            { 867, 868, 869 },
+            { 380, 381, 382 }, // td btc1
+            { 383, 384, 385 }, // nm btc1
+            { 2286, 2294, 2295 },
+            { 870, 871, 872 }, // td btc2
+            { 873, 874, 875 }, // nm btc2
+            { 2287, 2294, 2295 },
             { 1866, 1859, 1860 }, // td btc3
             { 1869, 1872, 1873 }, // nm btc3
-            { 1856, 1859, 1860 }
+            { 2288, 2294, 2295 }
     };
 
     public static final short[][] idOutfitGod = {
@@ -917,7 +976,7 @@ public class Player implements Runnable {
                     for (PorataTemplate template : specialPorataTemplates) {
                         if (itemSlot10.template.id == template.masterItemId
                                 && petItemSlot10.template.id == template.petItemId) {
-                            return template.headId;
+                            return template.getHeadId(this, itemSlot10);
                         }
                     }
                 }
@@ -1007,7 +1066,7 @@ public class Player implements Runnable {
                     for (PorataTemplate template : specialPorataTemplates) {
                         if (itemSlot10.template.id == template.masterItemId
                                 && petItemSlot10.template.id == template.petItemId) {
-                            return template.bodyId;
+                            return template.getBodyId(this, itemSlot10);
                         }
                     }
                 }
@@ -1095,7 +1154,7 @@ public class Player implements Runnable {
                     for (PorataTemplate template : specialPorataTemplates) {
                         if (itemSlot10.template.id == template.masterItemId
                                 && petItemSlot10.template.id == template.petItemId) {
-                            return template.legId;
+                            return template.getLegId(this, itemSlot10);
                         }
                     }
                 }
