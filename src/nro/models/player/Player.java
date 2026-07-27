@@ -697,7 +697,7 @@ public class Player implements Runnable {
                     }
                 }
                 if (level == 0)
-                    return 2270;
+                    return 2283;
                 if (level == 1)
                     return 2289;
                 if (level >= 2)
@@ -718,7 +718,7 @@ public class Player implements Runnable {
                     }
                 }
                 if (level == 0)
-                    return 2272;
+                    return 2284;
                 if (level >= 1)
                     return 2294;
             }
@@ -737,7 +737,7 @@ public class Player implements Runnable {
                     }
                 }
                 if (level == 0)
-                    return 2274;
+                    return 2285;
                 if (level >= 1)
                     return 2295;
             }
@@ -1007,7 +1007,8 @@ public class Player implements Runnable {
                 }
 
                 boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem()
+                        && (petItem.template.id == 1693 || petItem.template.id == 1553);
                 boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
                         && item.template.id == petItem.template.id;
                 if (hasItem1 && hasItem2 && !sameItem) {
@@ -1089,7 +1090,8 @@ public class Player implements Runnable {
                 }
 
                 boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem()
+                        && (petItem.template.id == 1693 || petItem.template.id == 1553);
                 boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
                         && item.template.id == petItem.template.id;
                 if (hasItem1 && hasItem2 && !sameItem) {
@@ -1174,7 +1176,8 @@ public class Player implements Runnable {
                 }
 
                 boolean hasItem1 = item.isNotNullItem() && (item.template.id == 1693 || item.template.id == 1553);
-                boolean hasItem2 = petItem.isNotNullItem() && (petItem.template.id == 1693 || petItem.template.id == 1553);
+                boolean hasItem2 = petItem.isNotNullItem()
+                        && (petItem.template.id == 1693 || petItem.template.id == 1553);
                 boolean sameItem = item.isNotNullItem() && petItem.isNotNullItem()
                         && item.template.id == petItem.template.id;
                 if (hasItem1 && hasItem2 && !sameItem) {
