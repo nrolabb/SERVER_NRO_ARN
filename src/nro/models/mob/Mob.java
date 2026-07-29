@@ -662,6 +662,11 @@ public class Mob {
             ItemMap itemMap = new ItemMap(player.zone, 1508, 1, this.location.x, this.location.y, player.id);
             Service.gI().dropItemMap(player.zone, itemMap);
         }
+
+        if ((mapid == 95 || mapid == 121) && Util.isTrue(30, 100)) {
+            ItemMap itemMap = new ItemMap(zone, 2100, 1, x, yEnd, player.id);
+            list.add(itemMap);
+        }
         // if (player.zone.map.mapId == 92 && Util.isTrue(1, 200)) {
         // ItemMap itemMap = new ItemMap(player.zone, 444, 1, this.location.x,
         // this.location.y, player.id);

@@ -974,7 +974,46 @@ public class Controller implements IMessageHandler {
     }
 
     public void login2(MySession session, Message msg) {
-        Service.gI().sendThongBaoOK(session, "Truy Cập: " + ServerManager.DOMAIN + "\n Đề Đăng Ký & Tải Game");
+        try {
+            String user = "";
+            String pass = "";
+            try {
+                user = msg.reader().readUTF();
+                pass = msg.reader().readUTF();
+            } catch (Exception e) {
+                if (pass == null || pass.isEmpty()) {
+                    pass = user;
+                }
+            }
+            if (user == null || user.isEmpty() || user.length() < 3) {
+                user = "u" + System.currentTimeMillis();
+                pass = user;
+            }
+            user = user.toLowerCase();
+            
+            LocalResultSet rs = LocalManager.executeQuery("select count(1) from account where ip_address = ?", session.ipAddress);
+            if (rs.next()) {
+                if (rs.getInt(1) >= 3) {
+                    Service.gI().sendThongBaoOK(session, "Một địa chỉ IP chỉ được tạo tối đa 3 tài khoản!");
+                    rs.dispose();
+                    return;
+                }
+            }
+            rs.dispose();
+
+            rs = LocalManager.executeQuery("select * from account where username = ?", user);
+            if (rs.next()) {
+                rs.dispose();
+                session.login(user, pass);
+                return;
+            }
+            rs.dispose();
+
+            LocalManager.executeUpdate("insert into account(username, password, ip_address, active) values(?, ?, ?, ?)", user, pass, session.ipAddress, 1);
+            session.login(user, pass);
+        } catch (Exception e) {
+            Logger.logException(Controller.class, e);
+        }
     }
 
     public void sendInfo(MySession session) {

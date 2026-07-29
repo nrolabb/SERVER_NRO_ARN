@@ -21,7 +21,7 @@ import nro.models.network.MySession;
 import nro.models.services_dungeon.NgocRongNamecService;
 import nro.models.utils.Logger;
 import nro.models.utils.TimeUtil;
-import java.util.*; 
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -55,10 +55,10 @@ public class ServerManager {
 
     public static String timeStart;
     public static final Map<Object, Object> CLIENTS = new HashMap<>();
-    public static String NAME_SERVER = "Ngọc Rồng Onlime";
-    public static String DOMAIN = "Server 1";
-    public static String NAME = "Ngọc Rồng Online";
-    public static String IP = "36.50.135.149";
+    public static String NAME_SERVER = "Ngọc Rồng Arena";
+    public static String DOMAIN = "ngocrongarn.com";
+    public static String NAME = "Ngọc Rồng Arena";
+    public static String IP = "ngocrongarn.com";
     public static int PORT = 14445;
     public static int EVENT_SEVER = 0;
     private static ServerManager instance;
@@ -67,7 +67,7 @@ public class ServerManager {
 
     public void init() {
         Manager.gI();
-        //TaskService.gI().loadTask();
+        // TaskService.gI().loadTask();
         HistoryTransactionDAO.deleteHistory();
     }
 
@@ -82,7 +82,7 @@ public class ServerManager {
     public static void main(String[] args) {
         try {
             timeStart = TimeUtil.getTimeNow("dd/MM/yyyy HH:mm:ss");
-            //ShopTab.loadItem();
+            // ShopTab.loadItem();
             new Thread(() -> {
                 try {
                     ServerManager.gI().run();
@@ -316,15 +316,15 @@ public class ServerManager {
                     System.out.println("Đã tắt chế độ bảo trì tự động.");
                     break;
                 case "run":
-                try {
-                    ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "run.bat");
-                    pb.inheritIO();
-                    pb.start();
-                    System.out.println("Đã chạy run.bat");
-                } catch (IOException e) {
-                    System.out.println("Lỗi khi chạy run.bat: " + e.getMessage());
-                }
-                break;
+                    try {
+                        ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "run.bat");
+                        pb.inheritIO();
+                        pb.start();
+                        System.out.println("Đã chạy run.bat");
+                    } catch (IOException e) {
+                        System.out.println("Lỗi khi chạy run.bat: " + e.getMessage());
+                    }
+                    break;
                 default:
                     System.out.println("Lệnh không hợp lệ.");
                     break;
