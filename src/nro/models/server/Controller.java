@@ -977,9 +977,11 @@ public class Controller implements IMessageHandler {
         try {
             String user = "";
             String pass = "";
+            String email = "";
             try {
                 user = msg.reader().readUTF();
                 pass = msg.reader().readUTF();
+                email = msg.reader().readUTF();
             } catch (Exception e) {
                 if (pass == null || pass.isEmpty()) {
                     pass = user;
@@ -1009,7 +1011,7 @@ public class Controller implements IMessageHandler {
             }
             rs.dispose();
 
-            LocalManager.executeUpdate("insert into account(username, password, ip_address, active) values(?, ?, ?, ?)", user, pass, session.ipAddress, 1);
+            LocalManager.executeUpdate("insert into account(username, password, ip_address, active, email, token, xsrf_token, newpass) values(?, ?, ?, ?, ?, '', '', '')", user, pass, session.ipAddress, 1, email);
             session.login(user, pass);
         } catch (Exception e) {
             Logger.logException(Controller.class, e);
