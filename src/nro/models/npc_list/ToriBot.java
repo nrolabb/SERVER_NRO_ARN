@@ -15,10 +15,13 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
 import nro.models.database.PlayerDAO;
+
 public class ToriBot extends Npc {
 
-    private static final LocalDateTime VIP_SEASON_START_DATE = LocalDateTime.of(LocalDate.now().getYear(), Month.JUNE, 5, 0, 0, 0);
-    private static final LocalDateTime VIP_SEASON_END_DATE = LocalDateTime.of(LocalDate.now().getYear(), Month.DECEMBER, 5, 23, 59, 59);
+    private static final LocalDateTime VIP_SEASON_START_DATE = LocalDateTime.of(LocalDate.now().getYear(), Month.JUNE,
+            5, 0, 0, 0);
+    private static final LocalDateTime VIP_SEASON_END_DATE = LocalDateTime.of(LocalDate.now().getYear(), Month.DECEMBER,
+            5, 23, 59, 59);
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public ToriBot(int mapId, int status, int cx, int cy, int tempId, int avartar) {
@@ -32,7 +35,8 @@ public class ToriBot extends Npc {
             this.createOtherMenu(player, 0, "Ngươi tìm ta có việc gì?", "Đóng");
         } else {
             int currentPurchases = player.vipPurchaseCount;
-            String vipInfoMessage = "Lưu ý: NÂNG VIP TỐI ĐA ĐƯỢC 4 LẦN\nNÂNG VIP TỐI ĐA ĐƯỢC 4 LẦN (Bạn đã mua: " + currentPurchases + "/4 lần)";
+            String vipInfoMessage = "Lưu ý: NÂNG VIP TỐI ĐA ĐƯỢC 4 LẦN\nNÂNG VIP TỐI ĐA ĐƯỢC 4 LẦN (Bạn đã mua: "
+                    + currentPurchases + "/4 lần)";
             String startDateStr = VIP_SEASON_START_DATE.format(DATE_TIME_FORMATTER);
             String endDateStr = VIP_SEASON_END_DATE.format(DATE_TIME_FORMATTER);
             Duration remainingDuration = Duration.between(currentDateTime, VIP_SEASON_END_DATE);
@@ -51,16 +55,18 @@ public class ToriBot extends Npc {
             } else if (days == 0) {
                 remainingTimeString = "Còn " + hours + " giờ " + minutes + " phút " + seconds + " giây!";
             } else {
-                remainingTimeString = "Còn " + days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây!";
+                remainingTimeString = "Còn " + days + " ngày " + hours + " giờ " + minutes + " phút " + seconds
+                        + " giây!";
             }
 
             this.createOtherMenu(player, 0,
                     "xin chào, xin chào\n"
-                    // \n(Từ " + startDateStr + " đến hết " + endDateStr + ")\n"
-                    // + "Thời gian còn lại: " + remainingTimeString + "\n"
-                    // + // Thêm dòng thời gian còn lại
-                    // "Tạo nhân vật mới sẽ được X2 Kinh nghiệm toàn mùa\n Nếu nâng cấp VIP sẽ được nhận\n nhiều ưu đãi hơn nữa.\n"
-                     + vipInfoMessage,
+                            // \n(Từ " + startDateStr + " đến hết " + endDateStr + ")\n"
+                            // + "Thời gian còn lại: " + remainingTimeString + "\n"
+                            // + // Thêm dòng thời gian còn lại
+                            // "Tạo nhân vật mới sẽ được X2 Kinh nghiệm toàn mùa\n Nếu nâng cấp VIP sẽ được
+                            // nhận\n nhiều ưu đãi hơn nữa.\n"
+                            + vipInfoMessage,
                     "Vip 1", "Vip 2", "Vip 3", "Vip 4");
         }
     }
@@ -73,26 +79,30 @@ public class ToriBot extends Npc {
         LocalDateTime currentDateTime = LocalDateTime.now();
         if (currentDateTime.isAfter(VIP_SEASON_END_DATE)) {
             Service.gI().sendThongBao(pl, "Mùa VIP đã kết thúc. Bạn không thể mua VIP vào lúc này.");
-           // openBaseMenu(pl);
+            // openBaseMenu(pl);
             return;
         }
         switch (pl.idMark.getIndexMenu()) {
             case 0 -> {
                 switch (select) {
                     case 0 ->
-                        createOtherMenu(pl, 1, "Nâng cấp VIP 1 bạn sẽ nhận được\n1000 ngọc xanh, 1 phiếu giảm giá 80%\nThú Cưỡi + Pet\n5 viên đá bảo vệ",
+                        createOtherMenu(pl, 1,
+                                "Nâng cấp VIP 1 bạn sẽ nhận được\n1000 ngọc xanh, 1 phiếu giảm giá 80%\nThú Cưỡi + Pet\n5 viên đá bảo vệ",
                                 "50.000\nVND [" + pl.getSession().vnd + "]",
                                 "Đóng");
                     case 1 ->
-                        createOtherMenu(pl, 2, "Nâng cấp VIP 2 bạn sẽ nhận được\n2000 ngọc xanh, 2 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Trang\n10 viên đá bảo vệ",
+                        createOtherMenu(pl, 2,
+                                "Nâng cấp VIP 2 bạn sẽ nhận được\n2000 ngọc xanh, 2 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Trang\n10 viên đá bảo vệ",
                                 "100.000\nVND[" + pl.getSession().vnd + "]",
                                 "Đóng");
                     case 2 ->
-                        createOtherMenu(pl, 3, "Nâng cấp VIP 3 bạn sẽ nhận được\n3000 ngọc xanh, 3 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Trang\n15 viên đá bảo vệ\n1 Đệ Tử thường + 1 viên capsule kích hoạt\n40 mảnh khỉ 1",
+                        createOtherMenu(pl, 3,
+                                "Nâng cấp VIP 3 bạn sẽ nhận được\n3000 ngọc xanh, 3 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Trang\n15 viên đá bảo vệ\n1 Đệ Tử thường + 1 viên capsule kích hoạt\n40 mảnh khỉ 1",
                                 "150.000\nVND [" + pl.getSession().vnd + "]",
                                 "Đóng");
                     case 3 ->
-                        createOtherMenu(pl, 4, "Nâng cấp VIP 4 bạn sẽ nhận được\n4000 ngọc xanh, 4 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Tran Vip\n20 viên đá bảo vệ\n1 Trứng Mabư + 2 viên capsule kích hoạt\n40 mảnh khỉ 2",
+                        createOtherMenu(pl, 4,
+                                "Nâng cấp VIP 4 bạn sẽ nhận được\n4000 ngọc xanh, 4 phiếu giảm giá 80%\nThú Cưỡi + Đeo Lưng + Cải Trang Vip\n20 viên đá bảo vệ\n1 Trứng Mabư + 2 viên capsule kích hoạt\n40 mảnh khỉ 2",
                                 "200.000\nVND [" + pl.getSession().vnd + "]",
                                 "Đóng");
                 }
@@ -122,13 +132,14 @@ public class ToriBot extends Npc {
             return;
         }
         if (pl.vip >= vipLevel) {
-            Service.gI().sendThongBao(pl, "Bạn đã có VIP cấp " + pl.vip + ". Bạn vẫn có thể mua gói này để nhận lại phần thưởng.");
+            Service.gI().sendThongBao(pl,
+                    "Bạn đã có VIP cấp " + pl.vip + ". Bạn vẫn có thể mua gói này để nhận lại phần thưởng.");
         }
 
-   if (!PlayerDAO.subvnd(pl, cost)) {
-    Service.gI().sendThongBao(pl, "Không đủ tiền (" + (cost / 1000) + "k VND) để mua VIP!");
-    return;
-}
+        if (!PlayerDAO.subvnd(pl, cost)) {
+            Service.gI().sendThongBao(pl, "Không đủ tiền (" + (cost / 1000) + "k VND) để mua VIP!");
+            return;
+        }
 
         if (vipLevel > pl.vip) {
             pl.vip = (byte) vipLevel;
@@ -145,7 +156,8 @@ public class ToriBot extends Npc {
                 VIP4(pl);
         }
 
-        Service.gI().sendThongBao(pl, "Mua VIP " + vipLevel + " thành công! Bạn đã mua " + pl.vipPurchaseCount + "/4 lượt VIP mùa này.");
+        Service.gI().sendThongBao(pl,
+                "Mua VIP " + vipLevel + " thành công! Bạn đã mua " + pl.vipPurchaseCount + "/4 lượt VIP mùa này.");
         openBaseMenu(pl);
     }
 
@@ -184,7 +196,7 @@ public class ToriBot extends Npc {
         Item protectStone = ItemService.gI().createNewItem((short) 987, 5);
 
         // if (pl.pet == null) {
-        //     PetService.gI().createNormalPet(pl);
+        // PetService.gI().createNormalPet(pl);
         // }
 
         // Thêm toàn bộ vật phẩm vào túi đồ của người chơi
@@ -233,7 +245,7 @@ public class ToriBot extends Npc {
         Item protectStone = ItemService.gI().createNewItem((short) 987, 10);
 
         // if (pl.pet == null) {
-        //     PetService.gI().createNormalPet(pl);
+        // PetService.gI().createNormalPet(pl);
         // }
         Item CaiTrang = ItemService.gI().createNewItem((short) 584);
         CaiTrang.itemOptions.add(new ItemOption(50, 24));
@@ -270,7 +282,7 @@ public class ToriBot extends Npc {
         mount.itemOptions.add(new ItemOption(50, 9));
         mount.itemOptions.add(new ItemOption(77, 9));
         mount.itemOptions.add(new ItemOption(103, 9));
-   mount.itemOptions.add(new ItemOption(93, 7));
+        mount.itemOptions.add(new ItemOption(93, 7));
 
         // Item pet = ItemService.gI().createNewItem((short) 1248);
         // pet.itemOptions.add(new ItemOption(50, 9));
@@ -281,7 +293,7 @@ public class ToriBot extends Npc {
         hammer.itemOptions.add(new ItemOption(50, 9));
         hammer.itemOptions.add(new ItemOption(77, 9));
         hammer.itemOptions.add(new ItemOption(103, 9));
-  hammer.itemOptions.add(new ItemOption(93, 7));
+        hammer.itemOptions.add(new ItemOption(93, 7));
         Item protectStone = ItemService.gI().createNewItem((short) 987, 15);
 
         if (pl.pet == null) {
@@ -291,10 +303,10 @@ public class ToriBot extends Npc {
         CaiTrang.itemOptions.add(new ItemOption(50, 24));
         CaiTrang.itemOptions.add(new ItemOption(77, 24));
         CaiTrang.itemOptions.add(new ItemOption(117, 15));
-   CaiTrang.itemOptions.add(new ItemOption(93, 5));
+        CaiTrang.itemOptions.add(new ItemOption(93, 5));
         Item capsule = ItemService.gI().createNewItem((short) 1655, 1);
         capsule.itemOptions.add(new ItemOption(30, 0));
-        
+
         Item captainCard = ItemService.gI().createNewItem((short) 1791, 40);
 
         InventoryService.gI().addItemBag(pl, gem);
@@ -334,7 +346,8 @@ public class ToriBot extends Npc {
         submarine.itemOptions.add(new ItemOption(103, 12));
         submarine.itemOptions.add(new ItemOption(14, 10));
 
-        // Item petDragon = ItemService.gI().createNewItem((short) 1771); // pet rồng nhí vĩnh viễn
+        // Item petDragon = ItemService.gI().createNewItem((short) 1771); // pet rồng
+        // nhí vĩnh viễn
         // petDragon.itemOptions.add(new ItemOption(50, 18));
         // petDragon.itemOptions.add(new ItemOption(77, 18));
         // petDragon.itemOptions.add(new ItemOption(5, 18)); // Chí mạng

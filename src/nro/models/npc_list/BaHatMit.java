@@ -37,8 +37,6 @@ public class BaHatMit extends Npc {
     private static final int VILLAGE_MERGE_STONE = 5;
     private static final int VILLAGE_MERGE_DRAGON_BALL = 6;
     private static final int VILLAGE_PORATA_3 = 7;
-    private static final int VILLAGE_INFUSE_SPIRIT_STONE = 8;
-    private static final int VILLAGE_PORATA_DB = 9;
 
     public BaHatMit(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
@@ -117,11 +115,10 @@ public class BaHatMit extends Npc {
                             case 0 ->
                                 createOtherMenu(player, 3,
                                         "Ta có thể giúp gì cho ngươi ?",
-                                        "Ép sao\ntrang bị"
-                                         ,
-                                         "Pha lê\nhóa\ntrang bị"
-                                         ,
-                                        "Bông tai\nPorata\nĐặc biệt"
+                                        "Ép sao\ntrang bị",
+                                        "Pha lê\nhóa\ntrang bị",
+                                        "Bông tai\nPorata\nĐặc biệt",
+                                        "Ép\nLinh Thạch"
                                     );
                             case 1 ->
                                 createOtherMenu(player, 4,
@@ -156,6 +153,9 @@ public class BaHatMit extends Npc {
                                     Service.gI().sendThongBao(player, "Cần có Bông tai Porata đặc biệt.");
                                 }
                                 break;
+                            case 3:
+                                CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
+                                break;
                          }
                     } else if (player.idMark.getIndexMenu() == 4) {
                         switch (select) {
@@ -167,7 +167,7 @@ public class BaHatMit extends Npc {
                         }
                     } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
                         switch (player.combineNew.typeCombine) {
-                            case CombineService.EP_SAO_TRANG_BI, CombineService.PHA_LE_HOA_TRANG_BI, CombineService.CHUYEN_HOA_TRANG_BI_VANG, CombineService.CHUYEN_HOA_TRANG_BI_NGOC, CombineService.PHAN_RA_TRANG_BI_KH, CombineService.TAI_TAO_CAPSULE_KH, CombineService.NANG_CAP_SAO_PHA_LE, CombineService.DANH_BONG_SAO_PHA_LE, CombineService.CUONG_HOA_LO_SAO_PHA_LE, CombineService.TAO_DA_HEMATITE, CombineService.GHEP_TRANG_BI_KICH_HOAT, CombineService.NANG_CAP_BONG_TAI_DB, CombineService.NANG_CHI_SO_BONG_TAI_DB -> {
+                            case CombineService.EP_SAO_TRANG_BI, CombineService.PHA_LE_HOA_TRANG_BI, CombineService.CHUYEN_HOA_TRANG_BI_VANG, CombineService.CHUYEN_HOA_TRANG_BI_NGOC, CombineService.PHAN_RA_TRANG_BI_KH, CombineService.TAI_TAO_CAPSULE_KH, CombineService.NANG_CAP_SAO_PHA_LE, CombineService.DANH_BONG_SAO_PHA_LE, CombineService.CUONG_HOA_LO_SAO_PHA_LE, CombineService.TAO_DA_HEMATITE, CombineService.GHEP_TRANG_BI_KICH_HOAT, CombineService.NANG_CAP_BONG_TAI_DB, CombineService.NANG_CHI_SO_BONG_TAI_DB, CombineService.EP_LINH_THACH -> {
                                 switch (select) {
                                     case 0 ->
                                         CombineService.gI().startCombine(player);
@@ -365,22 +365,6 @@ public class BaHatMit extends Npc {
                                 }
                                 break;
                             }
-                            case VILLAGE_PORATA_DB: {
-                                boolean hasBtDB = InventoryService.gI().findItem(player, 1965);
-                                if (hasBtDB) {
-                                    // Có BT đặc biệt → hỏi nâng cấp hay mở chỉ số
-                                    createOtherMenu(player, ConstNpc.MENU_PORATA_DB,
-                                            "Ngươi muốn làm gì với Bông tai Porata đặc biệt?",
-                                            "Nâng cấp\nBông tai\nđặc biệt",
-                                            "Mở chỉ số\nBông tai\nđặc biệt");
-                                } else {
-                                    Service.gI().sendThongBao(player, "Cần có Bông tai Porata đặc biệt.");
-                                }
-                                break;
-                            }
-                            case VILLAGE_INFUSE_SPIRIT_STONE:
-                                CombineService.gI().openTabCombine(player, CombineService.EP_LINH_THACH);
-                                break;
                        }
                     
                      } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_SACH_TUYET_KY) {
@@ -485,8 +469,6 @@ public class BaHatMit extends Npc {
         if (hasPorata2 || hasPorata3) {
             actions.add(VILLAGE_PORATA_3);
         }
-        actions.add(VILLAGE_PORATA_DB);
-        actions.add(VILLAGE_INFUSE_SPIRIT_STONE);
 
         return actions;
     }
@@ -506,8 +488,6 @@ public class BaHatMit extends Npc {
             case VILLAGE_PORATA_3 -> InventoryService.gI().findItem(player, 1819)
                     ? "Mở chỉ số\nBông tai\nPorata cấp\n3"
                     : "Nâng cấp\nBông tai\nPorata cấp\n3";
-            case VILLAGE_PORATA_DB -> "Bông tai\nPorata\nĐặc biệt";
-            case VILLAGE_INFUSE_SPIRIT_STONE -> "Ép\nLinh Thạch";
             default -> "";
         };
     }
