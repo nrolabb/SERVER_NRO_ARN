@@ -148,11 +148,11 @@ public class ConstNpc {
     public static final byte BARDOCK = 70;
     public static final byte TORIBOT = 74;
     public static final byte CAY_NEU = 72;
-    public static final byte EVENT = 75;
+    public static final byte XE_NUOC_MIA = 75;
     public static final byte CHI_CHI = 81;
     public static final byte RUONG_SUU_TAM = 82;
     public static final byte DR_MYUU = 83;
-    public static final byte XE_NUOC_MIA = 84;
+    public static final byte PHO_ANH_HAI = 84;
     public static final byte VUA_HAI_TAC = 111;
     //----------------------index menu------------------------------------------
     //menu o len tang map mabu

@@ -86,6 +86,7 @@ import nro.models.services.SubMenuService;
 import nro.models.services.shenron.Shenron_Service;
 import java.util.List;
 import nro.models.event.XeNuocMia;
+import nro.models.event.PhoAnhHai;
 import nro.models.event.summer.VuaHaiTac;
 import nro.models.npc_list.ChiChi;
 import nro.models.npc_list.DrMyuu;
@@ -228,6 +229,8 @@ public class NpcFactory {
                     new NoiBanh(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.XE_NUOC_MIA ->
                     new XeNuocMia(mapId, status, cx, cy, tempId, avatar);
+                case ConstNpc.PHO_ANH_HAI ->
+                    new PhoAnhHai(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.VUA_HAI_TAC ->
                     new VuaHaiTac(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.BARDOCK ->
