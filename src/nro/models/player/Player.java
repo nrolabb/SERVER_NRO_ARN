@@ -686,7 +686,7 @@ public class Player implements Runnable {
         }
 
         public short getHeadId(Player player, Item item) {
-            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+            if (this.masterItemId == 1965) {
                 int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
@@ -696,18 +696,17 @@ public class Player implements Runnable {
                         }
                     }
                 }
-                if (level == 0)
-                    return 2283;
-                if (level == 1)
-                    return 2289;
-                if (level >= 2)
-                    return 2290;
+                int idx = level + 3;
+                if (idx >= OUTFIT_BONG_TAI[player.gender][0].length) {
+                    idx = OUTFIT_BONG_TAI[player.gender][0].length - 1;
+                }
+                return OUTFIT_BONG_TAI[player.gender][0][idx];
             }
             return this.headId;
         }
 
         public short getBodyId(Player player, Item item) {
-            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+            if (this.masterItemId == 1965) {
                 int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
@@ -717,16 +716,17 @@ public class Player implements Runnable {
                         }
                     }
                 }
-                if (level == 0)
-                    return 2284;
-                if (level >= 1)
-                    return 2294;
+                int idx = level + 3;
+                if (idx >= OUTFIT_BONG_TAI[player.gender][1].length) {
+                    idx = OUTFIT_BONG_TAI[player.gender][1].length - 1;
+                }
+                return OUTFIT_BONG_TAI[player.gender][1][idx];
             }
             return this.bodyId;
         }
 
         public short getLegId(Player player, Item item) {
-            if (this.masterItemId == 1965 && player.gender == ConstPlayer.XAYDA) {
+            if (this.masterItemId == 1965) {
                 int level = 0;
                 if (item != null && item.itemOptions != null) {
                     for (Item.ItemOption op : item.itemOptions) {
@@ -736,10 +736,11 @@ public class Player implements Runnable {
                         }
                     }
                 }
-                if (level == 0)
-                    return 2285;
-                if (level >= 1)
-                    return 2295;
+                int idx = level + 3;
+                if (idx >= OUTFIT_BONG_TAI[player.gender][2].length) {
+                    idx = OUTFIT_BONG_TAI[player.gender][2].length - 1;
+                }
+                return OUTFIT_BONG_TAI[player.gender][2][idx];
             }
             return this.legId;
         }
@@ -753,16 +754,25 @@ public class Player implements Runnable {
         specialPorataTemplates.add(new PorataTemplate(1965, 1966, (short) 1254, (short) 1255, (short) 1256));
     }
 
-    private static final short[][] idOutfitFusion = {
-            { 380, 381, 382 }, // td btc1
-            { 383, 384, 385 }, // nm btc1
-            { 2286, 2294, 2295 },
-            { 870, 871, 872 }, // td btc2
-            { 873, 874, 875 }, // nm btc2
-            { 2287, 2294, 2295 },
-            { 1866, 1859, 1860 }, // td btc3
-            { 1869, 1872, 1873 }, // nm btc3
-            { 2288, 2294, 2295 }
+    public static final short[][][] OUTFIT_BONG_TAI = {
+            // Trái Đất (gender 0)
+            {
+                    { 2320, 2323, 2317, 2299, 2326, 2329 }, // Head (Thường 1, 2, 3 - Đặc biệt 0, 1, 2)
+                    { 2321, 2324, 2318, 2300, 2327, 2330 }, // Body
+                    { 2322, 2325, 2319, 2301, 2328, 2331 } // Leg
+            },
+            // Namec (gender 1)
+            {
+                    { 391, 2336, 2239, 2242, 2245, 2248 }, // Head
+                    { 392, 2337, 2240, 2243, 2246, 2249 }, // Body
+                    { 393, 2338, 2241, 2244, 2247, 2250 } // Leg
+            },
+            // Xayda (gender 2)
+            {
+                    { 2293, 2287, 2288, 2283, 2289, 2290 }, // Head
+                    { 2294, 2294, 2294, 2284, 2294, 2294 }, // Body
+                    { 2295, 2295, 2295, 2285, 2295, 2295 } // Leg
+            }
     };
 
     public static final short[][] idOutfitGod = {
@@ -956,6 +966,25 @@ public class Player implements Runnable {
         }
     }
 
+    public int getBongTaiLevel() {
+        int level = 0;
+        if (nPoint != null && nPoint.levelBT > 0) {
+            level = nPoint.levelBT - 1;
+        } else {
+            if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2)
+                level = 1;
+            else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3)
+                level = 2;
+        }
+
+        if (level < 0)
+            level = 0;
+        if (level >= OUTFIT_BONG_TAI[this.gender][0].length) {
+            level = OUTFIT_BONG_TAI[this.gender][0].length - 1;
+        }
+        return level;
+    }
+
     public short getHead() {
         if (isPreviewBienHinh()) {
             int lvl = Math.max(0, Math.min(getPreviewBienHinhLevel() - 1, ConstPlayer.HEADBIENHINH[gender].length - 1));
@@ -1018,22 +1047,12 @@ public class Player implements Runnable {
             if (nPoint != null && nPoint.isGogeta) {
                 return 2100;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][0];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-                // if (this.pet.typePet == 1) {
-                // return idOutfitFusion[3 + this.gender][0];
-                // }
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][0];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
-                if (nPoint != null && nPoint.levelBT == 3) {
-                    return idOutfitFusion[3 + this.gender][0];
-                }
-                return idOutfitFusion[3 + this.gender][0];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-                if (nPoint != null && nPoint.levelBT == 4) {
-                    return idOutfitFusion[6 + this.gender][0];
-                }
-                return idOutfitFusion[6 + this.gender][0];
+                return OUTFIT_BONG_TAI[this.gender == ConstPlayer.NAMEC ? 2 : 0][0][0];
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+                int level = getBongTaiLevel();
+                return OUTFIT_BONG_TAI[this.gender][0][level];
             }
         } else if (inventory != null && inventory.itemsBody.get(5).isNotNullItem()) {
             int headId = inventory.itemsBody.get(5).template.head;
@@ -1101,22 +1120,12 @@ public class Player implements Runnable {
             if (nPoint != null && nPoint.isGogeta) {
                 return 2101;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][1];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-                // if (this.pet.typePet == 1) {
-                // return idOutfitFusion[3 + this.gender][1];
-                // }
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][1];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
-                if (nPoint != null && nPoint.levelBT == 3) {
-                    return idOutfitFusion[3 + this.gender][1];
-                }
-                return idOutfitFusion[3 + this.gender][1];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-                if (nPoint != null && nPoint.levelBT == 4) {
-                    return idOutfitFusion[6 + this.gender][1];
-                }
-                return idOutfitFusion[6 + this.gender][1];
+                return OUTFIT_BONG_TAI[this.gender == ConstPlayer.NAMEC ? 2 : 0][1][0];
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+                int level = getBongTaiLevel();
+                return OUTFIT_BONG_TAI[this.gender][1][level];
             }
         } else if (inventory != null && inventory.itemsBody.get(5).isNotNullItem()) {
             int body = inventory.itemsBody.get(5).template.body;
@@ -1187,22 +1196,12 @@ public class Player implements Runnable {
             if (nPoint != null && nPoint.isGogeta) {
                 return 2102;
             } else if (fusion.typeFusion == ConstPlayer.LUONG_LONG_NHAT_THE) {
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 0][2];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA) {
-                // if (this.pet.typePet == 1) {
-                // return idOutfitFusion[3 + this.gender][2];
-                // }
-                return idOutfitFusion[this.gender == ConstPlayer.NAMEC ? 2 : 1][2];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2) {
-                if (nPoint != null && nPoint.levelBT == 3) {
-                    return idOutfitFusion[3 + this.gender][2];
-                }
-                return idOutfitFusion[3 + this.gender][2];
-            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
-                if (nPoint != null && nPoint.levelBT == 4) {
-                    return idOutfitFusion[6 + this.gender][2];
-                }
-                return idOutfitFusion[6 + this.gender][2];
+                return OUTFIT_BONG_TAI[this.gender == ConstPlayer.NAMEC ? 2 : 0][2][0];
+            } else if (fusion.typeFusion == ConstPlayer.HOP_THE_PORATA
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA2
+                    || fusion.typeFusion == ConstPlayer.HOP_THE_PORATA3) {
+                int level = getBongTaiLevel();
+                return OUTFIT_BONG_TAI[this.gender][2][level];
             }
         } else if (inventory != null && inventory.itemsBody.get(5).isNotNullItem()) {
             int leg = inventory.itemsBody.get(5).template.leg;
