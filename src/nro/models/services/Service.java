@@ -1224,6 +1224,7 @@ public class Service {
                 msg.writer().writeByte(player.effectSkill.isMonkey ? 1 : 0);//set khỉ
                 sendMessAllPlayerInMap(player, msg);
                 msg.cleanup();
+                nro.models.services.RadarService.gI().sendAura(player, player.getAura(), player.getEffFront());
             } catch (Exception e) {
                 e.printStackTrace();
             }

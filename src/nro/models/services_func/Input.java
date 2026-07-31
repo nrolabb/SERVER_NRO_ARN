@@ -332,6 +332,10 @@ player.inventory.gem += soGem;
 
                     if (Client.gI().getPlayer(name) != null) {
                         Item item = ItemService.gI().createNewItem(((short) id));
+                        if (item.template.name.startsWith("Unknown item")) {
+                            Service.gI().sendThongBao(player, "ID Item không tồn tại!");
+                            return;
+                        }
                         List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop((short) id);
                         if (!ops.isEmpty()) {
                             item.itemOptions = ops;
@@ -353,6 +357,10 @@ player.inventory.gem += soGem;
                     int q = Integer.parseInt(text[3]);
                     if (player.isAdmin()) {
                         Item item = ItemService.gI().createNewItem(((short) id));
+                        if (item.template.name.startsWith("Unknown item")) {
+                            Service.gI().sendThongBao(player, "ID Item không tồn tại!");
+                            return;
+                        }
                         List<Item.ItemOption> ops = ItemService.gI().getListOptionItemShop((short) id);
                         if (!ops.isEmpty()) {
                             item.itemOptions = ops;

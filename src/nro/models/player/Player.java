@@ -868,6 +868,19 @@ public class Player implements Runnable {
     }
 
     public byte getAura() {
+        if (this.inventory != null && this.inventory.itemsBody.size() > 5) {
+            Item item = this.inventory.itemsBody.get(5);
+            if (item != null && item.isNotNullItem()) {
+                if (item.template.id == 2113 || item.template.id == 2114 || item.template.id == 2115
+                        || item.template.id == 2116) {
+                    return 40;
+                }
+                if (item.template.id == 2112 || item.template.id == 2109 || item.template.id == 2110
+                        || item.template.id == 2111 || item.template.id == 2113) {
+                    return 41;
+                }
+            }
+        }
         if (!isPl() || this.Cards.isEmpty()) {
             return -1;
         }
