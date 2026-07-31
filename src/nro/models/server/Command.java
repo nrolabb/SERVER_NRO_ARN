@@ -358,11 +358,16 @@ public class Command {
             try {
                 String[] split = text.split(" ");
                 if (split.length < 2) {
-                    Service.gI().sendThongBao(player, "Cú pháp: i <itemId> <số lượng> [option:value...]");
+                    Service.gI().sendThongBao(player, "Cú pháp: i <itemId> [số lượng] [option:value...]");
                     return;
                 }
 
                 int itemId = Integer.parseInt(split[1]);
+                if (ItemService.gI().getTemplate(itemId) == null) {
+                    Service.gI().sendThongBao(player, "Vật phẩm không tồn tại!");
+                    return;
+                }
+
                 int quantity = split.length >= 3 ? Integer.parseInt(split[2]) : 1;
 
                 List<Item.ItemOption> customOptions = new ArrayList<>();
@@ -393,7 +398,7 @@ public class Command {
                         + " [" + itemId + "] SUCCESS!");
 
             } catch (Exception e) {
-                Service.gI().sendThongBao(player, "Lỗi cú pháp! Dùng: i <itemId> <số lượng> [optionId:value]");
+                Service.gI().sendThongBao(player, "Lỗi cú pháp! Dùng: i <itemId> [số lượng] [optionId:value]");
             }
         });
     }
