@@ -146,8 +146,8 @@ public class Input {
                                 Player refPlayer = Client.gI().getPlayerByUser(refId);
                                 if (refPlayer != null) {
                                     refPlayer.getSession().vnd += 10000;
-                                    Service.gI().sendThongBao(refPlayer,
-                                            "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được 10.000 VNĐ.");
+                                    Service.gI().sendThongBaoOK(refPlayer,
+                                            "Có người đã nhập mã giới thiệu của bạn!\nBạn nhận được 10.000 VNĐ.");
                                 } else {
                                     long playerId = -1;
                                     nro.models.data.LocalResultSet rs2 = LocalManager
@@ -168,7 +168,7 @@ public class Input {
                                 Player refPlayer = Client.gI().getPlayerByUser(refId);
                                 if (refPlayer != null) {
                                     Service.gI().sendThongBaoOK(refPlayer,
-                                            "Có người đã nhập mã giới thiệu của bạn! Bạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản");
+                                            "Có người đã nhập mã giới thiệu của bạn!\nBạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản");
                                 } else {
                                     long playerId = -1;
                                     nro.models.data.LocalResultSet rs2 = LocalManager
@@ -180,7 +180,7 @@ public class Input {
                                     if (playerId != -1) {
                                         Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
                                         if (offlinePlayer != null) {
-                                            offlinePlayer.notify = "Có người đã nhập mã giới thiệu của bạn! Bạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản";
+                                            offlinePlayer.notify = "Có người đã nhập mã giới thiệu của bạn!\nBạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản";
                                             PlayerDAO.updatePlayer(offlinePlayer);
                                         }
                                     }

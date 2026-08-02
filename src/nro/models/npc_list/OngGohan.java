@@ -125,7 +125,27 @@ public class OngGohan extends Npc {
                         LocalManager.executeUpdate("UPDATE account SET active = 1 WHERE id = ?",
                                 player.getSession().userId);
                         if (player.getSession().xacNhanGioiThieu != 0) {
-                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", player.getSession().xacNhanGioiThieu);
+                            int refId = player.getSession().xacNhanGioiThieu;
+                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", refId);
+                            nro.models.player.Player refPlayer = nro.models.server.Client.gI().getPlayerByUser(refId);
+                            if (refPlayer != null) {
+                                refPlayer.getSession().vnd += 10000;
+                                Service.gI().sendThongBaoOK(refPlayer, "Người bạn giới thiệu đã kích hoạt tài khoản!\nBạn nhận được 10.000 VNĐ.");
+                            } else {
+                                long playerId = -1;
+                                nro.models.data.LocalResultSet rs2 = LocalManager.executeQuery("select id from player where account_id = ? limit 1", refId);
+                                if (rs2.next()) {
+                                    playerId = rs2.getInt("id");
+                                }
+                                rs2.dispose();
+                                if (playerId != -1) {
+                                    nro.models.player.Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
+                                    if (offlinePlayer != null) {
+                                        offlinePlayer.notify = "Bạn vừa nhận được 10.000 VNĐ từ người bạn giới thiệu đã kích hoạt tài khoản!";
+                                        nro.models.database.PlayerDAO.updatePlayer(offlinePlayer);
+                                    }
+                                }
+                            }
                         }
                     } catch (Exception e) {
                     }
