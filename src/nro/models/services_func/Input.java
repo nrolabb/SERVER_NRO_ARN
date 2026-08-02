@@ -142,19 +142,15 @@ public class Input {
                             InventoryService.gI().sendItemBags(player);
                             Service.gI().sendThongBaoOK(player, "Bạn đã nhập mã thành công và nhận được quà!");
 
+                            try {
+                                LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", refId);
+                            } catch (Exception e) {}
+
                             Player refPlayer = Client.gI().getPlayerByUser(refId);
                             if (refPlayer != null) {
-                                Item refItem573 = ItemService.gI().createNewItem((short) 573, 5);
-                                Item refItem574 = ItemService.gI().createNewItem((short) 574, 5);
-                                if (!InventoryService.gI().addItemBag(refPlayer, refItem573)) {
-                                    InventoryService.gI().addItemBox(refPlayer, refItem573);
-                                }
-                                if (!InventoryService.gI().addItemBag(refPlayer, refItem574)) {
-                                    InventoryService.gI().addItemBox(refPlayer, refItem574);
-                                }
-                                InventoryService.gI().sendItemBags(refPlayer);
+                                refPlayer.getSession().vnd += 10000;
                                 Service.gI().sendThongBao(refPlayer,
-                                        "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được quà.");
+                                        "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được 10.000 VNĐ.");
                             } else {
                                 long playerId = -1;
                                 nro.models.data.LocalResultSet rs2 = LocalManager
@@ -166,15 +162,7 @@ public class Input {
                                 if (playerId != -1) {
                                     Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
                                     if (offlinePlayer != null) {
-                                        Item refItem573 = ItemService.gI().createNewItem((short) 573, 5);
-                                        Item refItem574 = ItemService.gI().createNewItem((short) 574, 5);
-                                        if (!InventoryService.gI().addItemBag(offlinePlayer, refItem573)) {
-                                            InventoryService.gI().addItemBox(offlinePlayer, refItem573);
-                                        }
-                                        if (!InventoryService.gI().addItemBag(offlinePlayer, refItem574)) {
-                                            InventoryService.gI().addItemBox(offlinePlayer, refItem574);
-                                        }
-                                        offlinePlayer.notify = "Bạn vừa nhận được quà giới thiệu từ người chơi khác!";
+                                        offlinePlayer.notify = "Bạn vừa nhận được 10.000 VNĐ từ người nhập mã giới thiệu của bạn!";
                                         PlayerDAO.updatePlayer(offlinePlayer);
                                     }
                                 }
@@ -872,7 +860,7 @@ public class Input {
     public void createFormNhapMaGioiThieu(Player pl) {
         createForm(pl, NHAP_MA_GIOI_THIEU,
                 "Mã giới thiệu của bạn: " + pl.getSession().maGioiThieu
-                        + "\nNếu người chơi khác nhập mã của bạn, bạn sẽ nhận được quà.",
+                        + "\nBạn sẽ nhận được 5 capsule bạc, 5 capsule vàng. Người giới thiệu nhận được 10.000 vnđ",
                 new SubInput("Mã giới thiệu", ANY));
     }
 

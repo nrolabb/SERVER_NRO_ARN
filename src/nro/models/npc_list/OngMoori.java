@@ -76,7 +76,7 @@ public void confirmMenu(Player player, int select) {
                 return;
             }
 
-            Service.gI().sendThongBao(player, "Mở TV Free thành cong!!");
+            Service.gI().sendThongBao(player, "Mở TV Free thành công!!");
             return;
         }
         
@@ -88,7 +88,7 @@ public void confirmMenu(Player player, int select) {
         if (!player.getSession().actived) {
             if (select == index++) {
                 this.createOtherMenu(player, ConstNpc.CONFIRM_KICH_HOAT_TAI_KHOAN,
-                        "Phí kích hoạt là 20.000 VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.\nNgười giới thiệu sẽ nhận được 10k vnd.\nBạn có đồng ý không?",
+                        "Phí kích hoạt là 20.000 VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.",
                         "Đồng ý", "Từ chối");
                 return;
             }
@@ -110,7 +110,7 @@ public void confirmMenu(Player player, int select) {
             }
         } else {
             if (select == index++) {
-                Service.gI().sendThongBao(player, "Bạn đã nhập mã giới thiệu rồi!\nMã giới thiệu của bạn là: " + player.getSession().maGioiThieu);
+                Service.gI().sendThongBaoOK(player, "Bạn đã nhập mã giới thiệu rồi!\nMã giới thiệu của bạn là: " + player.getSession().maGioiThieu);
                 return;
             }
         }
@@ -134,20 +134,6 @@ public void confirmMenu(Player player, int select) {
                 nro.models.services.InventoryService.gI().sendItemBags(player);
                 
                 Service.gI().sendThongBao(player, "Kích hoạt tài khoản thành công! Bạn nhận được 10.000 Ngọc xanh và 1.000 thỏi vàng.");
-                
-                if (player.getSession().xacNhanGioiThieu != 0) {
-                    int refId = player.getSession().xacNhanGioiThieu;
-                    Player refPlayer = nro.models.server.Client.gI().getPlayerByUser(refId);
-                    if (refPlayer != null) {
-                        nro.models.database.PlayerDAO.addVnd(refPlayer, 10000);
-                        refPlayer.getSession().vnd += 10000;
-                        Service.gI().sendThongBao(refPlayer, "Tài khoản do bạn giới thiệu (" + player.name + ") đã kích hoạt. Bạn nhận được 10.000 VNĐ.");
-                    } else {
-                        try {
-                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000, tongnap = tongnap + 10000 WHERE id = ?", refId);
-                        } catch (Exception e) {}
-                    }
-                }
             } else {
                 Service.gI().sendThongBao(player, "Số dư VNĐ không đủ để kích hoạt, vui lòng nạp thêm!");
             }
