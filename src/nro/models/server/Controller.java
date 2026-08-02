@@ -1011,7 +1011,14 @@ public class Controller implements IMessageHandler {
             }
             rs.dispose();
 
-            LocalManager.executeUpdate("insert into account(username, password, ip_address, active, email, token, xsrf_token, newpass) values(?, ?, ?, ?, ?, '', '', '')", user, pass, session.ipAddress, 1, email);
+            String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder maGtBuilder = new StringBuilder();
+            for (int i = 0; i < 5; i++) {
+                maGtBuilder.append(chars.charAt(nro.models.utils.Util.nextInt(chars.length())));
+            }
+            String refCode = user + "_" + maGtBuilder.toString();
+
+            LocalManager.executeUpdate("insert into account(username, password, ip_address, active, email, token, xsrf_token, newpass, gioithieu) values(?, ?, ?, ?, ?, '', '', '', ?)", user, pass, session.ipAddress, 1, email, refCode);
             session.login(user, pass);
         } catch (Exception e) {
             Logger.logException(Controller.class, e);

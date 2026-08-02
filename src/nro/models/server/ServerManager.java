@@ -56,9 +56,9 @@ public class ServerManager {
     public static String timeStart;
     public static final Map<Object, Object> CLIENTS = new HashMap<>();
     public static String NAME_SERVER = "Ngọc Rồng Arena";
-    public static String DOMAIN = "ngocrongarn.com";
+    public static String DOMAIN = "ngocrongarena.com";
     public static String NAME = "Ngọc Rồng Arena";
-    public static String IP = "ngocrongarn.com";
+    public static String IP = "ngocrongarena.com";
     public static int PORT = 14445;
     public static int EVENT_SEVER = 0;
     private static ServerManager instance;
