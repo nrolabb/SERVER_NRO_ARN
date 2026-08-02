@@ -111,10 +111,6 @@ public class Input {
             }
             switch (player.idMark.getTypeInput()) {
                 case NHAP_MA_GIOI_THIEU -> {
-                    if (!player.getSession().actived) {
-                        Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản để nhập mã giới thiệu!");
-                        break;
-                    }
                     String maGT = text[0];
                     if (maGT.equals(player.getSession().maGioiThieu)) {
                         Service.gI().sendThongBao(player, "Không thể nhập mã của chính mình!");
@@ -142,28 +138,51 @@ public class Input {
                             InventoryService.gI().sendItemBags(player);
                             Service.gI().sendThongBaoOK(player, "Bạn đã nhập mã thành công và nhận được quà!");
 
-                            try {
-                                LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", refId);
-                            } catch (Exception e) {}
+                            if (player.getSession().actived) {
+                                try {
+                                    LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", refId);
+                                } catch (Exception e) {}
 
-                            Player refPlayer = Client.gI().getPlayerByUser(refId);
-                            if (refPlayer != null) {
-                                refPlayer.getSession().vnd += 10000;
-                                Service.gI().sendThongBao(refPlayer,
-                                        "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được 10.000 VNĐ.");
-                            } else {
-                                long playerId = -1;
-                                nro.models.data.LocalResultSet rs2 = LocalManager
-                                        .executeQuery("select id from player where account_id = ? limit 1", refId);
-                                if (rs2.next()) {
-                                    playerId = rs2.getInt("id");
+                                Player refPlayer = Client.gI().getPlayerByUser(refId);
+                                if (refPlayer != null) {
+                                    refPlayer.getSession().vnd += 10000;
+                                    Service.gI().sendThongBao(refPlayer,
+                                            "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được 10.000 VNĐ.");
+                                } else {
+                                    long playerId = -1;
+                                    nro.models.data.LocalResultSet rs2 = LocalManager
+                                            .executeQuery("select id from player where account_id = ? limit 1", refId);
+                                    if (rs2.next()) {
+                                        playerId = rs2.getInt("id");
+                                    }
+                                    rs2.dispose();
+                                    if (playerId != -1) {
+                                        Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
+                                        if (offlinePlayer != null) {
+                                            offlinePlayer.notify = "Bạn vừa nhận được 10.000 VNĐ từ người nhập mã giới thiệu của bạn!";
+                                            PlayerDAO.updatePlayer(offlinePlayer);
+                                        }
+                                    }
                                 }
-                                rs2.dispose();
-                                if (playerId != -1) {
-                                    Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
-                                    if (offlinePlayer != null) {
-                                        offlinePlayer.notify = "Bạn vừa nhận được 10.000 VNĐ từ người nhập mã giới thiệu của bạn!";
-                                        PlayerDAO.updatePlayer(offlinePlayer);
+                            } else {
+                                Player refPlayer = Client.gI().getPlayerByUser(refId);
+                                if (refPlayer != null) {
+                                    Service.gI().sendThongBaoOK(refPlayer,
+                                            "Có người đã nhập mã giới thiệu của bạn! Bạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản");
+                                } else {
+                                    long playerId = -1;
+                                    nro.models.data.LocalResultSet rs2 = LocalManager
+                                            .executeQuery("select id from player where account_id = ? limit 1", refId);
+                                    if (rs2.next()) {
+                                        playerId = rs2.getInt("id");
+                                    }
+                                    rs2.dispose();
+                                    if (playerId != -1) {
+                                        Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
+                                        if (offlinePlayer != null) {
+                                            offlinePlayer.notify = "Có người đã nhập mã giới thiệu của bạn! Bạn sẽ nhận được 10.000 VNĐ nếu họ kích hoạt tài khoản";
+                                            PlayerDAO.updatePlayer(offlinePlayer);
+                                        }
                                     }
                                 }
                             }
@@ -860,7 +879,7 @@ public class Input {
     public void createFormNhapMaGioiThieu(Player pl) {
         createForm(pl, NHAP_MA_GIOI_THIEU,
                 "Mã giới thiệu của bạn: " + pl.getSession().maGioiThieu
-                        + "\nBạn sẽ nhận được 5 capsule bạc, 5 capsule vàng.\nNgười giới thiệu nhận được 10.000 vnđ",
+                        + "\nBạn sẽ nhận được 5 capsule bạc, 5 capsule vàng.\nNgười giới thiệu nhận được 10.000 vnđ khi bạn kích hoạt tài khoản",
                 new SubInput("Mã giới thiệu", ANY));
     }
 

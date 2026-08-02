@@ -123,11 +123,14 @@ public class OngParagus extends Npc {
                     Service.gI().sendThongBao(player, "Tài khoản của bạn đã được kích hoạt rồi!");
                     return;
                 }
-                if (nro.models.database.PlayerDAO.subvnd(player, 20000)) {
+                if (nro.models.database.PlayerDAO.subvnd(player, nro.models.server.Manager.ACTIVATION_FEE)) {
                     player.getSession().actived = true;
                     try {
                         LocalManager.executeUpdate("UPDATE account SET active = 1 WHERE id = ?",
                                 player.getSession().userId);
+                        if (player.getSession().xacNhanGioiThieu != 0) {
+                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", player.getSession().xacNhanGioiThieu);
+                        }
                     } catch (Exception e) {
                     }
 
