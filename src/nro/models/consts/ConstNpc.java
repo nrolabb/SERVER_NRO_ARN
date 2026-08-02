@@ -222,6 +222,8 @@ public class ConstNpc {
     public static final int MENU_CLAN_DUNGEON = 31721001;
     public static final int CONFIRM_CLAIM_SPIN_REWARD = 534;
 
+    public static final int CONFIRM_KICH_HOAT_TAI_KHOAN = 536;
+
     public static final int BUY_BACK = 533;
     public static final int MENU_OPTION_USE_ITEM726 = 726;
     public static final int MENU_SIEU_THAN_THUY = 2006;

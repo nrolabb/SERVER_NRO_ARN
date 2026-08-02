@@ -18,13 +18,22 @@ public class OngMoori extends Npc {
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
+                java.util.List<String> menus = new java.util.ArrayList<>();
+                menus.add("Nhập\nGiftcode");
+                menus.add("Mở\nTV Free");
+                menus.add("Nhận quà\nVòng Quay");
+                if (!player.getSession().actived) {
+                    menus.add("Kích hoạt\ntài khoản");
+                }
+                menus.add("Nhận ngọc");
+                if (player.getSession().xacNhanGioiThieu == 0) {
+                    menus.add("Nhập mã\ngiới thiệu");
+                }
+                menus.add("Đóng");
                 this.createOtherMenu(player, ConstNpc.BASE_MENU,
                         "Con cố gắng theo Quy Lão Kame học thành tài,\nđừng lo lắng cho ta.",
-                        "Nhập\nGiftcode",
-                        "Mở\nTV Free",
-                        "Nhận quà\nVòng Quay",
-                        "Đóng"
-                    );
+                        menus.toArray(new String[0])
+                );
             }
         }
     }
@@ -33,49 +42,107 @@ public void confirmMenu(Player player, int select) {
     if (!canOpenNpc(player)) return;
 
     if (player.idMark.isBaseMenu()) {
-        switch (select) {
-
-            case 0 -> {
-                // Nhập giftcode
-                Input.gI().createFormGiftCode(player);
+        int index = 0;
+        if (select == index++) {
+            // Nhập giftcode
+            Input.gI().createFormGiftCode(player);
+            return;
+        }
+        
+        if (select == index++) {
+            // Check nhiệm vụ
+            if (player.playerTask.taskMain.id <= 21) {
+                Service.gI().sendThongBao(player, "Xong Nv Fide!");
+                return;
             }
 
-         case 1 -> {
-    // Check nhiệm vụ
-    if (player.playerTask.taskMain.id <= 21) {
-        Service.gI().sendThongBao(player,
-                "Xong Nv Fide!");
-        return;
-    }
+            // Đã active chưa
+            if (player.getSession().actived) {
+                Service.gI().sendThongBao(player, "Tài khoản của con đã mở TV Free rồi!");
+                return;
+            }
 
-    // Đã active chưa
-    if (player.getSession().actived) {
-        Service.gI().sendThongBao(player,
-                "Tài khoản của con đã mở TV Free rồi!");
-        return;
-    }
+            // Set active trong session
+            player.getSession().actived = true;
 
-    // Set active trong session
-    player.getSession().actived = true;
+            // Update DB (PHẢI try-catch)
+            try {
+                LocalManager.executeUpdate("UPDATE account SET active = 1 WHERE id = ?", player.getSession().userId);
+            } catch (Exception e) {
+                Service.gI().sendThongBao(player, "Có lỗi xảy ra, vui lòng thử lại!");
+                e.printStackTrace();
+                return;
+            }
 
-    // Update DB (PHẢI try-catch)
-    try {
-        LocalManager.executeUpdate(
-                "UPDATE account SET active = 1 WHERE id = ?",
-                player.getSession().userId
-        );
-    } catch (Exception e) {
-        Service.gI().sendThongBao(player,
-                "Có lỗi xảy ra, vui lòng thử lại!");
-        e.printStackTrace();
-        return;
-    }
-
-    Service.gI().sendThongBao(player,
-            "Mở TV Free thành cong!!");
-}
-            case 2 -> {
-                nro.models.services.SpinRewardService.gI().showConfirmClaim(player, this);
+            Service.gI().sendThongBao(player, "Mở TV Free thành cong!!");
+            return;
+        }
+        
+        if (select == index++) {
+            nro.models.services.SpinRewardService.gI().showConfirmClaim(player, this);
+            return;
+        }
+        
+        if (!player.getSession().actived) {
+            if (select == index++) {
+                this.createOtherMenu(player, ConstNpc.CONFIRM_KICH_HOAT_TAI_KHOAN,
+                        "Phí kích hoạt là 20.000 VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.\nNgười giới thiệu sẽ nhận được 10k vnd.\nBạn có đồng ý không?",
+                        "Đồng ý", "Từ chối");
+                return;
+            }
+        }
+        
+        if (select == index++) {
+            Input.gI().createFormDoiNgoc(player);
+            return;
+        }
+        
+        if (player.getSession().xacNhanGioiThieu == 0) {
+            if (select == index++) {
+                if (!player.getSession().actived) {
+                    Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản để sử dụng chức năng này!");
+                    return;
+                }
+                Input.gI().createFormNhapMaGioiThieu(player);
+                return;
+            }
+        }
+    } else if (player.idMark.getIndexMenu() == ConstNpc.CONFIRM_KICH_HOAT_TAI_KHOAN) {
+        if (select == 0) {
+            if (player.getSession().actived) {
+                Service.gI().sendThongBao(player, "Tài khoản của bạn đã được kích hoạt rồi!");
+                return;
+            }
+            if (nro.models.database.PlayerDAO.subvnd(player, 20000)) {
+                player.getSession().actived = true;
+                try {
+                    LocalManager.executeUpdate("UPDATE account SET active = 1 WHERE id = ?", player.getSession().userId);
+                } catch (Exception e) {}
+                
+                player.inventory.gem += 10000;
+                Service.gI().sendMoney(player);
+                
+                nro.models.item.Item item = nro.models.services.ItemService.gI().createNewItem((short) 457, 1000);
+                nro.models.services.InventoryService.gI().addItemBag(player, item);
+                nro.models.services.InventoryService.gI().sendItemBags(player);
+                
+                Service.gI().sendThongBao(player, "Kích hoạt tài khoản thành công! Bạn nhận được 10.000 Ngọc xanh và 1.000 thỏi vàng.");
+                
+                if (player.getSession().xacNhanGioiThieu != 0) {
+                    int refId = player.getSession().xacNhanGioiThieu;
+                    Player refPlayer = nro.models.server.Client.gI().getPlayerByUser(refId);
+                    if (refPlayer != null) {
+                        nro.models.database.PlayerDAO.addVnd(refPlayer, 10000);
+                        refPlayer.getSession().vnd += 10000;
+                        Service.gI().sendThongBao(refPlayer, "Tài khoản do bạn giới thiệu (" + player.name + ") đã kích hoạt. Bạn nhận được 10.000 VNĐ.");
+                    } else {
+                        try {
+                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000, tongnap = tongnap + 10000 WHERE id = ?", refId);
+                        } catch (Exception e) {}
+                    }
+                }
+            } else {
+                Service.gI().sendThongBao(player, "Số dư VNĐ không đủ để kích hoạt, vui lòng nạp thêm!");
             }
         }
     } else if (player.idMark.getIndexMenu() == ConstNpc.CONFIRM_CLAIM_SPIN_REWARD) {

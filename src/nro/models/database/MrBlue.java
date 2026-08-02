@@ -79,6 +79,17 @@ public class MrBlue {
                 session.vnd = rs.getInt("vnd");
                 session.tongnap = rs.getInt("tongnap");
                 session.vip = rs.getInt("vip");
+                session.maGioiThieu = rs.getString("gioithieu");
+                if (session.maGioiThieu == null || session.maGioiThieu.trim().isEmpty() || session.maGioiThieu.equals("null")) {
+                    String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+                    StringBuilder maGtBuilder = new StringBuilder();
+                    for (int i = 0; i < 5; i++) {
+                        maGtBuilder.append(chars.charAt(nro.models.utils.Util.nextInt(chars.length())));
+                    }
+                    session.maGioiThieu = session.uu + "_" + maGtBuilder.toString();
+                    LocalManager.executeUpdate("update account set gioithieu = ? where id = ?", session.maGioiThieu, session.userId);
+                }
+                session.xacNhanGioiThieu = rs.getInt("xacnhan_gioithieu");
                 long lastTimeLogin = rs.getTimestamp("last_time_login").getTime();
                 int secondsPass1 = (int) ((System.currentTimeMillis() - lastTimeLogin) / 1000);
                 long lastTimeLogout = rs.getTimestamp("last_time_logout").getTime();

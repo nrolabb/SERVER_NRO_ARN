@@ -45,10 +45,12 @@ import nro.models.utils.Util;
 public class Input {
 
     private static final Map<Integer, Object> PLAYER_ID_OBJECT = new HashMap<>();
-public static final int ADMIN_ADD_VND = 600;
+    public static final int ADMIN_ADD_VND = 600;
 
     public static final int CHANGE_PASSWORD = 500;
     public static final int GIFT_CODE = 501;
+    public static final int NHAP_MA_GIOI_THIEU = 525;
+    public static final int DOI_NGOC = 527;
     public static final int FIND_PLAYER = 502;
     public static final int FIND_PLAYER_NAME = 502992;
     public static final int CHANGE_NAME = 503;
@@ -94,11 +96,12 @@ public static final int ADMIN_ADD_VND = 600;
         }
         return intance;
     }
-public void createFormAdminAddVnd(Player pl) {
-    createForm(pl, ADMIN_ADD_VND, "ADMIN NẠP VND",
-            new SubInput("Tên người chơi", ANY),
-            new SubInput("Số tiền", NUMERIC));
-}
+
+    public void createFormAdminAddVnd(Player pl) {
+        createForm(pl, ADMIN_ADD_VND, "ADMIN NẠP VND",
+                new SubInput("Tên người chơi", ANY),
+                new SubInput("Số tiền", NUMERIC));
+    }
 
     public void doInput(Player player, Message msg) {
         try {
@@ -107,40 +110,147 @@ public void createFormAdminAddVnd(Player pl) {
                 text[i] = msg.reader().readUTF();
             }
             switch (player.idMark.getTypeInput()) {
+                case NHAP_MA_GIOI_THIEU -> {
+                    if (!player.getSession().actived) {
+                        Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản để nhập mã giới thiệu!");
+                        break;
+                    }
+                    String maGT = text[0];
+                    if (maGT.equals(player.getSession().maGioiThieu)) {
+                        Service.gI().sendThongBao(player, "Không thể nhập mã của chính mình!");
+                        break;
+                    }
+                    try {
+                        nro.models.data.LocalResultSet rs = LocalManager
+                                .executeQuery("select id from account where gioithieu = ? limit 1", maGT);
+                        if (rs.next()) {
+                            int refId = rs.getInt("id");
+                            rs.dispose();
+
+                            LocalManager.executeUpdate("update account set xacnhan_gioithieu = ? where id = ?", refId,
+                                    player.getSession().userId);
+                            player.getSession().xacNhanGioiThieu = refId;
+
+                            Item item573 = ItemService.gI().createNewItem((short) 573, 5);
+                            Item item574 = ItemService.gI().createNewItem((short) 574, 5);
+                            if (!InventoryService.gI().addItemBag(player, item573)) {
+                                InventoryService.gI().addItemBox(player, item573);
+                            }
+                            if (!InventoryService.gI().addItemBag(player, item574)) {
+                                InventoryService.gI().addItemBox(player, item574);
+                            }
+                            InventoryService.gI().sendItemBags(player);
+                            Service.gI().sendThongBaoOK(player, "Bạn đã nhập mã thành công và nhận được quà!");
+
+                            Player refPlayer = Client.gI().getPlayerByUser(refId);
+                            if (refPlayer != null) {
+                                Item refItem573 = ItemService.gI().createNewItem((short) 573, 5);
+                                Item refItem574 = ItemService.gI().createNewItem((short) 574, 5);
+                                if (!InventoryService.gI().addItemBag(refPlayer, refItem573)) {
+                                    InventoryService.gI().addItemBox(refPlayer, refItem573);
+                                }
+                                if (!InventoryService.gI().addItemBag(refPlayer, refItem574)) {
+                                    InventoryService.gI().addItemBox(refPlayer, refItem574);
+                                }
+                                InventoryService.gI().sendItemBags(refPlayer);
+                                Service.gI().sendThongBao(refPlayer,
+                                        "Có người đã nhập mã giới thiệu của bạn! Bạn nhận được quà.");
+                            } else {
+                                long playerId = -1;
+                                nro.models.data.LocalResultSet rs2 = LocalManager
+                                        .executeQuery("select id from player where account_id = ? limit 1", refId);
+                                if (rs2.next()) {
+                                    playerId = rs2.getInt("id");
+                                }
+                                rs2.dispose();
+                                if (playerId != -1) {
+                                    Player offlinePlayer = nro.models.database.MrBlue.loadById(playerId);
+                                    if (offlinePlayer != null) {
+                                        Item refItem573 = ItemService.gI().createNewItem((short) 573, 5);
+                                        Item refItem574 = ItemService.gI().createNewItem((short) 574, 5);
+                                        if (!InventoryService.gI().addItemBag(offlinePlayer, refItem573)) {
+                                            InventoryService.gI().addItemBox(offlinePlayer, refItem573);
+                                        }
+                                        if (!InventoryService.gI().addItemBag(offlinePlayer, refItem574)) {
+                                            InventoryService.gI().addItemBox(offlinePlayer, refItem574);
+                                        }
+                                        offlinePlayer.notify = "Bạn vừa nhận được quà giới thiệu từ người chơi khác!";
+                                        PlayerDAO.updatePlayer(offlinePlayer);
+                                    }
+                                }
+                            }
+                        } else {
+                            rs.dispose();
+                            Service.gI().sendThongBaoOK(player, "Mã giới thiệu không hợp lệ!");
+                        }
+                    } catch (Exception e) {
+                        nro.models.utils.Logger.logException(Input.class, e, "Loi o NHAP_MA_GIOI_THIEU (offline): ");
+                        Service.gI().sendThongBaoOK(player, "Có lỗi xảy ra, vui lòng thử lại!");
+                    }
+                }
+                case DOI_NGOC -> {
+                    try {
+                        int amount = Integer.parseInt(text[0]);
+                        if (amount <= 0) {
+                            Service.gI().sendThongBao(player, "Số tiền nhập vào phải lớn hơn 0!");
+                            return;
+                        }
+                        if (amount > player.getSession().vnd) {
+                            Service.gI().sendThongBao(player, "Số dư VNĐ không đủ!");
+                            return;
+                        }
+                        int ngoc = amount / 10;
+                        if (ngoc <= 0) {
+                            Service.gI().sendThongBao(player, "Số tiền muốn đổi quá ít!");
+                            return;
+                        }
+                        int deductVnd = ngoc * 10;
+                        if (nro.models.database.PlayerDAO.subvnd(player, deductVnd)) {
+                            player.inventory.gem += ngoc;
+                            Service.gI().sendMoney(player);
+                            Service.gI().sendThongBao(player,
+                                    "Đổi thành công " + deductVnd + " VNĐ lấy " + ngoc + " ngọc xanh!");
+                        } else {
+                            Service.gI().sendThongBao(player, "Có lỗi xảy ra trong quá trình trừ tiền!");
+                        }
+                    } catch (Exception e) {
+                        Service.gI().sendThongBao(player, "Số tiền không hợp lệ!");
+                    }
+                }
                 case ADMIN_ADD_VND -> {
-    if (!player.isAdmin()) {
-        Service.gI().sendThongBao(player, "Không đủ quyền hạn!");
-        return;
-    }
+                    if (!player.isAdmin()) {
+                        Service.gI().sendThongBao(player, "Không đủ quyền hạn!");
+                        return;
+                    }
 
-    String name = text[0];
-    int amount = Integer.parseInt(text[1]);
+                    String name = text[0];
+                    int amount = Integer.parseInt(text[1]);
 
-    if (amount <= 0) {
-        Service.gI().sendThongBao(player, "Số tiền phải lớn hơn 0!");
-        return;
-    }
+                    if (amount <= 0) {
+                        Service.gI().sendThongBao(player, "Số tiền phải lớn hơn 0!");
+                        return;
+                    }
 
-    Player target = Client.gI().getPlayer(name);
+                    Player target = Client.gI().getPlayer(name);
 
-    if (target != null) {
-        // cộng DB
-        PlayerDAO.addVnd(target, amount);
+                    if (target != null) {
+                        // cộng DB
+                        PlayerDAO.addVnd(target, amount);
 
-        // cộng session nếu online
-        target.getSession().vnd += amount;
+                        // cộng session nếu online
+                        target.getSession().vnd += amount;
 
-        Service.gI().sendThongBao(player,
-                "Đã cộng " + amount + " VND cho " + target.name);
+                        Service.gI().sendThongBao(player,
+                                "Đã cộng " + amount + " VND cho " + target.name);
 
-        Service.gI().sendThongBao(target,
-                "Bạn được admin cộng " + amount + " VND!");
+                        Service.gI().sendThongBao(target,
+                                "Bạn được admin cộng " + amount + " VND!");
 
-    } else {
-        Service.gI().sendThongBao(player,
-                "Người chơi không online!");
-    }
-}
+                    } else {
+                        Service.gI().sendThongBao(player,
+                                "Người chơi không online!");
+                    }
+                }
 
                 case BOTITEM -> {
                     int slot = Integer.parseInt(text[0]);
@@ -173,7 +283,7 @@ public void createFormAdminAddVnd(Player pl) {
                                 // Nếu muốn chạy trong thread riêng (không bắt buộc)
                                 new Thread(() -> {
                                     try {
-                                        //    ((BotAttackplayer) bot).targetPlayer
+                                        // ((BotAttackplayer) bot).targetPlayer
                                     } catch (Exception e) {
                                     }
                                 }).start();
@@ -215,7 +325,8 @@ public void createFormAdminAddVnd(Player pl) {
                         player.event.addEventPoint(eventPointBonus);
 
                         Service.gI().sendThongBao(player, "Bạn nhận thêm " + eventPointBonus + " điểm sự kiện!");
-                        Service.gI().sendThongBao(player, "Đã đổi thành công. Bạn nhận được " + soLuongThoiVang + " thỏi vàng và " + soLuongVe + " vé tặng ngọc.");
+                        Service.gI().sendThongBao(player, "Đã đổi thành công. Bạn nhận được " + soLuongThoiVang
+                                + " thỏi vàng và " + soLuongVe + " vé tặng ngọc.");
                     }
                 }
 
@@ -229,8 +340,8 @@ public void createFormAdminAddVnd(Player pl) {
                         Service.gI().sendThongBao(player, "Số dư không đủ, vui lòng nạp thêm");
                     } else {
                         PlayerDAO.subvnd(player, quantity);
-int soGem = quantity / 10; 
-player.inventory.gem += soGem;
+                        int soGem = quantity / 10;
+                        player.inventory.gem += soGem;
 
                         Service.gI().sendMoney(player);
 
@@ -246,7 +357,8 @@ player.inventory.gem += soGem;
                         int eventPointBonus = (quantity / 10000) * 50;
                         player.event.addEventPoint(eventPointBonus);
 
-                        // Service.gI().sendThongBao(player, "Bạn nhận thêm " + eventPointBonus + " điểm sự kiện!");
+                        // Service.gI().sendThongBao(player, "Bạn nhận thêm " + eventPointBonus + " điểm
+                        // sự kiện!");
                         Service.gI().sendThongBao(player, "Bạn nhận được " + soGem + " ngọc");
                     }
                 }
@@ -264,19 +376,22 @@ player.inventory.gem += soGem;
 
                             switch (idItemBuff) {
                                 case -1:
-                                    pBuffItem.inventory.gold = Math.min(pBuffItem.inventory.gold + (long) slItemBuff, Inventory.LIMIT_GOLD);
+                                    pBuffItem.inventory.gold = Math.min(pBuffItem.inventory.gold + (long) slItemBuff,
+                                            Inventory.LIMIT_GOLD);
                                     txtBuff += slItemBuff + " vàng\b";
                                     Service.gI().sendMoney(pBuffItem);
                                     ServerLog.logAdmin(pBuffItem.name, slItemBuff);
                                     break;
                                 case -2:
-                                    pBuffItem.inventory.gem = Math.min(pBuffItem.inventory.gem + slItemBuff, 2000000000);
+                                    pBuffItem.inventory.gem = Math.min(pBuffItem.inventory.gem + slItemBuff,
+                                            2000000000);
                                     txtBuff += slItemBuff + " ngọc\b";
                                     Service.gI().sendMoney(pBuffItem);
                                     ServerLog.logAdmin(pBuffItem.name, slItemBuff);
                                     break;
                                 case -3:
-                                    pBuffItem.inventory.ruby = Math.min(pBuffItem.inventory.ruby + slItemBuff, 2000000000);
+                                    pBuffItem.inventory.ruby = Math.min(pBuffItem.inventory.ruby + slItemBuff,
+                                            2000000000);
                                     txtBuff += slItemBuff + " ngọc khóa\b";
                                     Service.gI().sendMoney(pBuffItem);
                                     ServerLog.logAdmin(pBuffItem.name, slItemBuff);
@@ -291,7 +406,8 @@ player.inventory.gem += soGem;
                                         ServerLog.logAdmin(pBuffItem.name, slItemBuff);
                                         InventoryService.gI().sendItemBags(pBuffItem);
                                     } else {
-                                        Service.gI().sendThongBao(player, "Không thể thêm vật phẩm vào hành trang của người chơi");
+                                        Service.gI().sendThongBao(player,
+                                                "Không thể thêm vật phẩm vào hành trang của người chơi");
                                         return;
                                     }
                                     break;
@@ -309,7 +425,8 @@ player.inventory.gem += soGem;
                 }
                 case CON_SO_MAY_MAN_NGOC -> {
                     int CSMM2 = Integer.parseInt(text[0]);
-                    if (CSMM2 >= MiniGame.gI().MiniGame_S1_Gem.min && CSMM2 <= MiniGame.gI().MiniGame_S1_Gem.max && MiniGame.gI().MiniGame_S1_Gem.second > 10) {
+                    if (CSMM2 >= MiniGame.gI().MiniGame_S1_Gem.min && CSMM2 <= MiniGame.gI().MiniGame_S1_Gem.max
+                            && MiniGame.gI().MiniGame_S1_Gem.second > 10) {
                         MiniGame.gI().MiniGame_S1_Gem.newData(player, CSMM2);
                     } else {
                         Service.gI().sendThongBao(player, "Số bạn chọn không hợp lệ hoặc đã hết thời gian đặt cược.");
@@ -317,7 +434,8 @@ player.inventory.gem += soGem;
                 }
                 case CON_SO_MAY_MAN_VANG -> {
                     int CSMM2 = Integer.parseInt(text[0]);
-                    if (CSMM2 >= MiniGame.gI().MiniGame_S1_Gold.min && CSMM2 <= MiniGame.gI().MiniGame_S1_Gold.max && MiniGame.gI().MiniGame_S1_Gold.second > 10) {
+                    if (CSMM2 >= MiniGame.gI().MiniGame_S1_Gold.min && CSMM2 <= MiniGame.gI().MiniGame_S1_Gold.max
+                            && MiniGame.gI().MiniGame_S1_Gold.second > 10) {
                         MiniGame.gI().MiniGame_S1_Gold.newData(player, CSMM2);
                     } else {
                         Service.gI().sendThongBao(player, "Số bạn chọn không hợp lệ hoặc đã hết thời gian đặt cược.");
@@ -344,7 +462,8 @@ player.inventory.gem += soGem;
                         item.itemOptions.add(new Item.ItemOption(op, pr));
                         InventoryService.gI().addItemBag(Client.gI().getPlayer(name), item);
                         InventoryService.gI().sendItemBags(Client.gI().getPlayer(name));
-                        Service.gI().sendThongBao(Client.gI().getPlayer(name), "Nhận " + item.template.name + " từ " + player.name);
+                        Service.gI().sendThongBao(Client.gI().getPlayer(name),
+                                "Nhận " + item.template.name + " từ " + player.name);
 
                     } else {
                         Service.gI().sendThongBao(player, "Không online");
@@ -383,7 +502,8 @@ player.inventory.gem += soGem;
                     Player pl = Client.gI().getPlayer(text[0]);
                     if (pl != null) {
                         NpcService.gI().createMenuConMeo(player, ConstNpc.MENU_FIND_PLAYER, -1, "Ngài muốn..?",
-                                new String[]{"Đi tới\n" + pl.name, "Gọi " + pl.name + "\ntới đây", "Đổi tên", "Ban", "Kick"},
+                                new String[] { "Đi tới\n" + pl.name, "Gọi " + pl.name + "\ntới đây", "Đổi tên", "Ban",
+                                        "Kick" },
                                 pl);
                     } else {
                         Service.gI().sendThongBao(player, "Người chơi không tồn tại hoặc đang offline");
@@ -393,7 +513,8 @@ player.inventory.gem += soGem;
                     Player target = Client.gI().getPlayer(text[0]);
                     if (target != null) {
                         player.menuPlayer = target;
-                        Input.gI().createForm(player, FIND_PLAYER_GIFT_RUBY, "Nhập số ngọc bạn muốn tặng cho " + target.name,
+                        Input.gI().createForm(player, FIND_PLAYER_GIFT_RUBY,
+                                "Nhập số ngọc bạn muốn tặng cho " + target.name,
                                 new SubInput("Số ngọc", ANY));
                     } else {
                         Service.gI().sendThongBao(player, "Người chơi không tồn tại hoặc đang offline");
@@ -410,10 +531,11 @@ player.inventory.gem += soGem;
                             }
 
                             int phi = (int) (soGem * 0.1); // Tính phí 10%
-                            int tongGem = soGem + phi;     // Tổng cần trừ
+                            int tongGem = soGem + phi; // Tổng cần trừ
 
                             if (player.inventory.gem < tongGem) {
-                                Service.gI().sendThongBao(player, "Bạn cần " + tongGem + " ngọc xanh để tặng (bao gồm phí 10%)");
+                                Service.gI().sendThongBao(player,
+                                        "Bạn cần " + tongGem + " ngọc xanh để tặng (bao gồm phí 10%)");
                                 return;
                             }
 
@@ -434,8 +556,10 @@ player.inventory.gem += soGem;
                             Service.gI().sendMoney(player);
                             Service.gI().sendMoney(target);
 
-                            Service.gI().sendThongBao(player, "Bạn đã tặng " + gemThucNhan + " ngọc xanh cho " + target.name + " (đã trừ phí " + phi + ")");
-                            Service.gI().sendThongBao(target, player.name + " vừa tặng bạn " + gemThucNhan + " ngọc xanh");
+                            Service.gI().sendThongBao(player, "Bạn đã tặng " + gemThucNhan + " ngọc xanh cho "
+                                    + target.name + " (đã trừ phí " + phi + ")");
+                            Service.gI().sendThongBao(target,
+                                    player.name + " vừa tặng bạn " + gemThucNhan + " ngọc xanh");
                         } catch (Exception e) {
                             Service.gI().sendThongBao(player, "Lỗi định dạng số lượng ngọc xanh");
                         }
@@ -450,13 +574,16 @@ player.inventory.gem += soGem;
                             Service.gI().sendThongBao(player, "Tên nhân vật đã tồn tại");
                         } else {
                             plChanged.name = text[0];
-                            LocalManager.executeUpdate("update player set name = ? where id = ?", plChanged.name, plChanged.id);
+                            LocalManager.executeUpdate("update player set name = ? where id = ?", plChanged.name,
+                                    plChanged.id);
                             Service.gI().player(plChanged);
                             Service.gI().Send_Caitrang(plChanged);
                             Service.gI().sendFlagBag(plChanged);
                             Zone zone = plChanged.zone;
-                            ChangeMapService.gI().changeMap(plChanged, zone, plChanged.location.x, plChanged.location.y);
-                            Service.gI().sendThongBao(plChanged, "Chúc mừng bạn đã có cái tên mới đẹp đẽ hơn tên ban đầu");
+                            ChangeMapService.gI().changeMap(plChanged, zone, plChanged.location.x,
+                                    plChanged.location.y);
+                            Service.gI().sendThongBao(plChanged,
+                                    "Chúc mừng bạn đã có cái tên mới đẹp đẽ hơn tên ban đầu");
                             Service.gI().sendThongBao(player, "Đổi tên người chơi thành công");
                         }
                     }
@@ -471,7 +598,8 @@ player.inventory.gem += soGem;
                         } else if (text[0].length() < 5) {
                             Service.gI().sendThongBaoOK(player, "Tên nhân vật quá ngắn");
                         } else if (text[0].length() > 10) {
-                            Service.gI().sendThongBaoOK(player, "Tên nhân vật chỉ đồng ý các ký tự a-z, 0-9 và chiều dài từ 5 đến 10 ký tự");
+                            Service.gI().sendThongBaoOK(player,
+                                    "Tên nhân vật chỉ đồng ý các ký tự a-z, 0-9 và chiều dài từ 5 đến 10 ký tự");
                         } else {
                             Item theDoiTen = InventoryService.gI().findItem(player.inventory.itemsBag, 2006);
                             if (theDoiTen == null) {
@@ -479,13 +607,15 @@ player.inventory.gem += soGem;
                             } else {
                                 InventoryService.gI().subQuantityItemsBag(player, theDoiTen, 1);
                                 player.name = text[0].toLowerCase();
-                                LocalManager.executeUpdate("update player set name = ? where id = ?", player.name, player.id);
+                                LocalManager.executeUpdate("update player set name = ? where id = ?", player.name,
+                                        player.id);
                                 Service.gI().player(player);
                                 Service.gI().Send_Caitrang(player);
                                 Service.gI().sendFlagBag(player);
                                 Zone zone = player.zone;
                                 ChangeMapService.gI().changeMap(player, zone, player.location.x, player.location.y);
-                                Service.gI().sendThongBao(player, "Chúc mừng bạn đã có cái tên mới đẹp đẽ hơn tên ban đầu");
+                                Service.gI().sendThongBao(player,
+                                        "Chúc mừng bạn đã có cái tên mới đẹp đẽ hơn tên ban đầu");
                             }
                         }
                     }
@@ -497,7 +627,7 @@ player.inventory.gem += soGem;
                         if (npc != null) {
                             npc.createOtherMenu(player, ConstNpc.MENU_ACCEPT_GO_TO_BDKB,
                                     "Con có chắc muốn đến\nhang kho báu cấp độ " + level + " ?",
-                                    new String[]{"Đồng ý", "Từ chối"}, level);
+                                    new String[] { "Đồng ý", "Từ chối" }, level);
                         }
                     } else {
                         Service.gI().sendThongBao(player, "Không thể thực hiện");
@@ -510,7 +640,7 @@ player.inventory.gem += soGem;
                         if (npc != null) {
                             npc.createOtherMenu(player, 2,
                                     "Cậu có chắc muốn đến\nDestron Gas cấp độ " + level + " ?",
-                                    new String[]{"Đồng ý", "Từ chối"}, level);
+                                    new String[] { "Đồng ý", "Từ chối" }, level);
                         }
                     }
                 }
@@ -521,7 +651,7 @@ player.inventory.gem += soGem;
                         if (npc != null) {
                             npc.createOtherMenu(player, 3,
                                     "Con có chắc muốn đến\ncon đường rắn độc cấp độ " + level + " ?",
-                                    new String[]{"Đồng ý", "Từ chối"}, level);
+                                    new String[] { "Đồng ý", "Từ chối" }, level);
                         }
                     }
                 }
@@ -564,7 +694,8 @@ player.inventory.gem += soGem;
                                 InventoryService.gI().sendItemBags(player);
                                 player.inventory.gold += cost;
                                 Service.gI().sendMoney(player);
-                                Service.gI().sendThongBao(player, "Đã bán " + sltv + " Thỏi vàng thu được " + Util.numberToMoney(cost) + " vàng");
+                                Service.gI().sendThongBao(player,
+                                        "Đã bán " + sltv + " Thỏi vàng thu được " + Util.numberToMoney(cost) + " vàng");
                             }
                         }
                     }
@@ -603,7 +734,8 @@ player.inventory.gem += soGem;
                                     clan.update();
                                     Service.gI().sendThongBao(player, "[" + tenvt + "] OK");
                                 } else {
-                                    Service.gI().sendThongBaoOK(player, "Chỉ chấp nhận các ký tự a-z, 0-9 và chiều dài từ 2 đến 4 ký tự");
+                                    Service.gI().sendThongBaoOK(player,
+                                            "Chỉ chấp nhận các ký tự a-z, 0-9 và chiều dài từ 2 đến 4 ký tự");
                                 }
                             }
                         }
@@ -676,11 +808,13 @@ player.inventory.gem += soGem;
     }
 
     public void createFormGiveItem(Player pl) {
-        createForm(pl, GIVE_IT, "Tặng vật phẩm", new SubInput("Tên", ANY), new SubInput("Id Item", ANY), new SubInput("ID OPTION", ANY), new SubInput("PARAM", ANY), new SubInput("Số lượng", ANY));
+        createForm(pl, GIVE_IT, "Tặng vật phẩm", new SubInput("Tên", ANY), new SubInput("Id Item", ANY),
+                new SubInput("ID OPTION", ANY), new SubInput("PARAM", ANY), new SubInput("Số lượng", ANY));
     }
 
     public void createFormGetItem(Player pl) {
-        createForm(pl, GET_IT, "Get vật phẩm", new SubInput("Id Item", ANY), new SubInput("ID OPTION", ANY), new SubInput("PARAM", ANY), new SubInput("Số lượng", ANY));
+        createForm(pl, GET_IT, "Get vật phẩm", new SubInput("Id Item", ANY), new SubInput("ID OPTION", ANY),
+                new SubInput("PARAM", ANY), new SubInput("Số lượng", ANY));
     }
 
     public void createFormGiftCode(Player pl) {
@@ -688,7 +822,8 @@ player.inventory.gem += soGem;
     }
 
     public void createFormMBV(Player pl) {
-        createForm(pl, MBV, "Đồ ngu! Đồ ăn hại! Cút mẹ mày đi!", new SubInput("Nhập Mã Bảo Vệ Đã Quên", NUMERIC), new SubInput("Nhập Mã Bảo Vệ Mới", NUMERIC), new SubInput("Nhập Lại Mã Bảo Vệ Mới", NUMERIC));
+        createForm(pl, MBV, "Đồ ngu! Đồ ăn hại! Cút mẹ mày đi!", new SubInput("Nhập Mã Bảo Vệ Đã Quên", NUMERIC),
+                new SubInput("Nhập Mã Bảo Vệ Mới", NUMERIC), new SubInput("Nhập Lại Mã Bảo Vệ Mới", NUMERIC));
     }
 
     public void createFormBangHoi(Player pl) {
@@ -700,7 +835,8 @@ player.inventory.gem += soGem;
     }
 
     public void createFormFindPlayer1(Player pl) {
-        Input.gI().createForm(pl, FIND_PLAYER_NAME, "Nhập tên người chơi bạn muốn tặng ngọc", new SubInput("Tên người chơi", ANY));
+        Input.gI().createForm(pl, FIND_PLAYER_NAME, "Nhập tên người chơi bạn muốn tặng ngọc",
+                new SubInput("Tên người chơi", ANY));
 
     }
 
@@ -715,11 +851,13 @@ player.inventory.gem += soGem;
     }
 
     public void createFormTradeGold(Player pl) {
-        createForm(pl, TRADE_GOLD, "Tỉ lệ quy đổi: 10.000 vnđ = 40 Thỏi vàng \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số lượng", NUMERIC));
+        createForm(pl, TRADE_GOLD, "Tỉ lệ quy đổi: 10.000 vnđ = 40 Thỏi vàng \n Số dư hiện tại: " + pl.getSession().vnd,
+                new SubInput("Số lượng", NUMERIC));
     }
 
     public void createFormTradeGem(Player pl) {
-        createForm(pl, TRADE_GEM, "Tỉ lệ quy đổi: 10.000 vnđ = 1.000 ngọc \n Số dư hiện tại: " + pl.getSession().vnd, new SubInput("Số tiền muốn đổi", NUMERIC));
+        createForm(pl, TRADE_GEM, "Tỉ lệ quy đổi: 10.000 vnđ = 1.000 ngọc \n Số dư hiện tại: " + pl.getSession().vnd,
+                new SubInput("Số tiền muốn đổi", NUMERIC));
     }
 
     public void createFormChangeName(Player pl, Player plChanged) {
@@ -729,6 +867,18 @@ player.inventory.gem += soGem;
 
     public void createFormChangeNameByItem(Player pl) {
         createForm(pl, CHANGE_NAME_BY_ITEM, "Đổi tên " + pl.name, new SubInput("Tên mới", ANY));
+    }
+
+    public void createFormNhapMaGioiThieu(Player pl) {
+        createForm(pl, NHAP_MA_GIOI_THIEU,
+                "Mã giới thiệu của bạn: " + pl.getSession().maGioiThieu
+                        + "\nNếu người chơi khác nhập mã của bạn, bạn sẽ nhận được quà.",
+                new SubInput("Mã giới thiệu", ANY));
+    }
+
+    public void createFormDoiNgoc(Player pl) {
+        createForm(pl, DOI_NGOC, "Số dư VNĐ: " + pl.getSession().vnd + "\nTỷ lệ quy đổi 10.000 VNĐ = 1.000 Ngọc Xanh",
+                new SubInput("Nhập số tiền", NUMERIC));
     }
 
     public void createFormChooseLevelBDKB(Player pl) {
@@ -761,11 +911,13 @@ player.inventory.gem += soGem;
     }
 
     public void createFormConSoMayMan_Gold(Player pl) {
-        createForm(pl, CON_SO_MAY_MAN_VANG, "Hãy chọn 1 số từ 0 đến 99 giá 1.000.000 vàng", new SubInput("Số bạn chọn", NUMERIC));
+        createForm(pl, CON_SO_MAY_MAN_VANG, "Hãy chọn 1 số từ 0 đến 99 giá 1.000.000 vàng",
+                new SubInput("Số bạn chọn", NUMERIC));
     }
 
     public void createFormConSoMayMan_Gem(Player pl) {
-        createForm(pl, CON_SO_MAY_MAN_NGOC, "Hãy chọn 1 số từ 0 đến 99 giá 5 ngọc", new SubInput("Số bạn chọn", NUMERIC));
+        createForm(pl, CON_SO_MAY_MAN_NGOC, "Hãy chọn 1 số từ 0 đến 99 giá 5 ngọc",
+                new SubInput("Số bạn chọn", NUMERIC));
     }
 
     public void createFormTrongDua(Player player) {

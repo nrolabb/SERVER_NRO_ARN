@@ -57,6 +57,8 @@ public class MySession extends Session {
     public int goldBar;
     public long gold;
     public int eventPoint;
+    public String maGioiThieu;
+    public int xacNhanGioiThieu;
     public List<Item> itemsReward;
     public String dataReward;
     public boolean is_gift_box;
