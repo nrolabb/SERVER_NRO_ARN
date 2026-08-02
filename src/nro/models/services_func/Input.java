@@ -860,7 +860,7 @@ public class Input {
     public void createFormNhapMaGioiThieu(Player pl) {
         createForm(pl, NHAP_MA_GIOI_THIEU,
                 "Mã giới thiệu của bạn: " + pl.getSession().maGioiThieu
-                        + "\nBạn sẽ nhận được 5 capsule bạc, 5 capsule vàng. Người giới thiệu nhận được 10.000 vnđ",
+                        + "\nBạn sẽ nhận được 5 capsule bạc, 5 capsule vàng.\nNgười giới thiệu nhận được 10.000 vnđ",
                 new SubInput("Mã giới thiệu", ANY));
     }
 
