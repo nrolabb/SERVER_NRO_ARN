@@ -90,7 +90,9 @@ public class OngParagus extends Npc {
             if (!player.getSession().actived) {
                 if (select == index++) {
                     this.createOtherMenu(player, ConstNpc.CONFIRM_KICH_HOAT_TAI_KHOAN,
-                            "Phí kích hoạt là " + nro.models.utils.Util.formatNumber(nro.models.server.Manager.ACTIVATION_FEE) + " VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.",
+                            "Phí kích hoạt là "
+                                    + nro.models.utils.Util.formatNumber(nro.models.server.Manager.ACTIVATION_FEE)
+                                    + " VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.",
                             "Đồng ý", "Từ chối");
                     return;
                 }
@@ -103,10 +105,6 @@ public class OngParagus extends Npc {
 
             if (player.getSession().xacNhanGioiThieu == 0) {
                 if (select == index++) {
-                    if (!player.getSession().actived) {
-                        Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản để sử dụng chức năng này!");
-                        return;
-                    }
                     Input.gI().createFormNhapMaGioiThieu(player);
                     return;
                 }
@@ -129,7 +127,8 @@ public class OngParagus extends Npc {
                         LocalManager.executeUpdate("UPDATE account SET active = 1 WHERE id = ?",
                                 player.getSession().userId);
                         if (player.getSession().xacNhanGioiThieu != 0) {
-                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?", player.getSession().xacNhanGioiThieu);
+                            LocalManager.executeUpdate("UPDATE account SET vnd = vnd + 10000 WHERE id = ?",
+                                    player.getSession().xacNhanGioiThieu);
                         }
                     } catch (Exception e) {
                     }

@@ -101,10 +101,6 @@ public void confirmMenu(Player player, int select) {
         
         if (player.getSession().xacNhanGioiThieu == 0) {
             if (select == index++) {
-                if (!player.getSession().actived) {
-                    Service.gI().sendThongBao(player, "Vui lòng kích hoạt tài khoản để sử dụng chức năng này!");
-                    return;
-                }
                 Input.gI().createFormNhapMaGioiThieu(player);
                 return;
             }
