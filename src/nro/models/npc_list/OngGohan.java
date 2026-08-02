@@ -20,7 +20,9 @@ public class OngGohan extends Npc {
             if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
                 java.util.List<String> menus = new java.util.ArrayList<>();
                 menus.add("Nhập\nGiftcode");
-                menus.add("Mở\nTV Free");
+                if (!player.getSession().actived) {
+                    menus.add("Mở\nTV Free");
+                }
                 menus.add("Nhận quà\nVòng Quay");
                 if (!player.getSession().actived) {
                     menus.add("Kích hoạt\ntài khoản");
@@ -52,6 +54,7 @@ public class OngGohan extends Npc {
                 return;
             }
 
+        if (!player.getSession().actived) {
             if (select == index++) {
                 // Check nhiệm vụ
                 if (player.playerTask.taskMain.id <= 21) {
@@ -81,6 +84,7 @@ public class OngGohan extends Npc {
                 Service.gI().sendThongBao(player, "Mở TV Free thành công!!");
                 return;
             }
+        }
 
             if (select == index++) {
                 nro.models.services.SpinRewardService.gI().showConfirmClaim(player, this);
@@ -108,8 +112,10 @@ public class OngGohan extends Npc {
                 }
             } else {
                 if (select == index++) {
-                    Service.gI().sendThongBaoOK(player, "Bạn đã nhập mã giới thiệu rồi!\nMã giới thiệu của bạn là: "
-                            + player.getSession().maGioiThieu);
+                    Service.gI().sendThongBaoOK(player,
+                            "Bạn đã nhập mã giới thiệu rồi!\nMã giới thiệu của bạn là: "
+                                    + player.getSession().maGioiThieu +
+                                    "\n\nKhi người được giới thiệu kích hoạt tài khoản,\nbạn sẽ nhận được 10.000 vnđ");
                     return;
                 }
             }
