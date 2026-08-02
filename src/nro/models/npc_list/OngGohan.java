@@ -28,6 +28,8 @@ public class OngGohan extends Npc {
                 menus.add("Nhận ngọc");
                 if (player.getSession().xacNhanGioiThieu == 0) {
                     menus.add("Nhập mã\ngiới thiệu");
+                } else {
+                    menus.add("Xem mã\ngiới thiệu");
                 }
                 menus.add("Đóng");
                 this.createOtherMenu(player, ConstNpc.BASE_MENU,
@@ -104,6 +106,11 @@ public void confirmMenu(Player player, int select) {
                     return;
                 }
                 Input.gI().createFormNhapMaGioiThieu(player);
+                return;
+            }
+        } else {
+            if (select == index++) {
+                Service.gI().sendThongBao(player, "Bạn đã nhập mã giới thiệu rồi!\nMã giới thiệu của bạn là: " + player.getSession().maGioiThieu);
                 return;
             }
         }
