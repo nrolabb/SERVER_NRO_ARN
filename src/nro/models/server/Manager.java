@@ -73,6 +73,81 @@ public final class Manager {
     private static Manager instance;
     public static long timeRealTop = 0;
     public static byte SERVER = 1;
+package nro.models.server;
+
+import nro.models.radar.OptionCard;
+import nro.models.services.RadarService;
+import nro.models.services.ClanIntrinsicService;
+import nro.models.radar.RadarCard;
+import nro.models.data.LocalManager;
+import nro.models.consts.ConstPlayer;
+import nro.models.consts.ConstMap;
+import nro.models.data.DataGame;
+import nro.models.database.ShopDAO;
+import nro.models.player_system.Template.*;
+import nro.models.clan.Clan;
+import nro.models.clan.ClanMember;
+import static nro.models.data.DataGame.MAP_MOUNT_NUM;
+import nro.models.player_system.GiftCode;
+import nro.models.managers.GiftCodeManager;
+import nro.models.intrinsic.Intrinsic;
+import nro.models.item.Item;
+import nro.models.item.Item.ItemOption;
+import nro.models.map.WayPoint;
+import nro.models.npc.Npc;
+import nro.models.npc.NpcFactory;
+import nro.models.shop.Shop;
+import nro.models.skill.NClass;
+import nro.models.skill.Skill;
+import nro.models.task.SideTaskTemplate;
+import nro.models.task.SubTaskMain;
+import nro.models.task.TaskMain;
+import nro.models.map.service.MapService;
+import nro.models.utils.Logger;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import nro.models.map.Zone;
+import nro.models.matches.TOP;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import nro.models.npc.NonInteractiveNPC;
+import nro.models.player.Player;
+import nro.models.player_badges.BagesTemplate;
+import nro.models.shop_ky_gui.ConsignItem;
+import nro.models.shop_ky_gui.ConsignShopManager;
+import nro.models.task.BadgesTaskTemplate;
+import nro.models.task.ClanTaskTemplate;
+import nro.models.utils.FileIO;
+import nro.models.utils.Util;
+import nro.models.services.ItemService;
+
+/**
+ *
+ * @author By Mr Blue
+ *
+ */
+public final class Manager {
+
+    private static Manager instance;
+    public static long timeRealTop = 0;
+    public static byte SERVER = 1;
     public static byte SECOND_WAIT_LOGIN = 5;
     public static int MAX_PER_IP = 1000;
     public static int MAX_PLAYER = 2000;
@@ -80,6 +155,7 @@ public final class Manager {
     public static boolean LOCAL = false;
     public static boolean TEST = false;
     public static boolean DAO_AUTO_UPDATER = false;
+    public static int ACTIVATION_FEE = 20000;
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -1166,257 +1242,6 @@ public final class Manager {
         }
         Logger.successln("Successfully validated follower pet templates (" + valid + " valid)");
     }
-
-    private void loadSetKichHoat(Connection con) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            // Tự động tạo bảng nếu chưa tồn tại
-            String sqlCreate = "CREATE TABLE IF NOT EXISTS `set_kich_hoat` ("
-                    + "`id` int(11) NOT NULL AUTO_INCREMENT,"
-                    + "`skh_id` int(11) DEFAULT NULL,"
-                    + "`gender` int(11) DEFAULT NULL,"
-                    + "`name` varchar(255) DEFAULT NULL,"
-                    + "`description` varchar(255) DEFAULT NULL,"
-                    + "`type_manh` int(11) DEFAULT NULL,"
-                    + "PRIMARY KEY (`id`)"
-                    + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
-            ps = con.prepareStatement(sqlCreate);
-            ps.executeUpdate();
-            ps.close();
-
-            // Kiểm tra xem bảng có dữ liệu chưa, nếu chưa có thì chèn dữ liệu mẫu mặc định
-            ps = con.prepareStatement("SELECT COUNT(*) FROM `set_kich_hoat`");
-            rs = ps.executeQuery();
-            boolean isEmpty = true;
-            if (rs.next()) {
-                isEmpty = rs.getInt(1) == 0;
-            }
-            rs.close();
-            ps.close();
-
-            if (isEmpty) {
-                // Chèn dữ liệu mẫu với skh_id và type_manh tương ứng
-                String sqlInsert = "INSERT INTO `set_kich_hoat` (`skh_id`, `gender`, `name`, `description`, `type_manh`) VALUES "
-                        + "(129, 0, 'Set Sôngôku', 'Kamejoko +100% dame', 100),"
-                        + "(127, 0, 'Set Thên Xin Hăng', 'Stun Thái Dương Hạ San x2 thời gian', 101),"
-                        + "(128, 0, 'Set Kirin', 'Tăng mạnh HP/KI', 102),"
-                        + "(245, 0, 'Set Thần Vũ Trụ Kaio', 'Tăng 30% sát thương Kaioken', 103),"
-                        + "(253, 0, 'Set Kaioken', 'Tăng chỉ số Kaioken', 104),"
-                        + "(131, 1, 'Set Ốc tiêu', 'Liên hoàn +100% dame', 105),"
-                        + "(132, 1, 'Set Pikkoro Daimao', 'Tăng sát thương đòn laze', 106),"
-                        + "(130, 1, 'Set Picolo', 'Tăng sát thương đòn laze', 107),"
-                        + "(237, 1, 'Set Nail chiến binh Namếc', 'Tăng 80% sát thương chiêu Masenko', 108),"
-                        + "(251, 1, 'Set Liên Hoàn', 'Liên hoàn đặc biệt', 109),"
-                        + "(133, 2, 'Set Kakarot', 'Đấm Galick +100% dame', 110),"
-                        + "(134, 2, 'Set Ca Đíc', 'Tăng sát thương đòn liên hoàn', 111),"
-                        + "(135, 2, 'Set Nappa', 'Tăng chỉ số khi biến khỉ', 112),"
-                        + "(241, 2, 'Set Cađic M', 'Tự sát +50% dame', 113),"
-                        + "(252, 2, 'Set Giảm Sát Thương', 'Tăng giảm sát thương nhận vào', 114)";
-                ps = con.prepareStatement(sqlInsert);
-                ps.executeUpdate();
-                ps.close();
-            }
-
-            ensureSetKichHoatOptionTemplates(con);
-
-            // Load dữ liệu
-            ps = con.prepareStatement("SELECT * FROM `set_kich_hoat`");
-            rs = ps.executeQuery();
-            SET_KICH_HOAT_TEMPLATES.clear();
-            while (rs.next()) {
-                SetKichHoatTemplate temp = new SetKichHoatTemplate();
-                temp.id = rs.getInt("skh_id");
-                temp.gender = rs.getInt("gender");
-                temp.name = rs.getString("name");
-                temp.description = rs.getString("description");
-                temp.typeManh = rs.getInt("type_manh");
-                SET_KICH_HOAT_TEMPLATES.add(temp);
-            }
-            Logger.success(Logger.RED + "Successfully loaded set kich hoat (" + SET_KICH_HOAT_TEMPLATES.size() + ")\n");
-        } catch (Exception e) {
-            Logger.logException(Manager.class, e, "Lỗi load set_kich_hoat");
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-            } catch (Exception ex) {}
-        }
-    }
-
-    private void ensureSetKichHoatOptionTemplates(Connection con) throws SQLException {
-        ensureItemOptionTemplate(con, 127, "Set Thên Xin Hăng");
-        ensureItemOptionTemplate(con, 128, "Set Kirin");
-        ensureItemOptionTemplate(con, 129, "Set Sôngôku");
-        ensureItemOptionTemplate(con, 130, "Set Picolo");
-        ensureItemOptionTemplate(con, 131, "Set Ốc tiêu");
-        ensureItemOptionTemplate(con, 132, "Set Pikkoro Daimao");
-        ensureItemOptionTemplate(con, 133, "Set Kakarot");
-        ensureItemOptionTemplate(con, 134, "Set Ca Đíc");
-        ensureItemOptionTemplate(con, 135, "Set Nappa");
-        ensureItemOptionTemplate(con, 233, "Set Gohan");
-        ensureItemOptionTemplate(con, 237, "Set Nail chiến binh Namếc");
-        ensureItemOptionTemplate(con, 241, "Set Cađic M");
-        ensureItemOptionTemplate(con, 245, "Set Thần Vũ Trụ Kaio");
-        ensureItemOptionTemplate(con, 251, "Set Liên Hoàn");
-        ensureItemOptionTemplate(con, 252, "Set Giảm Sát Thương");
-        ensureItemOptionTemplate(con, 253, "Set Kaioken");
-
-        try (PreparedStatement ps = con.prepareStatement(
-                "UPDATE `set_kich_hoat` SET `skh_id` = 251 WHERE `type_manh` = 109 AND `skh_id` = 250")) {
-            ps.executeUpdate();
-        }
-        updateSetKichHoatName(con, 127, "Set Thên Xin Hăng");
-        updateSetKichHoatName(con, 128, "Set Kirin");
-        updateSetKichHoatName(con, 129, "Set Sôngôku");
-        updateSetKichHoatName(con, 130, "Set Picolo");
-        updateSetKichHoatName(con, 131, "Set Ốc tiêu");
-        updateSetKichHoatName(con, 132, "Set Pikkoro Daimao");
-        updateSetKichHoatName(con, 133, "Set Kakarot");
-        updateSetKichHoatName(con, 134, "Set Ca Đíc");
-        updateSetKichHoatName(con, 135, "Set Nappa");
-        updateSetKichHoatName(con, 233, "Set Gohan");
-        updateSetKichHoatName(con, 237, "Set Nail chiến binh Namếc");
-        updateSetKichHoatName(con, 241, "Set Cađic M");
-        updateSetKichHoatName(con, 245, "Set Thần Vũ Trụ Kaio");
-        updateSetKichHoatName(con, 251, "Set Liên Hoàn");
-        updateSetKichHoatName(con, 252, "Set Giảm Sát Thương");
-        updateSetKichHoatName(con, 253, "Set Kaioken");
-    }
-
-    private void updateSetKichHoatName(Connection con, int skhId, String name) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement(
-                "UPDATE `set_kich_hoat` SET `name` = ? WHERE `skh_id` = ?")) {
-            ps.setString(1, name);
-            ps.setInt(2, skhId);
-            ps.executeUpdate();
-        }
-    }
-
-    private void ensureItemOptionTemplate(Connection con, int id, String name) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement(
-                "INSERT INTO `item_option_template` (`id`, `name`) VALUES (?, ?) "
-                + "ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)")) {
-            ps.setInt(1, id);
-            ps.setString(2, name);
-            ps.executeUpdate();
-        }
-
-        for (ItemOptionTemplate optionTemp : ITEM_OPTION_TEMPLATES) {
-            if (optionTemp != null && optionTemp.id == id) {
-                optionTemp.name = name;
-                return;
-            }
-        }
-
-        ItemOptionTemplate optionTemp = new ItemOptionTemplate();
-        optionTemp.id = id;
-        optionTemp.name = name;
-        ITEM_OPTION_TEMPLATES.add(optionTemp);
-    }
-
-    public static List<TOP> realTop(String query, Connection con) {
-        List<TOP> tops = new ArrayList<>();
-        try (PreparedStatement ps = con.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                TOP top = TOP.builder()
-                        .id_player(rs.getInt("id"))
-                        .build();
-
-                if (query.equals(Manager.queryTopsukien)) {
-                    int point = rs.getInt("point_sukien");
-                    top.setInfo1(point + " điểm");
-                    top.setInfo2(point + " điểm");
-
-                } else if (query.equals(Manager.queryTopsukien1)) {
-                    int point1 = rs.getInt("point_sukien1");
-                    top.setInfo1(point1 + " điểm");
-                    top.setInfo2(point1 + " điểm");
-
-                } else if (query.equals(Manager.queryTopsukien2)) {
-                    int point2 = rs.getInt("point_sukien2");
-                    top.setInfo1(point2 + " điểm");
-                    top.setInfo2(point2 + " điểm");
-
-                } else if (query.equals(Manager.queryTopwhis)) {
-                    int whis = rs.getInt("thachdauwhis");
-                    top.setInfo1(whis + " Level");
-                    top.setInfo2(whis + " Level");
-
-                } else if (query.equals(Manager.queryTopmaydam)) {
-                    int maydam = rs.getInt("point_maydam");
-                    long totalDame = rs.getLong("total_damage_maydam");
-                    top.setInfo1(maydam + " điểm");
-                    top.setInfo2(Util.formatNumber(totalDame) + " sát thương");
-                }
-
-                tops.add(top);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (tops.isEmpty()) {
-            System.out.println("No data found for the query: " + query);
-        }
-
-        return tops;
-    }
-
-    public void loadProperties() throws IOException {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream("Config.properties"));
-        Object value;
-        if ((value = properties.get("server.sv")) != null) {
-            SERVER = Byte.parseByte(String.valueOf(value));
-        }
-        if ((value = properties.get("server.name")) != null) {
-            String name = String.valueOf(value);
-            ServerManager.NAME = name.equals("Local") ? " Local" : name;
-        }
-        if ((value = properties.get("server.port")) != null) {
-            ServerManager.PORT = Integer.parseInt(String.valueOf(value));
-        }
-        String linkServer = "";
-        if ((value = properties.get("server.ip")) != null) {
-            ServerManager.IP = String.valueOf(value);
-            linkServer += ServerManager.NAME + ":" + ServerManager.IP + ":" + ServerManager.PORT + ":0,";
-        }
-        for (int i = 1; i <= 10; i++) {
-            value = properties.get("server.sv" + i);
-            if (value != null) {
-                linkServer += String.valueOf(value) + ":0,";
-            }
-        }
-        DataGame.LINK_IP_PORT = linkServer.substring(0, linkServer.length() - 1);
-        if ((value = properties.get("server.waitlogin")) != null) {
-            SECOND_WAIT_LOGIN = Byte.parseByte(String.valueOf(value));
-        }
-        if ((value = properties.get("server.maxperip")) != null) {
-            MAX_PER_IP = Integer.parseInt(String.valueOf(value));
-        }
-        if ((value = properties.get("server.maxplayer")) != null) {
-            MAX_PLAYER = Integer.parseInt(String.valueOf(value));
-        }
-        if ((value = properties.get("server.expserver")) != null) {
-            RATE_EXP_SERVER = Double.parseDouble(String.valueOf(value));
-        }
-        if ((value = properties.get("server.local")) != null) {
-            LOCAL = String.valueOf(value).toLowerCase().equals("true");
-        }
-        if ((value = properties.get("server.test")) != null) {
-            TEST = String.valueOf(value).toLowerCase().equals("true");
-        }
-        if ((value = properties.get("server.daoautoupdater")) != null) {
-            DAO_AUTO_UPDATER = String.valueOf(value).equalsIgnoreCase("true");
-        }
-    }
-
-    /**
-     * @param tileTypeFocus tile type: top, bot, left, right...
-     * @return [tileMapId][tileType]
-     */
     private int[][] readTileIndexTileType(int tileTypeFocus) {
         int[][] tileIndexTileType = null;
         try {

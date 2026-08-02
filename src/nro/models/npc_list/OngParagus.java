@@ -90,7 +90,7 @@ public class OngParagus extends Npc {
             if (!player.getSession().actived) {
                 if (select == index++) {
                     this.createOtherMenu(player, ConstNpc.CONFIRM_KICH_HOAT_TAI_KHOAN,
-                            "Phí kích hoạt là 20.000 VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.",
+                            "Phí kích hoạt là " + nro.models.utils.Util.formatNumber(nro.models.server.Manager.ACTIVATION_FEE) + " VNĐ.\nBạn được mở khóa toàn bộ tính năng,\nđược thưởng 10.000 Ngọc xanh và 1.000 thỏi vàng.",
                             "Đồng ý", "Từ chối");
                     return;
                 }
