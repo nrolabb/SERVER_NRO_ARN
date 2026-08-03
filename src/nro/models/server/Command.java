@@ -148,7 +148,7 @@ public class Command {
                     + "\nThreads: " + Thread.activeCount() + " luồng"
                     + "\n" + ram
                     + "\n" + cpu,
-            "Ngọc rồng", "Đệ tử", "Bảo trì", "Tìm kiếm\nngười chơi", "Boss", "Đóng");
+            "Ngọc rồng", "Đệ tử", "Bảo trì", "Tìm kiếm\nngười chơi", "Boss", "Buff VND", "Đóng");
 });
     }
     private void initParameterizedCommands() {

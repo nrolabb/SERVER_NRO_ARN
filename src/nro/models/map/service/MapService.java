@@ -103,7 +103,12 @@ public class MapService {
         }
 
         if (this.isMapClanDungeon(mapId) && (player.zone == null || player.clan == null || player.clan.clanDungeon == null)) {
-            return ClanDungeonService.gI().getNormalZone(mapId);
+            Zone zone = getZone(153);
+            if (zone != null) {
+                player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
+                player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
+            }
+            return zone;
         }
 
         if (this.isMapBanDoKhoBau(mapId)) {
@@ -177,7 +182,13 @@ public class MapService {
                 if (mapId == ClanDungeon.MAP_START && fromClanLand) {
                     return player.clan.clanDungeon.getMapById(mapId);
                 }
-                return ClanDungeonService.gI().getNormalZone(mapId);
+                // Not from dungeon and not entering from clan land - redirect to map 153
+                Zone zone = getZone(153);
+                if (zone != null) {
+                    player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
+                    player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
+                }
+                return zone;
             }
             if (!canGoNextClanDungeonMap(player, mapId)) {
                 return null;
@@ -331,7 +342,11 @@ public class MapService {
     }
 
     if (isMapClanDungeon(mapId)) {
-        return ClanDungeonService.gI().getNormalZone(mapId);
+        // All clan dungeon zones are instance-only, no normal zones
+        Zone zone = getZone(153);
+        if (zone != null) {
+            return zone;
+        }
     }
 
     return map.zones.get(0);
@@ -546,9 +561,8 @@ public class MapService {
 
     public int getClanDungeonRequiredPoint(int mapId) {
         return switch (mapId) {
-            case 157 -> 200;
-            case 158 -> 500;
-            case 159 -> 1000;
+            case 184 -> ClanDungeon.THRESHOLD_MAP_1;
+            case 185 -> ClanDungeon.THRESHOLD_MAP_2;
             default -> 0;
         };
     }
@@ -557,8 +571,14 @@ public class MapService {
         if (mapId <= player.zone.map.mapId) {
             return true;
         }
-        int requiredPoint = getClanDungeonRequiredPoint(mapId);
-        return player.clan.clanDungeon.getPoint() >= requiredPoint;
+        if (player.clan.clanDungeon == null) {
+            return false;
+        }
+        return switch (mapId) {
+            case ClanDungeon.MAP_2 -> player.clan.clanDungeon.canAccessMap184();
+            case ClanDungeon.MAP_3 -> player.clan.clanDungeon.canAccessMap185();
+            default -> true;
+        };
     }
 
     public boolean isMapSieuThanhThuy(int mapId) {

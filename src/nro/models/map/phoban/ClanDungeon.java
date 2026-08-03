@@ -24,13 +24,20 @@ import nro.models.utils.Util;
 @Data
 public class ClanDungeon implements Runnable {
 
-    public static final int NORMAL_AVAILABLE = 5;
     public static final int AVAILABLE = 10;
-    public static final int N_PLAYER_MAP = 1;
+    public static final int N_PLAYER_MAP = 1; // số người cần đứng cùng nhau trong map 153
     public static final int TIME_CLAN_DUNGEON = 1_800_000;
+    public static final int COUNTDOWN_TIME = 30_000;
 
-    public static final int MAP_START = 156;
-    public static final int MAP_END = 159;
+    public static final int MAP_START = 183;
+    public static final int MAP_END = 185;
+
+    public static final int MAP_1 = 183;
+    public static final int MAP_2 = 184;
+    public static final int MAP_3 = 185;
+
+    public static final int THRESHOLD_MAP_1 = 100;
+    public static final int THRESHOLD_MAP_2 = 500;
 
     private final int id;
     private final List<Zone> zones;
@@ -38,9 +45,27 @@ public class ClanDungeon implements Runnable {
     private long lastTimeOpen;
     private boolean opened;
     private int point;
-    private boolean clearedMap156;
-    private boolean clearedMap157;
-    private boolean clearedMap158;
+
+    // Map clear flags (mobs cleared, boss spawned)
+    private boolean map183BossSpawned;
+    private boolean map184BossSpawned;
+
+    // Boss death flags
+    private boolean anirazaDead;
+    private boolean ganosDead;
+    private boolean cawayDead;
+    private boolean coolerDead;
+    private boolean goldenFriezaDead;
+    private boolean pirimaDead;
+    private boolean saonelDead;
+
+    // Map 185 phase tracking
+    private boolean map185Phase2Spawned;
+
+    // Countdown after all bosses dead in map 185
+    private boolean countdownStarted;
+    private long countdownStartTime;
+
     private final List<Boss> bosses = new ArrayList<>();
     private final List<MobState> mobStates = new ArrayList<>();
 
@@ -70,9 +95,20 @@ public class ClanDungeon implements Runnable {
         this.clan = player.clan;
         this.opened = true;
         this.point = 0;
-        this.clearedMap156 = false;
-        this.clearedMap157 = false;
-        this.clearedMap158 = false;
+
+        // Reset all flags
+        this.map183BossSpawned = false;
+        this.map184BossSpawned = false;
+        this.anirazaDead = false;
+        this.ganosDead = false;
+        this.cawayDead = false;
+        this.coolerDead = false;
+        this.goldenFriezaDead = false;
+        this.pirimaDead = false;
+        this.saonelDead = false;
+        this.map185Phase2Spawned = false;
+        this.countdownStarted = false;
+
         player.clan.clanDungeon = this;
         player.clan.markOpenClanDungeon(player, this.lastTimeOpen);
         player.clan.update();
@@ -122,7 +158,8 @@ public class ClanDungeon implements Runnable {
                 mob.hoiSinhMobPhoBan();
             }
         }
-        spawnBosses();
+        // Spawn map 185 phase 1 bosses immediately (Fize vàng + Colder)
+        spawnMap185Phase1Bosses();
     }
 
     private void saveMobStates() {
@@ -134,17 +171,53 @@ public class ClanDungeon implements Runnable {
         }
     }
 
-    private void spawnBosses() {
+    private void spawnMap185Phase1Bosses() {
         try {
-            Zone map158 = getMapById(158);
-            Zone map159 = getMapById(159);
-            if (map158 != null) {
-                addBoss(ClanDungeonBoss.cooler(this, nextBossId(0)), map158);
-                addBoss(ClanDungeonBoss.goldenFrieza(this, nextBossId(1)), map158);
+            Zone map185 = getMapById(MAP_3);
+            if (map185 != null) {
+                addBoss(ClanDungeonBoss.goldenFrieza(this, nextBossId(0)), map185);
+                addBoss(ClanDungeonBoss.cooler(this, nextBossId(1)), map185);
             }
-            if (map159 != null) {
-                addBoss(ClanDungeonBoss.cumber(this, nextBossId(2)), map159);
-                addBoss(ClanDungeonBoss.sieuBoHung(this, nextBossId(3)), map159);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void spawnAniraza() {
+        try {
+            Zone map183 = getMapById(MAP_1);
+            if (map183 != null) {
+                addBoss(ClanDungeonBoss.aniraza(this, nextBossId(2)), map183);
+                map183BossSpawned = true;
+                notifyBossAppear("Aniraza", MAP_1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void spawnMap184Bosses() {
+        try {
+            Zone map184 = getMapById(MAP_2);
+            if (map184 != null) {
+                addBoss(ClanDungeonBoss.ganos(this, nextBossId(3)), map184);
+                addBoss(ClanDungeonBoss.caway(this, nextBossId(4)), map184);
+                map184BossSpawned = true;
+                notifyBossAppear("Ganos và Caway", MAP_2);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void spawnMap185Phase2Bosses() {
+        try {
+            Zone map185 = getMapById(MAP_3);
+            if (map185 != null) {
+                addBoss(ClanDungeonBoss.pirima(this, nextBossId(5)), map185);
+                addBoss(ClanDungeonBoss.saonel(this, nextBossId(6)), map185);
+                map185Phase2Spawned = true;
+                notifyBossAppear("Pirima và Saonel", MAP_3);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,28 +247,145 @@ public class ClanDungeon implements Runnable {
     }
 
     private void checkClearByPoint() {
-        if (!clearedMap156 && point >= 200) {
-            clearMapByPoint(156, 200);
-            clearedMap156 = true;
+        // Map 183: at 100 points, clear mobs and spawn Aniraza
+        if (!map183BossSpawned && point >= THRESHOLD_MAP_1) {
+            Zone map183 = getMapById(MAP_1);
+            if (map183 != null) {
+                clearMobs(map183);
+                spawnAniraza();
+                notifyThreshold(THRESHOLD_MAP_1, MAP_1);
+            }
         }
-        if (!clearedMap157 && point >= 500) {
-            clearMapByPoint(157, 500);
-            clearedMap157 = true;
-        }
-        if (!clearedMap158 && point >= 1000) {
-            clearMapByPoint(158, 1000);
-            clearedMap158 = true;
+        // Map 184: at 500 points, clear mobs and spawn Ganos + Caway
+        if (!map184BossSpawned && point >= THRESHOLD_MAP_2) {
+            Zone map184 = getMapById(MAP_2);
+            if (map184 != null) {
+                clearMobs(map184);
+                spawnMap184Bosses();
+                notifyThreshold(THRESHOLD_MAP_2, MAP_2);
+            }
         }
     }
 
-    private void clearMapByPoint(int mapId, int requiredPoint) {
-        Zone zone = getMapById(mapId);
-        if (zone == null) {
+    /**
+     * Called when a clan dungeon boss is killed
+     */
+    public synchronized void onBossKilled(ClanDungeonBoss boss) {
+        if (!opened || clan == null) {
             return;
         }
-        clearMobs(zone);
-        clearBosses(zone);
-        notifyNextMap(requiredPoint, mapId + 1);
+        int bossType = boss.getType();
+        switch (bossType) {
+            case ClanDungeonBoss.ANIRAZA:
+                anirazaDead = true;
+                notifyMapUnlocked(MAP_2);
+                break;
+            case ClanDungeonBoss.GANOS:
+                ganosDead = true;
+                if (cawayDead) {
+                    notifyMapUnlocked(MAP_3);
+                }
+                break;
+            case ClanDungeonBoss.CAWAY:
+                cawayDead = true;
+                if (ganosDead) {
+                    notifyMapUnlocked(MAP_3);
+                }
+                break;
+            case ClanDungeonBoss.GOLDEN_FRIEZA:
+                goldenFriezaDead = true;
+                if (coolerDead && !map185Phase2Spawned) {
+                    spawnMap185Phase2Bosses();
+                }
+                break;
+            case ClanDungeonBoss.COOLER:
+                coolerDead = true;
+                if (goldenFriezaDead && !map185Phase2Spawned) {
+                    spawnMap185Phase2Bosses();
+                }
+                break;
+            case ClanDungeonBoss.PIRIMA:
+                pirimaDead = true;
+                if (saonelDead) {
+                    startCountdown();
+                }
+                break;
+            case ClanDungeonBoss.SAONEL:
+                saonelDead = true;
+                if (pirimaDead) {
+                    startCountdown();
+                }
+                break;
+        }
+    }
+
+    /**
+     * Check if player can access map 184 (Aniraza must be dead)
+     */
+    public boolean canAccessMap184() {
+        return anirazaDead;
+    }
+
+    /**
+     * Check if player can access map 185 (Ganos + Caway must be dead)
+     */
+    public boolean canAccessMap185() {
+        return ganosDead && cawayDead;
+    }
+
+    private void startCountdown() {
+        if (countdownStarted) {
+            return;
+        }
+        countdownStarted = true;
+        countdownStartTime = System.currentTimeMillis();
+        // Notify all players in dungeon
+        if (clan == null) {
+            return;
+        }
+        String text = "Tất cả boss đã bị tiêu diệt!\nBạn sẽ được đưa về lãnh địa bang sau 30 giây.";
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
+    }
+
+    private void notifyBossAppear(String bossName, int mapId) {
+        if (clan == null) {
+            return;
+        }
+        String text = "Boss " + bossName + " đã xuất hiện tại map " + mapId + "!";
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
+    }
+
+    private void notifyThreshold(int requiredPoint, int mapId) {
+        if (clan == null) {
+            return;
+        }
+        String text = "Bang hội đã đạt " + requiredPoint + " điểm tích lũy.\n"
+                + "Quái khu vực đã rút lui, boss đã xuất hiện tại map " + mapId + "!";
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
+    }
+
+    private void notifyMapUnlocked(int nextMapId) {
+        if (clan == null) {
+            return;
+        }
+        String text = "Boss đã bị tiêu diệt! Có thể qua map " + nextMapId + ".";
+        for (Player pl : this.clan.membersInGame) {
+            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
+                Service.gI().sendBigMessage(pl, 1139, text);
+            }
+        }
     }
 
     private void clearMobs(Zone zone) {
@@ -207,30 +397,6 @@ public class ClanDungeon implements Runnable {
                 } else {
                     mob.point.hp = -1;
                 }
-            }
-        }
-    }
-
-    private void clearBosses(Zone zone) {
-        for (Iterator<Boss> it = bosses.iterator(); it.hasNext();) {
-            Boss boss = it.next();
-            if (boss != null && boss.zone != null && boss.zone.equals(zone)) {
-                boss.leaveMap();
-                OtherBossManager.gI().removeBoss(boss);
-                it.remove();
-            }
-        }
-    }
-
-    private void notifyNextMap(int requiredPoint, int nextMapId) {
-        if (clan == null) {
-            return;
-        }
-        String text = "Bang hội đã đạt " + requiredPoint + " điểm tích lũy.\n"
-                + "Quái và boss khu vực này đã rút lui, hãy sang map " + nextMapId + ".";
-        for (Player pl : this.clan.membersInGame) {
-            if (pl != null && pl.zone != null && MapService.gI().isMapClanDungeon(pl.zone.map.mapId)) {
-                Service.gI().sendBigMessage(pl, 1139, text);
             }
         }
     }
@@ -249,6 +415,14 @@ public class ClanDungeon implements Runnable {
     }
 
     private void update() {
+        // Check 30s countdown after all bosses killed in map 185
+        if (countdownStarted && Util.canDoWithTime(countdownStartTime, COUNTDOWN_TIME)) {
+            opened = false;
+            finish();
+            dispose();
+            return;
+        }
+        // Check total dungeon time limit
         if (Util.canDoWithTime(lastTimeOpen, TIME_CLAN_DUNGEON)) {
             opened = false;
             finish();
@@ -268,7 +442,11 @@ public class ClanDungeon implements Runnable {
 
     private void kickOut(Player player) {
         if (player != null && player.zone != null && MapService.gI().isMapClanDungeon(player.zone.map.mapId)) {
-            Service.gI().sendThongBao(player, "Đã hết thời gian phó bản bang hội");
+            if (countdownStarted) {
+                Service.gI().sendThongBao(player, "Phó bản bang hội đã hoàn thành! Trở về lãnh địa bang.");
+            } else {
+                Service.gI().sendThongBao(player, "Đã hết thời gian phó bản bang hội");
+            }
             ChangeMapService.gI().changeMapBySpaceShip(player, 153, -1, -1);
         }
     }

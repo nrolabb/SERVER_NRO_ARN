@@ -2842,4 +2842,105 @@ public class BossesData {
             }, //text chat 3
             AppearType.ANOTHER_LEVEL
         );
+
+    //======================== CLAN DUNGEON BOSSES ========================
+    public static final BossData ANIRAZA = new BossData(
+            "Aniraza", //name
+            ConstPlayer.XAYDA, //gender
+            new short[]{2373, 2374, 2375, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            10000, //dame
+            new int[]{500000000}, //hp
+            new int[]{183}, //map join
+            new int[][]{
+                {Skill.KAMEJOKO, 7, 1000},
+                {Skill.LIEN_HOAN, 7, 1000},
+                {Skill.TAI_TAO_NANG_LUONG, 1, 100000}},//skill
+            new String[]{"|-1|Ta là Aniraza, chiến binh hợp thể vũ trụ 3!"}, //text chat 1
+            new String[]{"|-1|Sức mạnh của ta vượt ngoài sức tưởng tượng!",
+                "|-1|Các ngươi không có cơ hội thắng!",
+                "|-1|Ha ha ha, yếu quá!",
+                "|-1|Xem đòn này!"}, //text chat 2
+            new String[]{"|-1|Không... thể... nào..."}, //text chat 3
+            REST_1_M
+    );
+
+    public static final BossData GANOS = new BossData(
+            "Ganos", //name
+            ConstPlayer.XAYDA, //gender
+            new short[]{2370, 2371, 2372, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            10000, //dame
+            new int[]{700000000}, //hp
+            new int[]{184}, //map join
+            new int[][]{
+                {Skill.KAMEJOKO, 7, 1000},
+                {Skill.GALICK, 7, 1000},
+                {Skill.TAI_TAO_NANG_LUONG, 1, 100000}},//skill
+            new String[]{"|-1|Ta là Ganos, chiến binh vũ trụ 4!"}, //text chat 1
+            new String[]{"|-1|Sức mạnh của ta ngày càng tăng!",
+                "|-1|Các ngươi chỉ là con mồi!",
+                "|-1|Biến hình!",
+                "|-1|Đừng mong thoát!"}, //text chat 2
+            new String[]{"|-1|Ta sẽ quay lại..."}, //text chat 3
+            REST_1_M
+    );
+
+    public static final BossData CAWAY = new BossData(
+            "Caway", //name
+            ConstPlayer.XAYDA, //gender
+            new short[]{2367, 2368, 2369, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            10000, //dame
+            new int[]{600000000}, //hp
+            new int[]{184}, //map join
+            new int[][]{
+                {Skill.MASENKO, 7, 1000},
+                {Skill.LIEN_HOAN, 7, 1000},
+                {Skill.TAI_TAO_NANG_LUONG, 1, 100000}},//skill
+            new String[]{"|-1|Đừng đánh giá thấp ta!"}, //text chat 1
+            new String[]{"|-1|Vũ khí của ta có thể tạo từ khí!",
+                "|-1|Ngươi tưởng ta yếu sao?",
+                "|-1|Xem chiêu này!",
+                "|-1|Ha ha!"}, //text chat 2
+            new String[]{"|-1|Khó tin..."}, //text chat 3
+            REST_1_M
+    );
+
+    public static final BossData PIRIMA = new BossData(
+            "Pirima", //name
+            ConstPlayer.XAYDA, //gender
+            new short[]{2376, 2377, 2378, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            10000, //dame
+            new int[]{1000000000}, //hp
+            new int[]{185}, //map join
+            new int[][]{
+                {Skill.KAMEJOKO, 7, 1000},
+                {Skill.ANTOMIC, 7, 1000},
+                {Skill.TAI_TAO_NANG_LUONG, 1, 100000}},//skill
+            new String[]{"|-1|Ta là Pirima, chiến binh thiên tài vũ trụ 2!"}, //text chat 1
+            new String[]{"|-1|Trí tuệ của ta vượt trội hơn tất cả!",
+                "|-1|Các ngươi chỉ là những kẻ thấp kém!",
+                "|-1|Kế hoạch hoàn hảo!",
+                "|-1|Không ai có thể ngăn cản ta!"}, //text chat 2
+            new String[]{"|-1|Kế hoạch... thất bại..."}, //text chat 3
+            REST_1_M
+    );
+
+    public static final BossData SAONEL = new BossData(
+            "Saonel", //name
+            ConstPlayer.XAYDA, //gender
+            new short[]{2379, 2380, 2381, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
+            10000, //dame
+            new int[]{1000000000}, //hp
+            new int[]{185}, //map join
+            new int[][]{
+                {Skill.MASENKO, 7, 1000},
+                {Skill.GALICK, 7, 1000},
+                {Skill.TAI_TAO_NANG_LUONG, 1, 100000}},//skill
+            new String[]{"|-1|Ta là Saonel, Namek chiến binh vũ trụ 6!"}, //text chat 1
+            new String[]{"|-1|Sức mạnh Namek hợp thể!",
+                "|-1|Các ngươi không thể đánh bại ta!",
+                "|-1|Pirima, cùng tấn công!",
+                "|-1|Đây là sức mạnh thật sự!"}, //text chat 2
+            new String[]{"|-1|Pirima... ta đã thất bại..."}, //text chat 3
+            REST_1_M
+    );
 }

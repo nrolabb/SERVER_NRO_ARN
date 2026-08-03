@@ -84,6 +84,10 @@ public class GiuMaDauBo extends Npc {
             return;
         }
         if (player.clan.clanDungeon != null && player.clan.clanDungeon.isOpened()) {
+            if (player.clanMember != null && player.clanMember.joinTime * 1000L > player.clan.lastTimeOpenClanDungeon) {
+                NpcService.gI().createTutorial(player, tempId, this.avartar, "Bang hội đã đi phó bản bang, hẹn gặp lại vào ngày mai");
+                return;
+            }
             ClanDungeonService.gI().joinClanDungeon(player);
             return;
         }
@@ -100,6 +104,14 @@ public class GiuMaDauBo extends Npc {
                     "Bang hội đã đi phó bản bang hôm nay\nNgười mở: " + name
                     + "\nThời gian: " + TimeUtil.formatTime(player.clan.lastTimeOpenClanDungeon, "HH:mm")
                     + "\nHẹn gặp lại ngày mai");
+            return;
+        }
+        if (System.currentTimeMillis() - player.clan.createTime * 1000L < 86400000L) {
+            NpcService.gI().createTutorial(player, tempId, this.avartar, "Bang hội cần được tạo ít nhất 24h mới có thể mở phó bản");
+            return;
+        }
+        if (player.clanMember != null && player.clanMember.role != nro.models.clan.Clan.LEADER && player.clanMember.role != nro.models.clan.Clan.DEPUTY) {
+            NpcService.gI().createTutorial(player, tempId, this.avartar, "Chỉ có Bang Chủ hoặc Bang Phó mới có thể mở phó bản");
             return;
         }
         int sameClan = 0;

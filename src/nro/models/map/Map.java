@@ -147,7 +147,7 @@ public class Map implements Runnable {
                 nZone = DestronGas.AVAILABLE;
         }
         if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END) {
-            nZone = ClanDungeon.NORMAL_AVAILABLE + ClanDungeon.AVAILABLE;
+            nZone = ClanDungeon.AVAILABLE;
         }
 
         for (int i = 0; i < nZone; i++) {
@@ -169,9 +169,8 @@ public class Map implements Runnable {
                 case ConstMap.MAP_MABU_14H ->
                     MajinBuu14HService.gI().addMapMaBu2H(i, zone);
             }
-            if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END
-                    && i >= ClanDungeon.NORMAL_AVAILABLE) {
-                ClanDungeonService.gI().addMapClanDungeon(i - ClanDungeon.NORMAL_AVAILABLE, zone);
+            if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END) {
+                ClanDungeonService.gI().addMapClanDungeon(i, zone);
             }
         }
     }

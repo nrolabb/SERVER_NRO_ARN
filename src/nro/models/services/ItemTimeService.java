@@ -271,6 +271,9 @@ public class ItemTimeService {
 
     public void sendTextClanDungeon(Player player) {
         if (player.clan != null && player.clan.clanDungeon != null && player.clan.clanDungeon.isOpened()) {
+            if (player.clanMember != null && player.clanMember.joinTime * 1000L > player.clan.lastTimeOpenClanDungeon) {
+                return;
+            }
             int secondPassed = (int) ((System.currentTimeMillis() - player.clan.clanDungeon.getLastTimeOpen()) / 1000);
             int secondsLeft = (ClanDungeon.TIME_CLAN_DUNGEON / 1000) - secondPassed;
             if (secondsLeft < 0 || secondsLeft > 1800) {

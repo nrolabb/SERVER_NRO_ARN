@@ -53,36 +53,20 @@ public class ClanDungeonService {
         return getOpenedClanDungeonCount() >= getMaxOpenedClanDungeon();
     }
 
-    public Zone getNormalZone(int mapId) {
-        Zone fallback = null;
-        Map map = MapService.gI().getMapById(mapId);
-        if (map == null || map.zones == null) {
-            return null;
-        }
-        for (Zone zone : map.zones) {
-            if (!isNormalClanDungeonZone(zone)) {
-                continue;
-            }
-            if (fallback == null) {
-                fallback = zone;
-            }
-            if (zone.getNumOfPlayers() < zone.maxPlayer) {
-                return zone;
-            }
-        }
-        return fallback;
-    }
-
+    /**
+     * Instance-only model: all zones are instance zones.
+     * Normal zone concept is no longer used.
+     */
     public boolean isNormalClanDungeonZone(Zone zone) {
-        return zone != null && zone.map != null
-                && zone.map.mapId >= ClanDungeon.MAP_START && zone.map.mapId <= ClanDungeon.MAP_END
-                && zone.zoneId < ClanDungeon.NORMAL_AVAILABLE;
+        return false;
     }
 
+    /**
+     * All clan dungeon zones are instance zones in the new model.
+     */
     public boolean isDungeonInstanceZone(Zone zone) {
         return zone != null && zone.map != null
-                && zone.map.mapId >= ClanDungeon.MAP_START && zone.map.mapId <= ClanDungeon.MAP_END
-                && zone.zoneId >= ClanDungeon.NORMAL_AVAILABLE;
+                && zone.map.mapId >= ClanDungeon.MAP_START && zone.map.mapId <= ClanDungeon.MAP_END;
     }
 
     public boolean isOpenedDungeonZone(Zone zone) {

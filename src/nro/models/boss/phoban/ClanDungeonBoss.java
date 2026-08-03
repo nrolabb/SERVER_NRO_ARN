@@ -15,21 +15,17 @@ import nro.models.utils.Util;
 
 public abstract class ClanDungeonBoss extends Boss {
 
+    // Boss type constants
     public static final int COOLER = 0;
     public static final int GOLDEN_FRIEZA = 1;
-    public static final int CUMBER = 2;
-    public static final int SIEU_BO_HUNG = 3;
-    private static final int FINAL_BOSS_RESPAWN_TIME = 180_000;
+    public static final int ANIRAZA = 2;
+    public static final int GANOS = 3;
+    public static final int CAWAY = 4;
+    public static final int PIRIMA = 5;
+    public static final int SAONEL = 6;
 
     protected final ClanDungeon clanDungeon;
     protected final int type;
-    private int nextFinalBossHp;
-    private int nextFinalBossKi;
-    private int nextFinalBossDame;
-    private boolean notifiedAfterDeath;
-    private boolean notifiedTwoMinutes;
-    private boolean notifiedOneMinute;
-    private boolean notifiedTenSeconds;
 
     protected ClanDungeonBoss(ClanDungeon clanDungeon, int id, int type, BossData... data) throws Exception {
         super(BossType.PHOBAN, id, true, true, data);
@@ -38,6 +34,11 @@ public abstract class ClanDungeonBoss extends Boss {
         this.secondsRest = 60;
     }
 
+    public int getType() {
+        return this.type;
+    }
+
+    // Factory methods for existing bosses (Fize vàng, Colder - map 185 phase 1)
     public static ClanDungeonBoss cooler(ClanDungeon clanDungeon, int id) throws Exception {
         return new CoolerClanDungeonBoss(clanDungeon, id);
     }
@@ -46,12 +47,25 @@ public abstract class ClanDungeonBoss extends Boss {
         return new GoldenFriezaClanDungeonBoss(clanDungeon, id);
     }
 
-    public static ClanDungeonBoss cumber(ClanDungeon clanDungeon, int id) throws Exception {
-        return new CumberClanDungeonBoss(clanDungeon, id);
+    // Factory methods for new bosses
+    public static ClanDungeonBoss aniraza(ClanDungeon clanDungeon, int id) throws Exception {
+        return new AnirazaClanDungeonBoss(clanDungeon, id);
     }
 
-    public static ClanDungeonBoss sieuBoHung(ClanDungeon clanDungeon, int id) throws Exception {
-        return new SieuBoHungClanDungeonBoss(clanDungeon, id);
+    public static ClanDungeonBoss ganos(ClanDungeon clanDungeon, int id) throws Exception {
+        return new GanosClanDungeonBoss(clanDungeon, id);
+    }
+
+    public static ClanDungeonBoss caway(ClanDungeon clanDungeon, int id) throws Exception {
+        return new CawayClanDungeonBoss(clanDungeon, id);
+    }
+
+    public static ClanDungeonBoss pirima(ClanDungeon clanDungeon, int id) throws Exception {
+        return new PirimaClanDungeonBoss(clanDungeon, id);
+    }
+
+    public static ClanDungeonBoss saonel(ClanDungeon clanDungeon, int id) throws Exception {
+        return new SaonelClanDungeonBoss(clanDungeon, id);
     }
 
     protected static BossData cloneData(BossData data) {
@@ -59,51 +73,35 @@ public abstract class ClanDungeonBoss extends Boss {
                 data.getMapJoin(), data.getSkillTemp(), data.getTextS(), data.getTextM(), data.getTextE(), 60);
     }
 
-    @Override
-    public void initBase() {
-        super.initBase();
-        if (!isFinalMapBoss() || nextFinalBossHp <= 0) {
-            return;
-        }
-        this.nPoint.hpg = nextFinalBossHp;
-        this.nPoint.mpg = nextFinalBossKi;
-        this.nPoint.dameg = nextFinalBossDame;
-        this.nPoint.calPoint();
-        this.nPoint.hp = this.nPoint.hpMax;
-        this.nPoint.mp = this.nPoint.mpMax;
+    /**
+     * Capsule reward per boss type
+     */
+    protected int getCapsuleReward() {
+        return switch (this.type) {
+            case ANIRAZA -> 20;
+            case GANOS, CAWAY -> 50;
+            case COOLER, GOLDEN_FRIEZA -> 100;
+            case PIRIMA, SAONEL -> 150;
+            default -> 20;
+        };
     }
 
     @Override
     public void reward(Player plKill) {
-        if (this.type == GOLDEN_FRIEZA) {
-            dropGoldenFriezaReward(plKill);
-        } else {
-            dropCommonBossReward(plKill, this.type == SIEU_BO_HUNG ? 20 : 100);
-        }
+        dropCommonBossReward(plKill);
         TaskService.gI().checkDoneTaskKillBoss(plKill, this);
         if (clanDungeon != null) {
-            clanDungeon.addPoint(20);
+            int capsule = getCapsuleReward();
+            clanDungeon.addPoint(capsule);
+            clanDungeon.onBossKilled(this);
         }
     }
 
-    private void dropGoldenFriezaReward(Player plKill) {
-        plKill.event.addEventPoint(5);
-        Service.gI().sendThongBao(plKill, "+5 Point");
-        ItemMap item = new ItemMap(zone, 629, 1, this.location.x + Util.nextInt(-50, 50),
-                this.zone.map.yPhysicInTop(this.location.x, this.location.y - 24), plKill.id);
-        item.options.add(new Item.ItemOption(30, 1));
-        item.options.add(new Item.ItemOption(50, 20));
-        item.options.add(new Item.ItemOption(77, 20));
-        item.options.add(new Item.ItemOption(103, 20));
-        item.options.add(new Item.ItemOption(93, 20));
-        Service.gI().dropItemMap(this.zone, item);
-    }
-
-    private void dropCommonBossReward(Player plKill, int percentDropMain) {
+    private void dropCommonBossReward(Player plKill) {
         int x = this.location.x;
         int y = this.zone.map.yPhysicInTop(x, this.location.y - 24);
 
-        if (this.type != SIEU_BO_HUNG && Util.isTrue(30, 100)) {
+        if (Util.isTrue(30, 100)) {
             ItemMap it = ItemService.gI().randDoTLBoss(this.zone, 1, x, y, plKill.id);
             if (it != null) {
                 Service.gI().dropItemMap(zone, it);
@@ -111,7 +109,7 @@ public abstract class ClanDungeonBoss extends Boss {
             return;
         }
 
-        if (Util.isTrue(percentDropMain, 100)) {
+        if (Util.isTrue(80, 100)) {
             int[] dropItems = {
                 241, 253, 265, 277,
                 233, 245, 257, 269,
@@ -151,11 +149,6 @@ public abstract class ClanDungeonBoss extends Boss {
             }
             Service.gI().dropItemMap(zone, it);
         }
-
-        if (this.type == SIEU_BO_HUNG && Util.isTrue(20, 100)) {
-            int itemId = Util.isTrue(50, 100) ? 16 : 17;
-            Service.gI().dropItemMap(zone, new ItemMap(zone, itemId, 1, x + 10, y, plKill.id));
-        }
     }
 
     private int randomStar() {
@@ -169,66 +162,10 @@ public abstract class ClanDungeonBoss extends Boss {
         return 2;
     }
 
-    private boolean isFinalMapBoss() {
-        return this.type == CUMBER || this.type == SIEU_BO_HUNG;
-    }
-
-    private int scaleNextFinalBossStat(int value) {
-        long scaled = value + (value / 2L);
-        return (int) Math.max(1, Math.min(Integer.MAX_VALUE, scaled));
-    }
-
-    private boolean canRespawnFinalBoss() {
-        return clanDungeon != null && clanDungeon.isOpened() && isFinalMapBoss();
-    }
-
-    private void resetFinalBossRespawnNotifies() {
-        notifiedAfterDeath = false;
-        notifiedTwoMinutes = false;
-        notifiedOneMinute = false;
-        notifiedTenSeconds = false;
-    }
-
-    private void notifyFinalBossRespawn(String timeLeft) {
-        if (clanDungeon == null || clanDungeon.getClan() == null) {
-            return;
-        }
-        String text = this.name + " sẽ xuất hiện sau " + timeLeft + ".";
-        for (Player pl : clanDungeon.getClan().membersInGame) {
-            if (pl != null && pl.zone != null && pl.zone.map.mapId == ClanDungeon.MAP_END) {
-                Service.gI().sendBigMessage(pl, 1139, text);
-            }
-        }
-    }
-
     @Override
     public void rest() {
-        if (!canRespawnFinalBoss()) {
-            super.rest();
-            return;
-        }
-        long elapsed = System.currentTimeMillis() - this.lastTimeRest;
-        long timeLeft = FINAL_BOSS_RESPAWN_TIME - elapsed;
-        if (!notifiedAfterDeath) {
-            notifyFinalBossRespawn("3 phút");
-            notifiedAfterDeath = true;
-        }
-        if (!notifiedTwoMinutes && timeLeft <= 120_000) {
-            notifyFinalBossRespawn("2 phút");
-            notifiedTwoMinutes = true;
-        }
-        if (!notifiedOneMinute && timeLeft <= 60_000) {
-            notifyFinalBossRespawn("1 phút");
-            notifiedOneMinute = true;
-        }
-        if (!notifiedTenSeconds && timeLeft <= 10_000) {
-            notifyFinalBossRespawn("10 giây");
-            notifiedTenSeconds = true;
-        }
-        if (elapsed >= FINAL_BOSS_RESPAWN_TIME) {
-            resetFinalBossRespawnNotifies();
-            this.changeStatus(BossStatus.RESPAWN);
-        }
+        // No respawn for clan dungeon bosses in the new system
+        // Boss stays dead until dungeon ends
     }
 
     @Override
@@ -237,20 +174,11 @@ public abstract class ClanDungeonBoss extends Boss {
 
     @Override
     public void leaveMap() {
-        boolean respawnFinalBoss = canRespawnFinalBoss();
-        if (respawnFinalBoss) {
-            nextFinalBossHp = scaleNextFinalBossStat(this.nPoint.hpMax);
-            nextFinalBossKi = scaleNextFinalBossStat(this.nPoint.mpMax);
-            nextFinalBossDame = scaleNextFinalBossStat(this.nPoint.dame);
-        }
         if (this.zone != null) {
             nro.models.map.service.ChangeMapService.gI().exitMap(this);
         }
         this.lastZone = null;
         this.lastTimeRest = System.currentTimeMillis();
-        if (respawnFinalBoss) {
-            resetFinalBossRespawnNotifies();
-        }
         this.changeStatus(BossStatus.REST);
     }
 }

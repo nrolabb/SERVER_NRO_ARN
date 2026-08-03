@@ -7,6 +7,7 @@ import nro.models.consts.ConstTask;
 import nro.models.map.Map;
 import nro.models.services_dungeon.MajinBuuService;
 import nro.models.services_dungeon.ClanDungeonService;
+import nro.models.map.phoban.ClanDungeon;
 import nro.models.map.WayPoint;
 import nro.models.map.Zone;
 import nro.models.mob.Mob;
@@ -580,10 +581,12 @@ public class ChangeMapService {
         if (player == null || player.clan == null || player.clan.clanDungeon == null || player.zone == null) {
             return "Bạn chưa thể đến khu vực này";
         }
-        int nextMapId = Math.min(player.zone.map.mapId + 1, 159);
-        int requiredPoint = MapService.gI().getClanDungeonRequiredPoint(nextMapId);
-        if (requiredPoint > 0 && player.clan.clanDungeon.getPoint() < requiredPoint) {
-            return "Cần " + requiredPoint + " điểm tích lũy để qua cửa tiếp theo";
+        int currentMapId = player.zone.map.mapId;
+        if (currentMapId == ClanDungeon.MAP_1 && !player.clan.clanDungeon.canAccessMap184()) {
+            return "Cần tiêu diệt boss Aniraza để qua map tiếp theo";
+        }
+        if (currentMapId == ClanDungeon.MAP_2 && !player.clan.clanDungeon.canAccessMap185()) {
+            return "Cần tiêu diệt tất cả boss để qua map tiếp theo";
         }
         return "Bạn chưa thể đến khu vực này";
     }
