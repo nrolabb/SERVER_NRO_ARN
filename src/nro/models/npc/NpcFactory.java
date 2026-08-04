@@ -696,10 +696,14 @@ public class NpcFactory {
                         }
                     }
                     case ConstNpc.CONFIRM_TELE_NAMEC -> {
-                        if (select == 0) {
-                            NgocRongNamecService.gI().teleportToNrNamec(player);
-                            player.inventory.subGem(10);
-                            Service.gI().sendMoney(player);
+                        if (select == 0 && player.idNRNM == -1) {
+                            if (player.inventory.gem >= 50) {
+                                player.inventory.subGem(50);
+                                Service.gI().sendMoney(player);
+                                NgocRongNamecService.gI().teleportToNrNamec(player);
+                            } else {
+                                Service.gI().sendThongBao(player, "Bạn không đủ ngọc để thực hiện");
+                            }
                         }
                     }
                     case ConstNpc.MA_BAO_VE -> {

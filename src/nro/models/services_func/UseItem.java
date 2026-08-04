@@ -297,6 +297,13 @@ public class UseItem {
                     InventoryService.gI().itemBagToBody(pl, indexBag);
                     return;
                 }
+                if (item.template.id == 361) {
+                    pl.idGo = (short) Util.nextInt(0, 6);
+                    NgocRongNamecService.gI().menuCheckTeleNamekBall(pl);
+                    InventoryService.gI().subQuantityItemsBag(pl, item, 1);
+                    InventoryService.gI().sendItemBags(pl);
+                    return;
+                }
                 switch (item.template.type) {
                     case 33: // card
                         UseCard(pl, item);
@@ -334,12 +341,6 @@ public class UseItem {
                                 pl.type = 2;
                                 pl.maxTime = 5;
                                 Service.gI().Transport(pl);
-                                break;
-                            case 361:
-                                pl.idGo = (short) Util.nextInt(0, 6);
-                                NgocRongNamecService.gI().menuCheckTeleNamekBall(pl);
-                                InventoryService.gI().subQuantityItemsBag(pl, item, 1);
-                                InventoryService.gI().sendItemBags(pl);
                                 break;
                             case 892:
                                 InventoryService.gI().itemBagToBody(pl, indexBag);
