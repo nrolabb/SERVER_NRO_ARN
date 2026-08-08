@@ -16,14 +16,19 @@ public class RareItemDropService {
     private static RareItemDropService instance;
 
     // Các bộ đồ
-    private static final int[] DO_THAN_LINH = {555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567};
-    private static final int[] DO_HUY_DIET = {650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662};
-    private static final int[] DO_THIEN_SU = {1048, 1049, 1050, 1051, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059, 1060, 1061, 1062};
+    private static final int[] DO_THAN_LINH = { 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567 };
+    private static final int[] DO_HUY_DIET = { 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662 };
+    private static final int[] DO_THIEN_SU = { 1048, 1049, 1050, 1051, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059,
+            1060, 1061, 1062 };
 
     // Thuộc tính tuyệt đối (số lượng)
-    private static final int[] ABSOLUTE_OPTIONS = {14}; // Chỉ dùng Chí Mạng để test
+    // 0: Tấn công (Sức đánh), 6: HP, 7: KI, 47: Giáp
+    private static final int[] ABSOLUTE_OPTIONS = { 0, 6, 7, 47 };
     // Thuộc tính phần trăm
-    private static final int[] PERCENT_OPTIONS = {14}; // Chỉ dùng Chí Mạng để test
+    // 5: %SĐ chí mạng, 14: %Chí mạng, 16: %Tốc độ di chuyển, 50: %Sức đánh, 77:
+    // %HP, 80: %HP/30s, 81: %KI/30s, 95: Biến %ST thành HP, 96: Biến %ST thành KI,
+    // 97: Phản %ST, 100: %Vàng từ quái, 103: %KI, 108: %Né tránh
+    private static final int[] PERCENT_OPTIONS = { 5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108 };
 
     public static RareItemDropService gI() {
         if (instance == null) {
@@ -34,7 +39,8 @@ public class RareItemDropService {
 
     public ItemMap tryDropRareItem(Zone zone, Player player, int x, int y) {
         RareItemConfig config = RareItemConfig.gI();
-        if (!config.enabled) return null;
+        if (!config.enabled)
+            return null;
 
         // Tính toán tỉ lệ rơi dựa trên map
         int dropRate = config.dropRateDefault;
@@ -74,14 +80,23 @@ public class RareItemDropService {
         List<Item.ItemOption> bonusOptions = rollOptions(numLines, config);
         itemMap.options.addAll(bonusOptions);
 
-        // Thêm Option 73, 254, 255 để Client mod hiển thị Khung viền màu theo chuẩn byte < 255
+        // Thêm Option 73, 254, 255 để Client mod hiển thị Khung viền màu theo chuẩn
+        // byte < 255
         // Option 225 để Client đổi màu và tên (nhờ bản mod C# vừa làm)
         int colorParam = 0;
         int textOptionId = 73; // Mặc định Đỏ (text)
-        if (rarity == 1) { colorParam = 3; textOptionId = 73; } // Đỏ
-        else if (rarity == 2) { colorParam = 7; textOptionId = 254; } // Vàng
-        else if (rarity == 3) { colorParam = 5; textOptionId = 255; } // Xanh
-        itemMap.options.add(new Item.ItemOption(225, colorParam));
+        if (rarity == 1) {
+            colorParam = 3;
+            textOptionId = 73;
+        } // Đỏ
+        else if (rarity == 2) {
+            colorParam = 7;
+            textOptionId = 254;
+        } // Vàng
+        else if (rarity == 3) {
+            colorParam = 5;
+            textOptionId = 255;
+        } // Xanh
         itemMap.options.add(new Item.ItemOption(textOptionId, 1));
 
         // Lưu rarity vào ItemMap để nhận diện khi nhặt
@@ -94,30 +109,37 @@ public class RareItemDropService {
                 + " BonusLines=" + numLines
                 + " TotalOptions=" + itemMap.options.size() + "\n");
 
-        StringBuilder sb = new StringBuilder("Item rơi ra có các option: ");
-        for (Item.ItemOption opt : itemMap.options) {
-            sb.append(opt.optionTemplate.id).append(" (").append(opt.param).append("), ");
-        }
-        nro.models.services.Service.gI().sendThongBao(player, sb.toString());
+        /*
+         * StringBuilder sb = new StringBuilder("Item rơi ra có các option: ");
+         * for (Item.ItemOption opt : itemMap.options) {
+         * sb.append(opt.optionTemplate.id).append(" (").append(opt.param).append("), "
+         * );
+         * }
+         * nro.models.services.Service.gI().sendThongBao(player, sb.toString());
+         */
 
         return itemMap;
     }
 
     /**
-     * Roll rarity: tỉ lệ mỗi loại được tính dựa trên tổng tỉ lệ (trọng số) của cả 3 loại.
+     * Roll rarity: tỉ lệ mỗi loại được tính dựa trên tổng tỉ lệ (trọng số) của cả 3
+     * loại.
      * Ưu tiên: Xanh (hiếm nhất) > Vàng > Đỏ
      */
     private int rollRarity(RareItemConfig config) {
         int totalWeight = config.rateBlue + config.rateYellow + config.rateRed;
-        if (totalWeight <= 0) return 0;
+        if (totalWeight <= 0)
+            return 0;
 
         int r = Util.nextInt(totalWeight);
 
         // Kiểm tra Xanh
-        if (r < config.rateBlue) return 3;
+        if (r < config.rateBlue)
+            return 3;
 
         // Kiểm tra Vàng
-        if (r < config.rateBlue + config.rateYellow) return 2;
+        if (r < config.rateBlue + config.rateYellow)
+            return 2;
 
         // Trả về Đỏ (trường hợp còn lại)
         return 1;
@@ -125,21 +147,28 @@ public class RareItemDropService {
 
     private int rollItemId() {
         int r = Util.nextInt(100);
-        if (r < 60) return DO_THAN_LINH[Util.nextInt(DO_THAN_LINH.length)];
-        if (r < 90) return DO_HUY_DIET[Util.nextInt(DO_HUY_DIET.length)];
+        if (r < 60)
+            return DO_THAN_LINH[Util.nextInt(DO_THAN_LINH.length)];
+        if (r < 90)
+            return DO_HUY_DIET[Util.nextInt(DO_HUY_DIET.length)];
         return DO_THIEN_SU[Util.nextInt(DO_THIEN_SU.length)];
     }
 
     private void initBaseStats(ItemMap itemMap, int itemId) {
         nro.models.player_system.Template.ItemTemplate template = ItemService.gI().getTemplate(itemId);
-        if (template == null) return;
+        if (template == null)
+            return;
 
         int tier = 0; // 1 = Thần, 2 = Hủy Diệt, 3 = Thiên Sứ
-        if (itemId >= 555 && itemId <= 567) tier = 1;
-        else if (itemId >= 650 && itemId <= 662) tier = 2;
-        else if (itemId >= 1048 && itemId <= 1062) tier = 3;
+        if (itemId >= 555 && itemId <= 567)
+            tier = 1;
+        else if (itemId >= 650 && itemId <= 662)
+            tier = 2;
+        else if (itemId >= 1048 && itemId <= 1062)
+            tier = 3;
 
-        if (tier == 0) return;
+        if (tier == 0)
+            return;
 
         int type = template.type;
         int optionId = -1;
@@ -182,8 +211,10 @@ public class RareItemDropService {
     private List<Item.ItemOption> rollOptions(int numLines, RareItemConfig config) {
         List<Item.ItemOption> result = new ArrayList<>();
         List<Integer> pool = new ArrayList<>();
-        for (int opt : ABSOLUTE_OPTIONS) pool.add(opt);
-        for (int opt : PERCENT_OPTIONS) pool.add(opt);
+        for (int opt : ABSOLUTE_OPTIONS)
+            pool.add(opt);
+        for (int opt : PERCENT_OPTIONS)
+            pool.add(opt);
 
         Collections.shuffle(pool);
 
@@ -205,7 +236,8 @@ public class RareItemDropService {
 
     private boolean isAbsoluteOption(int optionId) {
         for (int opt : ABSOLUTE_OPTIONS) {
-            if (opt == optionId) return true;
+            if (opt == optionId)
+                return true;
         }
         return false;
     }
@@ -216,10 +248,14 @@ public class RareItemDropService {
      */
     public static String getRarityPrefix(int rarity) {
         switch (rarity) {
-            case 1: return "[Đỏ] ";
-            case 2: return "[Vàng] ";
-            case 3: return "[Xanh] ";
-            default: return "";
+            case 1:
+                return "[Đỏ] ";
+            case 2:
+                return "[Vàng] ";
+            case 3:
+                return "[Xanh] ";
+            default:
+                return "";
         }
     }
 }
