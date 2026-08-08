@@ -631,6 +631,23 @@ public class Mob {
             return list;
         }
         int mapid = player.zone.map.mapId;
+
+        // ======================== ĐỒ ĐẶC BIỆT HIẾM (XANH/ĐỎ/VÀNG) ========================
+        if (nro.models.consts.RareItemConfig.gI().enabled && nro.models.consts.RareItemConfig.gI().isMapValid(mapid)) {
+            ItemMap rareItem = nro.models.services.RareItemDropService.gI().tryDropRareItem(zone, player, x, yEnd);
+            if (rareItem != null) {
+                list.add(rareItem);
+                // Đồ xanh có 3 dòng -> option size sẽ >= 4 (vì có 1 dòng lưu màu)
+                if (rareItem.options.size() >= 4) {
+                    nro.models.services.ChatGlobalService.gI().ThongBaoRoiDo(
+                            player,
+                            player.name + " vừa nhặt được " + rareItem.itemTemplate.name +
+                                    " (Cực Hiếm) tại " + this.zone.map.mapName +
+                                    " khu " + this.zone.zoneId);
+                }
+            }
+        }
+
         // ========================Capsul Kì Bí========================
         if (player.itemTime.isUseMayDo
                 && (Util.isTrue(1, 50))

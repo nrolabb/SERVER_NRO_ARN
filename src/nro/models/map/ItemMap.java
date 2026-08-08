@@ -37,6 +37,9 @@ public class ItemMap {
     public boolean isPickedUp;
     public String id;
 
+    // Độ hiếm: 0 = thường, 1 = đỏ, 2 = vàng, 3 = xanh
+    public int rarity = 0;
+
     public ItemMap(Zone zone, int tempId, int quantity, int x, int y, long playerId) {
         this.zone = zone;
         this.itemMapId = zone.countItemAppeaerd++;

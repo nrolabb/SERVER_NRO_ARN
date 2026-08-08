@@ -25,6 +25,9 @@ public class Item {
 
     public List<ItemOption> itemOptions;
 
+    // Độ hiếm: 0 = thường, 1 = đỏ, 2 = vàng, 3 = xanh
+    public int rarity = 0;
+
     public long createTime;
     public int id;
     public Object text;
@@ -33,10 +36,6 @@ public class Item {
 
     public boolean isNotNullItem() {
         return this.template != null;
-    }
-
-    public String getName() {
-        return template.name;
     }
 
     public Item() {
@@ -52,8 +51,13 @@ public class Item {
 
     public String getInfo() {
         String strInfo = "";
+        if (this.rarity > 0) {
+            if (this.rarity == 1) strInfo += "|1|[Đỏ] " + this.template.name + "\n";
+            else if (this.rarity == 2) strInfo += "|7|[Vàng] " + this.template.name + "\n";
+            else if (this.rarity == 3) strInfo += "|5|[Xanh] " + this.template.name + "\n";
+        }
         for (ItemOption itemOption : itemOptions) {
-            strInfo += itemOption.getOptionString();
+            strInfo += itemOption.getOptionString() + "\n";
         }
         return strInfo;
     }
@@ -500,8 +504,15 @@ public class Item {
         return this.template != null && (this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 86) || this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 87) || this.template.type == 14 || this.template.type == 15 || this.template.type == 6 || this.template.id >= 14 && this.template.id <= 20);
     }
 
+    public String getName() {
+        if (this.rarity == 1) return "[Đỏ] " + template.name;
+        if (this.rarity == 2) return "[Vàng] " + template.name;
+        if (this.rarity == 3) return "[Xanh] " + template.name;
+        return template.name;
+    }
+
     public String getInfoItem() {
-        String strInfo = "|1|" + template.name + "\n|0|";
+        String strInfo = "|1|" + getName() + "\n|0|";
         for (ItemOption itemOption : itemOptions) {
             strInfo += itemOption.getOptionString() + "\n";
         }

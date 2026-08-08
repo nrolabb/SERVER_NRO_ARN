@@ -540,12 +540,15 @@ public final class Manager {
                                 JSONArray dataItem = (JSONArray) JSONValue.parse(dataArray.get(i).toString());
                                 short tempId = Short.parseShort(String.valueOf(dataItem.get(0)));
                                 if (tempId != -1) {
-                                    item = ItemService.gI().createNewItem(tempId, Integer.parseInt(String.valueOf(dataItem.get(1))));
-                                    JSONArray options = (JSONArray) JSONValue.parse(String.valueOf(dataItem.get(2)).replaceAll("\"", ""));
+                                    item = ItemService.gI().createNewItem(tempId,
+                                            Integer.parseInt(String.valueOf(dataItem.get(1))));
+                                    JSONArray options = (JSONArray) JSONValue
+                                            .parse(String.valueOf(dataItem.get(2)).replaceAll("\"", ""));
                                     for (int j = 0; j < options.size(); j++) {
                                         JSONArray opt = (JSONArray) JSONValue.parse(String.valueOf(options.get(j)));
-                                        item.itemOptions.add(new Item.ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
-                                                Integer.parseInt(String.valueOf(opt.get(1)))));
+                                        item.itemOptions
+                                                .add(new Item.ItemOption(Integer.parseInt(String.valueOf(opt.get(0))),
+                                                        Integer.parseInt(String.valueOf(opt.get(1)))));
                                     }
                                     item.createTime = Long.parseLong(String.valueOf(dataItem.get(3)));
                                     if (ItemService.gI().isOutOfDateTime(item)) {
@@ -793,7 +796,8 @@ public final class Manager {
 
             try {
                 while (true) {
-                    ps = ConnectionDatabase.prepareStatement("SELECT * FROM item_template ORDER BY id LIMIT ? OFFSET ?");
+                    ps = ConnectionDatabase
+                            .prepareStatement("SELECT * FROM item_template ORDER BY id LIMIT ? OFFSET ?");
                     ps.setInt(1, batchSize);
                     ps.setInt(2, offset);
                     rs = ps.executeQuery();
@@ -957,7 +961,8 @@ public final class Manager {
             if (rs.next()) {
                 int countRow = rs.getShort(1);
                 MAP_TEMPLATES = new MapTemplate[countRow];
-                ps = ConnectionDatabase.prepareStatement("select id, name, type, planet_id, bg_type, tile_id, bg_id, zones, max_player, waypoints, mobs, npcs from map_template");
+                ps = ConnectionDatabase.prepareStatement(
+                        "select id, name, type, planet_id, bg_type, tile_id, bg_id, zones, max_player, waypoints, mobs, npcs from map_template");
                 rs = ps.executeQuery();
                 short i = 0;
                 while (rs.next()) {
@@ -1239,9 +1244,12 @@ public final class Manager {
             Logger.logException(Manager.class, e, "Lỗi load set_kich_hoat");
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-            } catch (Exception ex) {}
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -1297,7 +1305,7 @@ public final class Manager {
     private void ensureItemOptionTemplate(Connection con, int id, String name) throws SQLException {
         try (PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO `item_option_template` (`id`, `name`) VALUES (?, ?) "
-                + "ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)")) {
+                        + "ON DUPLICATE KEY UPDATE `name` = VALUES(`name`)")) {
             ps.setInt(1, id);
             ps.setString(2, name);
             ps.executeUpdate();

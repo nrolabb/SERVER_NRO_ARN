@@ -354,6 +354,10 @@ public class ItemService {
     public Item createItemFromItemMap(ItemMap itemMap) {
         Item item = createNewItem(itemMap.itemTemplate.id, itemMap.quantity);
         item.itemOptions = itemMap.options;
+        item.rarity = itemMap.rarity;
+        // Cập nhật lại info và content sau khi đã gán options
+        item.info = item.getInfo();
+        item.content = item.getContent();
         return item;
     }
 

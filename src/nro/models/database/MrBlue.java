@@ -316,6 +316,12 @@ public class MrBlue {
             } catch (Exception e) {
                 Logger.error(e + "\n");
             }
+            if (player.zone == null) {
+                int mapId = player.gender + 21;
+                player.location.x = 300;
+                player.location.y = 336;
+                player.zone = MapService.gI().getMapCanJoin(player, mapId, -1);
+            }
             dataArray.clear();
 
             //data chỉ số

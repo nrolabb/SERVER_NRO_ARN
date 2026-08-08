@@ -6,3 +6,5 @@
 *.zip
 /.vs
 /data
+!/data/map
+!/data/map/*
