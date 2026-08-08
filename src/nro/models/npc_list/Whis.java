@@ -37,7 +37,7 @@ public class Whis extends Npc {
             case 154 ->
                 createOtherMenu(player, ConstNpc.BASE_MENU,
                         "Thử đánh với ta xem nào.\nNgươi còn 1 lượt nữa cơ mà.",
-                        "Nói chuyện", "Học\ntuyệt kỹ", "Top 100", "[LV:" + (player.traning.getTop() + 1) + "]");
+                        "Nói chuyện", "Học\ntuyệt kỹ", "Top 100", "[LV:" + (player.traning.getTop() + 1) + "]", "Nâng cấp\nBiến hình");
             case 164 ->
                 createOtherMenu(player, ConstNpc.BASE_MENU,
                         "Ta có thể giúp gì cho ngươi?", "Quay về", "Từ chối");
@@ -65,6 +65,8 @@ public class Whis extends Npc {
                 }
                 case 6 ->
                     handleHocTuyetKy(player, select);
+                case 7 ->
+                    handleNangCapBienHinh(player, select);
             }
         }
     }
@@ -88,6 +90,8 @@ public class Whis extends Npc {
                 showSkillLearningMenu(player, biKiepTuyetKy);
             case 3 ->
                 TrainingService.gI().callBoss(player, BossID.WHIS, false);
+            case 4 ->
+                showUpgradeBienHinhMenu(player);
         }
     }
 
@@ -185,6 +189,79 @@ public class Whis extends Npc {
                 Service.gI().sendThongBao(player, "Ngươi còn thiếu " + missing + " bí kíp nữa.\nHãy tìm đủ rồi đến gặp ta.");
             }
         }
+    }
+
+    private void showUpgradeBienHinhMenu(Player player) {
+        Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
+        if (skill == null || skill.point == 0) {
+            Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
+            return;
+        }
+        if (skill.point >= 5) {
+            Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
+            return;
+        }
+        int successRate = 30 - (skill.point * 5);
+        String message = "|1|Ta sẽ giúp ngươi nâng cấp kỹ năng Biến Hình\n"
+                + "|7|Cấp hiện tại: " + skill.point + "\n"
+                + "|2|Tiêu tốn: 10 Tỷ Tiềm Năng Sức Mạnh\n"
+                + "|2|Tỷ lệ thành công: " + successRate + "%";
+        createOtherMenu(player, 7, message, "Nâng cấp", "Từ chối");
+    }
+
+    private void handleNangCapBienHinh(Player player, int select) {
+        if (select != 0) {
+            return;
+        }
+
+        Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
+        if (skill == null || skill.point == 0) {
+            Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
+            return;
+        }
+        if (skill.point >= 5) {
+            Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
+            return;
+        }
+        if (player.nPoint.tiemNang < 10_000_000_000L) {
+            Service.gI().sendThongBao(player, "Bạn không đủ 10 Tỷ Tiềm năng sức mạnh!");
+            return;
+        }
+
+        player.nPoint.tiemNang -= 10_000_000_000L;
+        Service.gI().point(player);
+
+        int successRate = 30 - (skill.point * 5);
+        boolean success = Util.isTrue(successRate, 100);
+
+        // Gửi animation spine mặc định
+        nro.models.services.EffectSkillService ess = nro.models.services.EffectSkillService.gI();
+        int targetLevel = success ? skill.point + 1 : skill.point;
+        String skin = ess.getBienHinhSpineSkin(targetLevel);
+        nro.models.services.SpineService.gI().sendSpineSkillEffect(player,
+                nro.models.services.EffectSkillService.BIEN_HINH_SPINE_PATH,
+                nro.models.services.EffectSkillService.BIEN_HINH_SPINE_ANIM,
+                skin, nro.models.services.EffectSkillService.TIME_TRANSFORM_BIEN_HINH_SPINE);
+
+        // Chờ animation xong mới áp dụng kết quả
+        Util.setTimeout(() -> {
+            if (player != null && player.zone != null) {
+                if (success) {
+                    Skill newSkill = SkillUtil.createSkill(Skill.BIEN_HINH, skill.point + 1);
+                    SkillUtil.setSkill(player, newSkill);
+                    try {
+                        Message msg = new Message(62);
+                        msg.writer().writeShort(newSkill.skillId);
+                        player.sendMessage(msg);
+                        msg.cleanup();
+                    } catch (Exception e) {
+                    }
+                    npcChat(player, "Chúc mừng con nhé! Kỹ năng Biến hình đã đạt cấp " + newSkill.point);
+                } else {
+                    npcChat(player, "Ngu dốt! Nâng cấp thất bại!");
+                }
+            }
+        }, nro.models.services.EffectSkillService.TIME_TRANSFORM_BIEN_HINH_SPINE);
     }
 
     private void learnNewSkill(Player player, Item sach, int skillId, int iconSkill) {

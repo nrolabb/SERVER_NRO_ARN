@@ -13,6 +13,7 @@ import nro.models.services.ItemService;
 import nro.models.services.Service;
 import nro.models.services.TaskService;
 import nro.models.utils.Util;
+import nro.models.map.service.ChangeMapService;
 
 public class Fide extends Boss {
 
@@ -43,4 +44,13 @@ public void reward(Player plKill) {
         }
     }
 
+    @Override
+    public void leaveMap() {
+        super.leaveMap();
+        if (this.currentLevel < this.data.length - 1) {
+            ChangeMapService.gI().exitMap(this);
+            this.zone = null;
+            this.lastZone = null;
+        }
+    }
 }
