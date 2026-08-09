@@ -216,12 +216,31 @@ public class RareItemDropService {
         for (int opt : PERCENT_OPTIONS)
             pool.add(opt);
 
-        Collections.shuffle(pool);
+        List<Integer> selected = new ArrayList<>();
 
         for (int i = 0; i < numLines; i++) {
-            int optionId = pool.get(i);
-            int param = 0;
+            boolean allowDuplicate = Util.nextInt(100) < 60;
+            int optionId;
 
+            if (!allowDuplicate) {
+                // Chọn thuộc tính chưa xuất hiện
+                List<Integer> available = new ArrayList<>(pool);
+                available.removeAll(selected);
+
+                // Nếu hết loại chưa dùng thì bắt buộc cho phép trùng
+                if (available.isEmpty()) {
+                    optionId = pool.get(Util.nextInt(pool.size()));
+                } else {
+                    optionId = available.get(Util.nextInt(available.size()));
+                }
+            } else {
+                // Cho phép chọn trùng
+                optionId = pool.get(Util.nextInt(pool.size()));
+            }
+
+            selected.add(optionId);
+
+            int param = 0;
             if (isAbsoluteOption(optionId)) {
                 param = Util.nextInt(config.minAbsolute, config.maxAbsolute);
             } else {
