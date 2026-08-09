@@ -1165,6 +1165,17 @@ public void checkDoneTaskUseItem(Player player, Item item) {
                 Service.gI().addSMTN(player, (byte) 0, 20000, false);
                 Service.gI().addSMTN(player, (byte) 1, 20000, false);
                 break;
+            case 21:
+                if (InventoryService.gI().getCountEmptyBag(player) > 0) {
+                    short idSachBH = (short) (player.gender == ConstPlayer.TRAI_DAT ? 1950 : player.gender == ConstPlayer.NAMEC ? 1955 : 1960);
+                    Item sachBH = ItemService.gI().createNewItem(idSachBH, 1);
+                    InventoryService.gI().addItemBag(player, sachBH);
+                    InventoryService.gI().sendItemBags(player);
+                    Service.gI().sendThongBao(player, "Bạn nhận được sách biến hình");
+                } else {
+                    Service.gI().sendThongBao(player, "Hành trang đầy, không thể nhận sách biến hình");
+                }
+                break;
         }
         // if (player.playerTask.taskMain.id > 0 && player.playerTask.taskMain.id < 25) {
         //     Service.gI().addSMTN(player, (byte) 2, 500L * (player.playerTask.taskMain.id + 1), false);
