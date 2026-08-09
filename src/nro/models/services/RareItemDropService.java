@@ -219,7 +219,7 @@ public class RareItemDropService {
         List<Integer> selected = new ArrayList<>();
 
         for (int i = 0; i < numLines; i++) {
-            boolean allowDuplicate = Util.nextInt(100) < 60;
+            boolean allowDuplicate = Util.nextInt(100) < config.allowDuplicatePercent;
             int optionId;
 
             if (!allowDuplicate) {

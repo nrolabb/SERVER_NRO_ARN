@@ -21,6 +21,7 @@ public class RareItemConfig {
     public int maxPercent;
     public int minAbsolute;
     public int maxAbsolute;
+    public int allowDuplicatePercent;
 
     public static RareItemConfig gI() {
         if (instance == null) {
@@ -63,6 +64,7 @@ public class RareItemConfig {
             this.maxPercent = Integer.parseInt(properties.getProperty("rareitem.max_percent", "20").trim());
             this.minAbsolute = Integer.parseInt(properties.getProperty("rareitem.min_absolute", "500").trim());
             this.maxAbsolute = Integer.parseInt(properties.getProperty("rareitem.max_absolute", "3000").trim());
+            this.allowDuplicatePercent = Integer.parseInt(properties.getProperty("rareitem.allow_duplicate_percent", "60").trim());
 
             Logger.success("Loaded RareItemConfig successfully!\n");
         } catch (Exception e) {
