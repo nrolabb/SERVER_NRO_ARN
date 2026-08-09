@@ -313,10 +313,10 @@ public class ClanService {
                                 opId = 222;
                                 param /= 1000;
                             }
-                            msgBox.writer().writeByte(opId);
+                            msgBox.writer().writeShort(opId);
                             msgBox.writer().writeShort(param);
                         } else {
-                            msgBox.writer().writeByte(option.optionTemplate.id);
+                            msgBox.writer().writeShort(option.optionTemplate.id);
                             msgBox.writer().writeShort(option.param);
                         }
                     }

@@ -201,7 +201,7 @@ public class ShopService {
                         }
                         msg.writer().writeByte(itemShop.options.size());
                         for (Item.ItemOption option : itemShop.options) {
-                            msg.writer().writeByte(option.optionTemplate.id);
+                            msg.writer().writeShort(option.optionTemplate.id);
                             msg.writer().writeShort(option.param);
                         }
                         msg.writer().writeByte(itemShop.isNew ? 1 : 0);
@@ -256,7 +256,7 @@ public class ShopService {
                         }
                         msg.writer().writeByte(itemShop.options.size());
                         for (Item.ItemOption option : itemShop.options) {
-                            msg.writer().writeByte(option.optionTemplate.id);
+                            msg.writer().writeShort(option.optionTemplate.id);
                             msg.writer().writeShort(option.param);
                         }
                         msg.writer().writeByte(itemShop.isNew ? 1 : 0);
@@ -310,7 +310,7 @@ public class ShopService {
 
                         msg.writer().writeByte(itemShop.options.size());
                         for (Item.ItemOption option : itemShop.options) {
-                            msg.writer().writeByte(option.optionTemplate.id);
+                            msg.writer().writeShort(option.optionTemplate.id);
                             msg.writer().writeShort(option.param);
                         }
                         msg.writer().writeByte(itemShop.isNew ? 1 : 0);
@@ -348,7 +348,7 @@ public class ShopService {
                         msg.writer().writeInt(itemShop.cost);
                         msg.writer().writeByte(itemShop.options.size());
                         for (Item.ItemOption option : itemShop.options) {
-                            msg.writer().writeByte(option.optionTemplate.id);
+                            msg.writer().writeShort(option.optionTemplate.id);
                             msg.writer().writeShort(option.param);
                         }
                         msg.writer().writeByte(itemShop.isNew ? 1 : 0);
@@ -405,7 +405,7 @@ public class ShopService {
                 msg.writer().writeUTF("|7| LUCKY REWARD");
                 msg.writer().writeByte(item.itemOptions.size() + 1);
                 for (Item.ItemOption io : item.itemOptions) {
-                    msg.writer().writeByte(io.optionTemplate.id);
+                    msg.writer().writeShort(io.optionTemplate.id);
                     msg.writer().writeShort(io.param);
                 }
                 // số lượng
@@ -456,7 +456,7 @@ public class ShopService {
                 msg.writer().writeInt(item.quantity);
                 msg.writer().writeByte(item.itemOptions.size());
                 for (Item.ItemOption io : item.itemOptions) {
-                    msg.writer().writeByte(io.optionTemplate.id);
+                    msg.writer().writeShort(io.optionTemplate.id);
                     msg.writer().writeShort(io.param);
                 }
                 msg.writer().writeByte(0);

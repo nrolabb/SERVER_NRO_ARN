@@ -448,11 +448,36 @@ public final class Manager {
             // load item option template before loading clan box items
             ps = ConnectionDatabase.prepareStatement("select id, name from item_option_template order by id");
             rs = ps.executeQuery();
+            int maxOptionId = -1;
+            List<ItemOptionTemplate> tempOptions = new ArrayList<>();
             while (rs.next()) {
                 ItemOptionTemplate optionTemp = new ItemOptionTemplate();
                 optionTemp.id = rs.getInt("id");
                 optionTemp.name = rs.getString("name");
-                ITEM_OPTION_TEMPLATES.add(optionTemp);
+                tempOptions.add(optionTemp);
+                if (optionTemp.id > maxOptionId) {
+                    maxOptionId = optionTemp.id;
+                }
+            }
+            if (maxOptionId >= 255) {
+                Logger.warning("Max item option template ID is >= 255! Size might overflow byte on client.");
+            }
+            for (int i = 0; i <= maxOptionId; i++) {
+                ItemOptionTemplate match = null;
+                for (ItemOptionTemplate opt : tempOptions) {
+                    if (opt.id == i) {
+                        match = opt;
+                        break;
+                    }
+                }
+                if (match != null) {
+                    ITEM_OPTION_TEMPLATES.add(match);
+                } else {
+                    ItemOptionTemplate dummy = new ItemOptionTemplate();
+                    dummy.id = i;
+                    dummy.name = "";
+                    ITEM_OPTION_TEMPLATES.add(dummy);
+                }
             }
             Logger.success(Logger.PURPLE + "Successfully loaded map item option template ("
                     + ITEM_OPTION_TEMPLATES.size() + ")\n");
@@ -1318,10 +1343,14 @@ public final class Manager {
             }
         }
 
-        ItemOptionTemplate optionTemp = new ItemOptionTemplate();
-        optionTemp.id = id;
-        optionTemp.name = name;
-        ITEM_OPTION_TEMPLATES.add(optionTemp);
+        while (ITEM_OPTION_TEMPLATES.size() <= id) {
+            ItemOptionTemplate dummy = new ItemOptionTemplate();
+            dummy.id = ITEM_OPTION_TEMPLATES.size();
+            dummy.name = "";
+            ITEM_OPTION_TEMPLATES.add(dummy);
+        }
+        
+        ITEM_OPTION_TEMPLATES.get(id).name = name;
     }
 
     public static List<TOP> realTop(String query, Connection con) {

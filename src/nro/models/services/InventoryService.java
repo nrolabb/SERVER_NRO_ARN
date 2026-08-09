@@ -813,10 +813,10 @@ public class InventoryService {
                             opId = 222;
                             param /= 1000;
                         }
-                        msg.writer().writeByte(opId);
+                        msg.writer().writeShort(opId);
                         msg.writer().writeShort(param);
                     } else {
-                        msg.writer().writeByte(item.itemOptions.get(j).optionTemplate.id);
+                        msg.writer().writeShort(item.itemOptions.get(j).optionTemplate.id);
                         msg.writer().writeShort(item.itemOptions.get(j).param);
                     }
                 }
@@ -856,10 +856,10 @@ public class InventoryService {
                                 opId = 222;
                                 param /= 1000;
                             }
-                            msg.writer().writeByte(opId);
+                            msg.writer().writeShort(opId);
                             msg.writer().writeShort(param);
                         } else {
-                            msg.writer().writeByte(itemOption.optionTemplate.id);
+                            msg.writer().writeShort(itemOption.optionTemplate.id);
                             msg.writer().writeShort(itemOption.param);
                         }
                     }
@@ -896,10 +896,10 @@ public class InventoryService {
                                 opId = 222;
                                 param /= 1000;
                             }
-                            msg.writer().writeByte(opId);
+                            msg.writer().writeShort(opId);
                             msg.writer().writeShort(param);
                         } else {
-                            msg.writer().writeByte(io.optionTemplate.id);
+                            msg.writer().writeShort(io.optionTemplate.id);
                             msg.writer().writeShort(io.param);
                         }
                     }

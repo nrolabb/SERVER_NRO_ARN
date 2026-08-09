@@ -51,10 +51,12 @@ public class Item {
 
     public String getInfo() {
         String strInfo = "";
-        if (this.rarity > 0) {
-            if (this.rarity == 1) strInfo += "|1|[Đỏ] " + this.template.name + "\n";
-            else if (this.rarity == 2) strInfo += "|7|[Vàng] " + this.template.name + "\n";
-            else if (this.rarity == 3) strInfo += "|5|[Xanh] " + this.template.name + "\n";
+        if (isHaveOption(73)) {
+            strInfo += nro.models.services.RareItemDropService.getRarityPrefix(1) + this.template.name + "\n";
+        } else if (isHaveOption(254)) {
+            strInfo += nro.models.services.RareItemDropService.getRarityPrefix(2) + this.template.name + "\n";
+        } else if (isHaveOption(255)) {
+            strInfo += nro.models.services.RareItemDropService.getRarityPrefix(3) + this.template.name + "\n";
         }
         for (ItemOption itemOption : itemOptions) {
             strInfo += itemOption.getOptionString() + "\n";
@@ -310,7 +312,8 @@ public class Item {
     public String getOptionInfo() {
         StringJoiner optionInfo = new StringJoiner("\n");
         for (ItemOption io : this.itemOptions) {
-            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102 && io.optionTemplate.id != 107 && io.optionTemplate.id != 218) {
+            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102
+                    && io.optionTemplate.id != 107 && io.optionTemplate.id != 218) {
                 optionInfo.add(io.getOptionString());
             }
         }
@@ -341,7 +344,8 @@ public class Item {
                 io.param += iodpl.param;
                 haveOption = true;
             }
-            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102 && io.optionTemplate.id != 107) {
+            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102
+                    && io.optionTemplate.id != 107) {
                 optionInfo.add(io.getOptionString());
             }
         }
@@ -357,7 +361,8 @@ public class Item {
         Item itC = this.cloneItem();
         ItemOption iodpl = item.getOptionDaPhaLe();
         for (ItemOption io : itC.itemOptions) {
-            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102 && io.optionTemplate.id != 107 && io.optionTemplate.id != 218) {
+            if (io.optionTemplate.id != 72 && io.optionTemplate.id != 73 && io.optionTemplate.id != 102
+                    && io.optionTemplate.id != 107 && io.optionTemplate.id != 218) {
                 optionInfo.add(io.getOptionString());
             }
         }
@@ -497,17 +502,24 @@ public class Item {
     }
 
     public boolean isCongThucVip() {
-        return (this.template.id >= 1071 && this.template.id <= 1073) || (this.template.id >= 1084 && this.template.id <= 1086);
+        return (this.template.id >= 1071 && this.template.id <= 1073)
+                || (this.template.id >= 1084 && this.template.id <= 1086);
     }
 
     public boolean isDoKyGui() {
-        return this.template != null && (this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 86) || this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 87) || this.template.type == 14 || this.template.type == 15 || this.template.type == 6 || this.template.id >= 14 && this.template.id <= 20);
+        return this.template != null && (this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 86)
+                || this.itemOptions.stream().anyMatch(op -> op.optionTemplate.id == 87) || this.template.type == 14
+                || this.template.type == 15 || this.template.type == 6
+                || this.template.id >= 14 && this.template.id <= 20);
     }
 
     public String getName() {
-        if (this.rarity == 1) return "[Đỏ] " + template.name;
-        if (this.rarity == 2) return "[Vàng] " + template.name;
-        if (this.rarity == 3) return "[Xanh] " + template.name;
+        if (isHaveOption(73))
+            return nro.models.services.RareItemDropService.getRarityPrefix(1) + template.name;
+        if (isHaveOption(254))
+            return nro.models.services.RareItemDropService.getRarityPrefix(2) + template.name;
+        if (isHaveOption(255))
+            return nro.models.services.RareItemDropService.getRarityPrefix(3) + template.name;
         return template.name;
     }
 

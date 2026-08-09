@@ -306,7 +306,7 @@ public class Trade {
                     }
                     msg.writer().writeByte(item.itemOptions.size());
                     for (Item.ItemOption io : item.itemOptions) {
-                        msg.writer().writeByte(io.optionTemplate.id);
+                        msg.writer().writeShort(io.optionTemplate.id);
                         msg.writer().writeShort(io.param);
                     }
                 }
@@ -323,7 +323,7 @@ public class Trade {
                     }
                     msg.writer().writeByte(item.itemOptions.size());
                     for (Item.ItemOption io : item.itemOptions) {
-                        msg.writer().writeByte(io.optionTemplate.id);
+                        msg.writer().writeShort(io.optionTemplate.id);
                         msg.writer().writeShort(io.param);
                     }
                 }

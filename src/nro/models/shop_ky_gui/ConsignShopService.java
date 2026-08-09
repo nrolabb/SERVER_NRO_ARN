@@ -216,7 +216,7 @@ public class ConsignShopService {
                 msg.writer().writeByte(itk.player_sell == pl.id ? 1 : 0); // isMe
                 msg.writer().writeByte(it.itemOptions.size());
                 for (int a = 0; a < it.itemOptions.size(); a++) {
-                    msg.writer().writeByte(it.itemOptions.get(a).optionTemplate.id);
+                    msg.writer().writeShort(it.itemOptions.get(a).optionTemplate.id);
                     msg.writer().writeShort(it.itemOptions.get(a).param);
                 }
                 msg.writer().writeByte(0);
@@ -476,7 +476,7 @@ public class ConsignShopService {
                         msg.writer().writeByte(1); // isMe
                         msg.writer().writeByte(it.itemOptions.size());
                         for (int a = 0; a < it.itemOptions.size(); a++) {
-                            msg.writer().writeByte(it.itemOptions.get(a).optionTemplate.id);
+                            msg.writer().writeShort(it.itemOptions.get(a).optionTemplate.id);
                             msg.writer().writeShort(it.itemOptions.get(a).param);
                         }
                         msg.writer().writeByte(0);
@@ -507,7 +507,7 @@ public class ConsignShopService {
                         msg.writer().writeByte(itk.player_sell == pl.id ? 1 : 0); // isMe     
                         msg.writer().writeByte(it.itemOptions.size());
                         for (int a = 0; a < it.itemOptions.size(); a++) {
-                            msg.writer().writeByte(it.itemOptions.get(a).optionTemplate.id);
+                            msg.writer().writeShort(it.itemOptions.get(a).optionTemplate.id);
                             msg.writer().writeShort(it.itemOptions.get(a).param);
                         }
                         msg.writer().writeByte(0);

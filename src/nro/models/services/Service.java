@@ -886,7 +886,7 @@ public class Service {
                     List<ItemOption> itemOptions = item.itemOptions;
                     msg.writer().writeByte(itemOptions.size());
                     for (ItemOption itemOption : itemOptions) {
-                        msg.writer().writeByte(itemOption.optionTemplate.id);
+                        msg.writer().writeShort(itemOption.optionTemplate.id);
                         msg.writer().writeShort(itemOption.param);
                     }
                 }
@@ -906,7 +906,7 @@ public class Service {
                     List<ItemOption> itemOptions = item.itemOptions;
                     msg.writer().writeByte(itemOptions.size());
                     for (ItemOption itemOption : itemOptions) {
-                        msg.writer().writeByte(itemOption.optionTemplate.id);
+                        msg.writer().writeShort(itemOption.optionTemplate.id);
                         msg.writer().writeShort(itemOption.param);
                     }
                 }
@@ -926,7 +926,7 @@ public class Service {
                     List<ItemOption> itemOptions = item.itemOptions;
                     msg.writer().writeByte(itemOptions.size());
                     for (ItemOption itemOption : itemOptions) {
-                        msg.writer().writeByte(itemOption.optionTemplate.id);
+                        msg.writer().writeShort(itemOption.optionTemplate.id);
                         msg.writer().writeShort(itemOption.param);
                     }
                 }
@@ -1614,7 +1614,7 @@ public class Service {
                         int countOption = item.itemOptions.size();
                         msg.writer().writeByte(countOption);
                         for (ItemOption iop : item.itemOptions) {
-                            msg.writer().writeByte(iop.optionTemplate.id);
+                            msg.writer().writeShort(iop.optionTemplate.id);
                             msg.writer().writeShort(iop.param);
                         }
                     }
