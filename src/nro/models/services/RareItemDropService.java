@@ -80,14 +80,12 @@ public class RareItemDropService {
         List<Item.ItemOption> bonusOptions = rollOptions(numLines, config);
         itemMap.options.addAll(bonusOptions);
 
-        // Thêm Option 73, 254, 255 để Client mod hiển thị Khung viền màu theo chuẩn
-        // byte < 255
-        // Option 225 để Client đổi màu và tên (nhờ bản mod C# vừa làm)
+        // Thêm Option 256, 254, 255 để Client mod hiển thị Khung viền màu theo chuẩn
         int colorParam = 0;
-        int textOptionId = 73; // Mặc định Đỏ (text)
+        int textOptionId = 73; // Mặc định không option (text)
         if (rarity == 1) {
             colorParam = 3;
-            textOptionId = 73;
+            textOptionId = 256;
         } // Đỏ
         else if (rarity == 2) {
             colorParam = 7;
@@ -102,12 +100,14 @@ public class RareItemDropService {
         // Lưu rarity vào ItemMap để nhận diện khi nhặt
         itemMap.rarity = rarity;
 
-        Logger.log("[RareItemDrop] Player=" + player.name
-                + " Map=" + zone.map.mapId
-                + " ItemId=" + itemId
-                + " Rarity=" + rarity
-                + " BonusLines=" + numLines
-                + " TotalOptions=" + itemMap.options.size() + "\n");
+        /*
+         * Logger.log("[RareItemDrop] Player=" + player.name
+         * + " Map=" + zone.map.mapId
+         * + " ItemId=" + itemId
+         * + " Rarity=" + rarity
+         * + " BonusLines=" + numLines
+         * + " TotalOptions=" + itemMap.options.size() + "\n");
+         */
 
         /*
          * StringBuilder sb = new StringBuilder("Item rơi ra có các option: ");

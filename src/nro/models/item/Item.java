@@ -51,7 +51,7 @@ public class Item {
 
     public String getInfo() {
         String strInfo = "";
-        if (isHaveOption(73)) {
+        if (isHaveOption(256)) {
             strInfo += nro.models.services.RareItemDropService.getRarityPrefix(1) + this.template.name + "\n";
         } else if (isHaveOption(254)) {
             strInfo += nro.models.services.RareItemDropService.getRarityPrefix(2) + this.template.name + "\n";
@@ -514,7 +514,7 @@ public class Item {
     }
 
     public String getName() {
-        if (isHaveOption(73))
+        if (isHaveOption(256))
             return nro.models.services.RareItemDropService.getRarityPrefix(1) + template.name;
         if (isHaveOption(254))
             return nro.models.services.RareItemDropService.getRarityPrefix(2) + template.name;
