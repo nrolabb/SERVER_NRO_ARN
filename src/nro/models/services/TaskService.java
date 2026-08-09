@@ -1182,6 +1182,15 @@ public void checkDoneTaskUseItem(Player player, Item item) {
         //     player.inventory.gold += (player.playerTask.taskMain.id < 5 && player.playerTask.taskMain.id >= 0) ? 100000 * (player.playerTask.taskMain.id + 1) : 500000;
         //     Service.gI().sendMoney(player);
         // }
+        
+        if (InventoryService.gI().getCountEmptyBag(player) > 0) {
+            Item thoiVang = ItemService.gI().createNewItem((short) 457, 50);
+            InventoryService.gI().addItemBag(player, thoiVang);
+            InventoryService.gI().sendItemBags(player);
+            Service.gI().sendThongBao(player, "Bạn nhận được 50 Thỏi vàng");
+        } else {
+            Service.gI().sendThongBao(player, "Hành trang đầy, không thể nhận 50 Thỏi vàng");
+        }
     }
 
     private void addDoneSubTask(Player player, int numDone) {
