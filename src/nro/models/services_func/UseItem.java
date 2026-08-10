@@ -317,30 +317,31 @@ public class UseItem {
                         return;
                     }
                     InventoryService.gI().subQuantityItemsBag(pl, item, 1);
-                    
-                    short[] MOUNT_IDS = {1468, 1734, 1886, 1947, 1948, 1949};
+
+                    short[] MOUNT_IDS = { 1468, 1734, 1886, 1947, 1948, 1949 };
                     short mountId = MOUNT_IDS[Util.nextInt(0, MOUNT_IDS.length - 1)];
                     Item mount = ItemService.gI().createNewItem(mountId);
-                    
+
                     mount.itemOptions.add(new Item.ItemOption(21, 5));
-                    
-                    int[] ABS = {0, 6, 7, 47};
+
+                    int[] ABS = { 0, 6, 7, 47 };
                     int absId = ABS[Util.nextInt(0, ABS.length - 1)];
-                    mount.itemOptions.add(new Item.ItemOption(absId, 
-                        Util.nextInt(Manager.THU_CUOI_ABS_MIN, Manager.THU_CUOI_ABS_MAX)));
-                    
-                    int[] PCT = {5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108};
+                    mount.itemOptions.add(new Item.ItemOption(absId,
+                            Util.nextInt(Manager.THU_CUOI_ABS_MIN, Manager.THU_CUOI_ABS_MAX)));
+
+                    int[] PCT = { 5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108 };
                     int pctId = PCT[Util.nextInt(0, PCT.length - 1)];
-                    mount.itemOptions.add(new Item.ItemOption(pctId, 
-                        Util.nextInt(Manager.THU_CUOI_PCT_MIN, Manager.THU_CUOI_PCT_MAX)));
-                    
+                    mount.itemOptions.add(new Item.ItemOption(pctId,
+                            Util.nextInt(Manager.THU_CUOI_PCT_MIN, Manager.THU_CUOI_PCT_MAX)));
+
                     mount.itemOptions.add(new Item.ItemOption(257, 0));
+                    mount.itemOptions.add(new Item.ItemOption(84, 1));
                     mount.itemOptions.add(new Item.ItemOption(30, 1));
-                    
+
                     if (Util.isTrue(70, 100)) {
                         mount.itemOptions.add(new Item.ItemOption(93, Util.nextInt(2, 5)));
                     }
-                    
+
                     InventoryService.gI().addItemBag(pl, mount);
                     InventoryService.gI().sendItemBags(pl);
                     Service.gI().sendThongBao(pl, "Bạn nhận được " + mount.template.name);
