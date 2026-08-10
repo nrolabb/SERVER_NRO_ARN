@@ -88,6 +88,12 @@ public final class Manager {
     public static int PET_RONG_ADD_PERCENT = 5;
     public static int PET_RONG_ADD_ABSOLUTE = 10;
 
+    // Cấu hình tỷ lệ rơi SKH
+    public static int RATE_SKH_NORMAL = 500;
+    public static int RATE_SKH_UPSKH = 400;
+    public static int RATE_SKH_PRIVATE = 300;
+    public static int RATE_MANHSKH = 3;
+
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -1459,6 +1465,19 @@ public final class Manager {
         if ((value = properties.get("server.activation_fee")) != null) {
             ACTIVATION_FEE = Integer.parseInt(String.valueOf(value));
         }
+        if ((value = properties.get("server.rate.skh.normal")) != null) {
+            RATE_SKH_NORMAL = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("server.rate.skh.upskh")) != null) {
+            RATE_SKH_UPSKH = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("server.rate.skh.private")) != null) {
+            RATE_SKH_PRIVATE = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("server.rate.manhskh")) != null) {
+            RATE_MANHSKH = Integer.parseInt(String.valueOf(value));
+        }
+
         
         // Load cấu hình Nâng Cấp Pet Rồng Nhí
         if ((value = properties.get("pet_rong_nhi.exp_req")) != null) {

@@ -276,14 +276,18 @@ public class UseItem {
                     int[] PERCENT_OPTIONS = { 5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108 };
 
                     List<Integer> listAbs = new ArrayList<>();
-                    for (int o : ABSOLUTE_OPTIONS) listAbs.add(o);
+                    for (int o : ABSOLUTE_OPTIONS)
+                        listAbs.add(o);
                     List<Integer> listPer = new ArrayList<>();
-                    for (int o : PERCENT_OPTIONS) listPer.add(o);
+                    for (int o : PERCENT_OPTIONS)
+                        listPer.add(o);
 
                     for (int i = 0; i < 3; i++) {
                         boolean isAbs = Util.nextInt(0, 1) == 0;
-                        if (isAbs && listAbs.isEmpty()) isAbs = false;
-                        if (!isAbs && listPer.isEmpty()) isAbs = true;
+                        if (isAbs && listAbs.isEmpty())
+                            isAbs = false;
+                        if (!isAbs && listPer.isEmpty())
+                            isAbs = true;
 
                         if (isAbs) {
                             int opIndex = Util.nextInt(0, listAbs.size() - 1);
@@ -300,7 +304,7 @@ public class UseItem {
 
                     itemReward.itemOptions.add(new Item.ItemOption(30, 1));
                     itemReward.itemOptions.add(new Item.ItemOption(257, 0));
-                    itemReward.itemOptions.add(new Item.ItemOption(21, 150000000));
+                    itemReward.itemOptions.add(new Item.ItemOption(21, 5));
 
                     InventoryService.gI().addItemBag(pl, itemReward);
                     InventoryService.gI().sendItemBags(pl);
@@ -2044,7 +2048,8 @@ public class UseItem {
             }
         } else if (tempId >= Shenron_Service.NGOC_RONG_1_SAO && tempId <= Shenron_Service.NGOC_RONG_7_SAO) {
             Shenron_Service.gI().openMenuSummonShenron(pl, 0);
-        } else if (tempId >= nro.models.consts.ConstItem.BI_NGO_1_SAO && tempId <= nro.models.consts.ConstItem.BI_NGO_7_SAO) {
+        } else if (tempId >= nro.models.consts.ConstItem.BI_NGO_1_SAO
+                && tempId <= nro.models.consts.ConstItem.BI_NGO_7_SAO) {
             nro.models.services.shenron.Shenron_Halloween_Service.gI().openMenuSummonShenron(pl);
         }
     }

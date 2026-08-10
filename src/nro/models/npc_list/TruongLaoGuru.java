@@ -55,6 +55,12 @@ public class TruongLaoGuru extends Npc {
                 handleBaseMenu(player, select);
             } else if (player.idMark.getIndexMenu() == 12) {
                 handleSkillLearning(player, select);
+            } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
+                if (player.combineNew.typeCombine == nro.models.combine.CombineService.NANG_CAP_PET_RONG) {
+                    if (select == 0) {
+                        nro.models.combine.CombineService.gI().startCombine(player);
+                    }
+                }
             }
         }
     }

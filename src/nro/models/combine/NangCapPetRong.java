@@ -68,7 +68,11 @@ public class NangCapPetRong {
         player.combineNew.gemCombine = 1000;
         player.combineNew.ratioCombine = rate;
 
-        CombineService.gI().baHatMit.createOtherMenu(player, ConstNpc.MENU_START_COMBINE, info,
+        nro.models.npc.Npc npc = player.idMark.getNpcChose();
+        if (npc == null) {
+            npc = CombineService.gI().baHatMit;
+        }
+        npc.createOtherMenu(player, ConstNpc.MENU_START_COMBINE, info,
                 "Nâng cấp\n1.000 ngọc\n100 vàng", "Từ chối");
     }
 

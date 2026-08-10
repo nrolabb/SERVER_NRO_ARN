@@ -376,7 +376,7 @@ public class ShopService {
 
     private int resolveSellIcon(ItemShop itemShop) {
         return switch (itemShop.typeSell) {
-            case ShopSellType.GOLD -> ItemService.gI().getTemplate((short) 76).iconID;
+            case ShopSellType.GOLD -> ItemService.gI().getTemplate((short) 189).iconID;
             case ShopSellType.GEM -> ItemService.gI().getTemplate((short) 77).iconID;
             case ShopSellType.RUBY -> ItemService.gI().getTemplate((short) 861).iconID;
             case ShopSellType.SPECIFIC_ITEM -> {
