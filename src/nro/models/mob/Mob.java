@@ -178,11 +178,12 @@ public class Mob {
                     TaskService.gI().checkDoneSideTaskKillMob(plAtt, this);
                     TaskService.gI().checkDoneClanTaskKillMob(plAtt, this);
                     AchievementService.gI().checkDoneTaskKillMob(plAtt, this);
-                    
+
                     try {
                         if (plAtt.inventory != null && plAtt.inventory.itemsBody.size() > 9) {
                             Item pet = plAtt.inventory.itemsBody.get(9);
-                            if (pet != null && pet.isNotNullItem() && pet.template.id >= 1765 && pet.template.id <= 1771) {
+                            if (pet != null && pet.isNotNullItem() && pet.template.id >= 1765
+                                    && pet.template.id <= 1771) {
                                 boolean hasExpOpt = false;
                                 for (ItemOption opt : pet.itemOptions) {
                                     if (opt.optionTemplate.id == 257) {
@@ -684,7 +685,8 @@ public class Mob {
         }
         int mapid = player.zone.map.mapId;
 
-        // ======================== ĐỒ ĐẶC BIỆT HIẾM (XANH/ĐỎ/VÀNG) ========================
+        // ======================== ĐỒ ĐẶC BIỆT HIẾM (XANH/ĐỎ/VÀNG)
+        // ========================
         if (nro.models.consts.RareItemConfig.gI().enabled && nro.models.consts.RareItemConfig.gI().isMapValid(mapid)) {
             ItemMap rareItem = nro.models.services.RareItemDropService.gI().tryDropRareItem(zone, player, x, yEnd);
             if (rareItem != null) {
@@ -1195,12 +1197,12 @@ public class Mob {
         boolean isMapRiengTu = MapService.gI().isMapRiengTu(mapid);
 
         // ===== TỶ LỆ CƠ BẢN =====
-        int denominator = 500; // all map mặc định
+        int denominator = nro.models.server.Manager.RATE_SKH_NORMAL; // all map mặc định
 
         if (isMapRiengTu) {
-            denominator = 300;
+            denominator = nro.models.server.Manager.RATE_SKH_PRIVATE;
         } else if (isMapUpSKH) {
-            denominator = 400;
+            denominator = nro.models.server.Manager.RATE_SKH_UPSKH;
         }
 
         boolean hasOption236 = false;
@@ -1221,27 +1223,27 @@ public class Mob {
         // ===== ĐIỀU CHỈNH TỶ LỆ =====
         if (isMapRiengTu) {
             if (hasOption236 && player.itemTime.isUseCoBonLa) {
-                denominator = 150;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_PRIVATE - 150);
             } else if (hasOption236) {
-                denominator = 250;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_PRIVATE - 50);
             } else if (player.itemTime.isUseCoBonLa) {
-                denominator = 200;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_PRIVATE - 100);
             }
         } else if (isMapUpSKH) {
             if (hasOption236 && player.itemTime.isUseCoBonLa) {
-                denominator = 350;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_UPSKH - 50);
             } else if (hasOption236) {
-                denominator = 300;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_UPSKH - 100);
             } else if (player.itemTime.isUseCoBonLa) {
-                denominator = 250;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_UPSKH - 150);
             }
         } else {
             if (hasOption236 && player.itemTime.isUseCoBonLa) {
-                denominator = 400;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_NORMAL - 100);
             } else if (hasOption236) {
-                denominator = 450;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_NORMAL - 50);
             } else if (player.itemTime.isUseCoBonLa) {
-                denominator = 450;
+                denominator = Math.max(1, nro.models.server.Manager.RATE_SKH_NORMAL - 50);
             }
         }
 
@@ -1267,9 +1269,11 @@ public class Mob {
 
             // Map thường thì có option 93 random 1-7 ngày
             // Map UpSKH / Riêng tư thì KHÔNG có option 93
-            if (!isMapUpSKH && !isMapRiengTu) {
-                it.options.add(new Item.ItemOption(93, Util.nextInt(1, 7)));
-            }
+            /*
+             * if (!isMapUpSKH && !isMapRiengTu) {
+             * it.options.add(new Item.ItemOption(93, Util.nextInt(1, 7)));
+             * }
+             */
 
             list.add(it);
 
@@ -1281,7 +1285,7 @@ public class Mob {
         }
 
         // ===== RƠI MẢNH KÍCH HOẠT THEO GENDER =====
-        if ((mapid == 1 || mapid == 8 || mapid == 15) && Util.isTrue(1, 3)) {
+        if ((mapid == 1 || mapid == 8 || mapid == 15) && Util.isTrue(1, nro.models.server.Manager.RATE_MANHSKH)) {
             List<Integer> validTypes = new ArrayList<>();
             for (nro.models.player_system.Template.SetKichHoatTemplate temp : nro.models.server.Manager.SET_KICH_HOAT_TEMPLATES) {
                 if (temp.gender == player.gender) {
