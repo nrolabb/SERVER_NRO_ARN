@@ -9,7 +9,8 @@ import nro.models.server.Manager;
 import nro.models.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
-import nro.models.npc.Npc;
+import nro.models.consts.ConstNpc;
+import nro.models.combine.CombineService;
 
 public class NangCapThuCuoi {
 
@@ -20,15 +21,21 @@ public class NangCapThuCuoi {
         return itemId == 1468 || itemId == 1734 || itemId == 1886 || itemId == 1947 || itemId == 1948 || itemId == 1949;
     }
 
-    public static void showUpgradeInfo(Player player, Npc npc) {
-        if (player.inventory.itemsBody.size() <= 7) {
-            Service.gI().sendThongBao(player, "Bạn chưa trang bị Thú cưỡi");
+    public static void showInfoCombine(Player player) {
+        if (player.combineNew.itemsCombine.size() != 1) {
+            Service.gI().sendThongBao(player, "Hãy bỏ Thú cưỡi vào đây");
             return;
         }
 
-        Item mount = player.inventory.itemsBody.get(7);
-        if (mount == null || !mount.isNotNullItem() || !isMountItem(mount.template.id)) {
-            Service.gI().sendThongBao(player, "Hãy trang bị Thú cưỡi cần nâng cấp");
+        Item mount = null;
+        for (Item item : player.combineNew.itemsCombine) {
+            if (isMountItem(item.template.id)) {
+                mount = item;
+            }
+        }
+
+        if (mount == null || !mount.isNotNullItem()) {
+            Service.gI().sendThongBao(player, "Hãy bỏ Thú cưỡi cần nâng cấp vào đây");
             return;
         }
 
@@ -62,18 +69,33 @@ public class NangCapThuCuoi {
                 + "|1|Tỷ lệ thành công: " + rate + "%\n"
                 + "|7|Thất bại sẽ bị trừ 1.000 EXP";
 
-        npc.createOtherMenu(player, 50, info, "Nâng cấp\n1.000 ngọc\n100 vàng", "Từ chối");
+        player.combineNew.goldCombine = 0;
+        player.combineNew.gemCombine = 1000;
+        player.combineNew.ratioCombine = rate;
+
+        nro.models.npc.Npc npc = player.idMark.getNpcChose();
+        if (npc == null) {
+            npc = CombineService.gI().baHatMit;
+        }
+        npc.createOtherMenu(player, ConstNpc.MENU_START_COMBINE, info,
+                "Nâng cấp\n1.000 ngọc\n100 vàng", "Từ chối");
     }
 
     public static void upgradeMount(Player player) {
-        if (player.inventory.itemsBody.size() <= 7) {
-            Service.gI().sendThongBao(player, "Bạn chưa trang bị Thú cưỡi");
+        if (player.combineNew.itemsCombine.size() != 1) {
+            Service.gI().sendThongBao(player, "Hãy bỏ 1 Thú cưỡi vào đây");
             return;
         }
 
-        Item mount = player.inventory.itemsBody.get(7);
-        if (mount == null || !mount.isNotNullItem() || !isMountItem(mount.template.id)) {
-            Service.gI().sendThongBao(player, "Hãy trang bị Thú cưỡi cần nâng cấp");
+        Item mount = null;
+        for (Item item : player.combineNew.itemsCombine) {
+            if (isMountItem(item.template.id)) {
+                mount = item;
+            }
+        }
+
+        if (mount == null || !mount.isNotNullItem()) {
+            Service.gI().sendThongBao(player, "Hãy bỏ Thú cưỡi cần nâng cấp vào đây");
             return;
         }
 
@@ -126,7 +148,6 @@ public class NangCapThuCuoi {
         InventoryService.gI().subQuantityItemsBag(player, thoiVang, 100);
         player.inventory.subGem(1000);
         Service.gI().sendMoney(player);
-        InventoryService.gI().sendItemBags(player);
 
         int rate = Manager.THU_CUOI_UPGRADE_PERCENT - (level * 5);
         if (rate < 0) rate = 0;
@@ -159,7 +180,7 @@ public class NangCapThuCuoi {
             }
             
             Service.gI().sendThongBao(player, "Nâng cấp thành công Thú cưỡi lên cấp " + (level + 1));
-            nro.models.combine.CombineService.gI().sendEffectSuccessCombine(player);
+            CombineService.gI().sendEffectSuccessCombine(player);
         } else {
             // Thất bại
             expOption.param -= 1000;
@@ -167,10 +188,11 @@ public class NangCapThuCuoi {
                 expOption.param = 0;
             }
             Service.gI().sendThongBao(player, "Nâng cấp thất bại, Thú cưỡi bị trừ 1.000 điểm kinh nghiệm");
-            nro.models.combine.CombineService.gI().sendEffectFailCombine(player);
+            CombineService.gI().sendEffectFailCombine(player);
         }
 
-        InventoryService.gI().sendItemBody(player);
+        InventoryService.gI().sendItemBags(player);
+        CombineService.gI().reOpenItemCombine(player);
     }
 
     private static boolean isPercentOption(int id) {

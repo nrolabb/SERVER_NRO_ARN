@@ -61,6 +61,7 @@ public class CombineService {
     public static final int NANG_CAP_BONG_TAI_DB = 458;
     public static final int NANG_CHI_SO_BONG_TAI_DB = 459;
     public static final int NANG_CAP_PET_RONG = 460;
+    public static final int NANG_CAP_THU_CUOI = 461;
     private static CombineService instance;
     
     public final Npc baHatMit;
@@ -182,6 +183,9 @@ public class CombineService {
             case NANG_CAP_PET_RONG:
                 NangCapPetRong.showInfoCombine(player);
                 break;
+            case NANG_CAP_THU_CUOI:
+                nro.models.npc_list.NangCapThuCuoi.showInfoCombine(player);
+                break;
         }
     }
 
@@ -278,6 +282,9 @@ public class CombineService {
                 break;
             case NANG_CAP_PET_RONG:
                 NangCapPetRong.nangCapPetRong(player);
+                break;
+            case NANG_CAP_THU_CUOI:
+                nro.models.npc_list.NangCapThuCuoi.upgradeMount(player);
                 break;
         }
         
@@ -704,6 +711,8 @@ public class CombineService {
                 return "Ta sẽ giúp ngươi\nép Linh Thạch\nlên cấp cao hơn";
             case NANG_CAP_PET_RONG:
                 return "Ta sẽ phù phép\ncho Pet rồng của ngươi\nthành cấp cao hơn";
+            case NANG_CAP_THU_CUOI:
+                return "Ta sẽ phù phép\ncho Thú cưỡi của ngươi\nthành cấp cao hơn";
             default:
                 return "";
         }
@@ -795,6 +804,8 @@ public class CombineService {
                         + "Thất bại chỉ mất điểm tiềm năng";
             case NANG_CAP_PET_RONG:
                 return "Vào hành trang\nChọn Pet Rồng\nCần 1.000 Ngọc Xanh và 100 Thỏi vàng trong hành trang\nSau đó chọn 'Nâng cấp'";
+            case NANG_CAP_THU_CUOI:
+                return "Vào hành trang\nChọn Thú cưỡi\nCần 1.000 Ngọc Xanh và 100 Thỏi vàng trong hành trang\nSau đó chọn 'Nâng cấp'";
             default:
                 return "";
         }

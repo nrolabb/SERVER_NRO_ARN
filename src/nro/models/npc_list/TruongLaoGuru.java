@@ -57,12 +57,12 @@ public class TruongLaoGuru extends Npc {
                 handleBaseMenu(player, select);
             } else if (player.idMark.getIndexMenu() == 12) {
                 handleSkillLearning(player, select);
-            } else if (player.idMark.getIndexMenu() == 50) {
-                if (select == 0) {
-                    nro.models.npc_list.NangCapThuCuoi.upgradeMount(player);
-                }
             } else if (player.idMark.getIndexMenu() == ConstNpc.MENU_START_COMBINE) {
                 if (player.combineNew.typeCombine == nro.models.combine.CombineService.NANG_CAP_PET_RONG) {
+                    if (select == 0) {
+                        nro.models.combine.CombineService.gI().startCombine(player);
+                    }
+                } else if (player.combineNew.typeCombine == nro.models.combine.CombineService.NANG_CAP_THU_CUOI) {
                     if (select == 0) {
                         nro.models.combine.CombineService.gI().startCombine(player);
                     }
@@ -76,7 +76,7 @@ public class TruongLaoGuru extends Npc {
             if (select == 0) {
                 nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
             } else if (select == 1) {
-                nro.models.npc_list.NangCapThuCuoi.showUpgradeInfo(player, this);
+                nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_THU_CUOI);
             }
             return;
         }
@@ -88,7 +88,7 @@ public class TruongLaoGuru extends Npc {
             case 2 ->
                 nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
             case 3 ->
-                nro.models.npc_list.NangCapThuCuoi.showUpgradeInfo(player, this);
+                nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_THU_CUOI);
         }
     }
 
