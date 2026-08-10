@@ -60,6 +60,7 @@ public class CombineService {
     public static final int NANG_CHI_SO_BONG_TAI3 = 457;
     public static final int NANG_CAP_BONG_TAI_DB = 458;
     public static final int NANG_CHI_SO_BONG_TAI_DB = 459;
+    public static final int NANG_CAP_PET_RONG = 460;
     private static CombineService instance;
     
     public final Npc baHatMit;
@@ -178,6 +179,9 @@ public class CombineService {
             case EP_LINH_THACH:
                 EpLinhThach.showInfoCombine(player);
                 break;
+            case NANG_CAP_PET_RONG:
+                NangCapPetRong.showInfoCombine(player);
+                break;
         }
     }
 
@@ -271,6 +275,9 @@ public class CombineService {
                 break;
             case EP_LINH_THACH:
                 EpLinhThach.epLinhThach(player);
+                break;
+            case NANG_CAP_PET_RONG:
+                NangCapPetRong.nangCapPetRong(player);
                 break;
         }
         
@@ -695,6 +702,8 @@ public class CombineService {
                 return "Ta sẽ phù phép\nmảnh kích hoạt\nthành trang bị kích hoạt";
             case EP_LINH_THACH:
                 return "Ta sẽ giúp ngươi\nép Linh Thạch\nlên cấp cao hơn";
+            case NANG_CAP_PET_RONG:
+                return "Ta sẽ phù phép\ncho Pet rồng của ngươi\nthành cấp cao hơn";
             default:
                 return "";
         }
@@ -784,6 +793,8 @@ public class CombineService {
                         + "Chọn 5 Linh Thạch cùng cấp (cấp 1-3)\n"
                         + "Tỉ lệ: cấp 1→2 30%, cấp 2→3 20%, cấp 3→4 5%\n"
                         + "Thất bại chỉ mất điểm tiềm năng";
+            case NANG_CAP_PET_RONG:
+                return "Vào hành trang\nChọn Pet Rồng\nCần 1.000 Ngọc Xanh và 100 Thỏi vàng trong hành trang\nSau đó chọn 'Nâng cấp'";
             default:
                 return "";
         }

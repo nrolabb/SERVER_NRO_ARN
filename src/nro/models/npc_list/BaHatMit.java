@@ -427,7 +427,7 @@ public class BaHatMit extends Npc {
                         switch (player.combineNew.typeCombine) {
                             case CombineService.NANG_CAP_BONG_TAI3, CombineService.NANG_CHI_SO_BONG_TAI3, CombineService.NANG_CAP_BONG_TAI, CombineService.NANG_CHI_SO_BONG_TAI, CombineService.LAM_PHEP_NHAP_DA, CombineService.NHAP_NGOC_RONG,
                             CombineService.GIAM_DINH_SACH, CombineService.TAY_SACH, CombineService.NANG_CAP_SACH_TUYET_KY, CombineService.HOI_PHUC_SACH, CombineService.PHAN_RA_SACH, CombineService.EP_LINH_THACH,
-                            CombineService.NANG_CAP_BONG_TAI_DB, CombineService.NANG_CHI_SO_BONG_TAI_DB
+                            CombineService.NANG_CAP_BONG_TAI_DB, CombineService.NANG_CHI_SO_BONG_TAI_DB, CombineService.NANG_CAP_PET_RONG
                              -> {
                                 if (select == 0) {
                                     CombineService.gI().startCombine(player);

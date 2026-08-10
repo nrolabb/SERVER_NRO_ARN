@@ -32,13 +32,14 @@ public class TruongLaoGuru extends Npc {
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             if (!TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
-                if (player.gender != ConstPlayer.NAMEC) {
-                    NpcService.gI().createTutorial(player, tempId, avartar, "Con hãy về hành tinh của mình mà thể hiện");
-                    return;
-                }
                 ArrayList<String> menu = new ArrayList<>();
-                menu.add("Nhiệm vụ");
-                menu.add("Học\nKỹ năng");
+                if (player.gender != ConstPlayer.NAMEC) {
+                    menu.add("Nâng Cấp\nPet rồng");
+                } else {
+                    menu.add("Nhiệm vụ");
+                    menu.add("Học\nKỹ năng");
+                    menu.add("Nâng Cấp\nPet rồng");
+                }
 
                 String[] menus = menu.toArray(String[]::new);
                 createOtherMenu(player, ConstNpc.BASE_MENU,
@@ -59,11 +60,19 @@ public class TruongLaoGuru extends Npc {
     }
 
     private void handleBaseMenu(Player player, int select) {
+        if (player.gender != ConstPlayer.NAMEC) {
+            if (select == 0) {
+                nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
+            }
+            return;
+        }
         switch (select) {
             case 0 ->
                 NpcService.gI().createTutorial(player, tempId, avartar, player.playerTask.taskMain.subTasks.get(player.playerTask.taskMain.index).name);
             case 1 ->
                 handleSkillLearningMenu(player);
+            case 2 ->
+                nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
         }
     }
 

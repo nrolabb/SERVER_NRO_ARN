@@ -264,6 +264,49 @@ public class UseItem {
             // Nhận diện trực tiếp theo item id, sau đó PuppetService mới tra
             // id_temp trong bảng puppet_template để lấy cấu hình triệu hồi.
             switch (item.template.id) {
+                case 1946 -> {
+                    if (InventoryService.gI().getCountEmptyBag(pl) == 0) {
+                        Service.gI().sendThongBao(pl, "Hành trang không đủ chỗ trống");
+                        return;
+                    }
+                    InventoryService.gI().subQuantityItemsBag(pl, item, 1);
+                    Item itemReward = ItemService.gI().createNewItem((short) 1765);
+
+                    int[] ABSOLUTE_OPTIONS = { 0, 6, 7, 47 };
+                    int[] PERCENT_OPTIONS = { 5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108 };
+
+                    List<Integer> listAbs = new ArrayList<>();
+                    for (int o : ABSOLUTE_OPTIONS) listAbs.add(o);
+                    List<Integer> listPer = new ArrayList<>();
+                    for (int o : PERCENT_OPTIONS) listPer.add(o);
+
+                    for (int i = 0; i < 3; i++) {
+                        boolean isAbs = Util.nextInt(0, 1) == 0;
+                        if (isAbs && listAbs.isEmpty()) isAbs = false;
+                        if (!isAbs && listPer.isEmpty()) isAbs = true;
+
+                        if (isAbs) {
+                            int opIndex = Util.nextInt(0, listAbs.size() - 1);
+                            int opId = listAbs.get(opIndex);
+                            listAbs.remove(opIndex);
+                            itemReward.itemOptions.add(new Item.ItemOption(opId, Util.nextInt(1000, 5000)));
+                        } else {
+                            int opIndex = Util.nextInt(0, listPer.size() - 1);
+                            int opId = listPer.get(opIndex);
+                            listPer.remove(opIndex);
+                            itemReward.itemOptions.add(new Item.ItemOption(opId, Util.nextInt(5, 15)));
+                        }
+                    }
+
+                    itemReward.itemOptions.add(new Item.ItemOption(30, 1));
+                    itemReward.itemOptions.add(new Item.ItemOption(257, 0));
+                    itemReward.itemOptions.add(new Item.ItemOption(21, 150000000));
+
+                    InventoryService.gI().addItemBag(pl, itemReward);
+                    InventoryService.gI().sendItemBags(pl);
+                    Service.gI().sendThongBao(pl, "Bạn nhận được " + itemReward.template.name);
+                    return;
+                }
                 case 2027, 2028, 2029, 2030 -> {
                     PuppetService.gI().charge(pl, item);
                     return;

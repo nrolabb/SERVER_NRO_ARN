@@ -178,6 +178,27 @@ public class Mob {
                     TaskService.gI().checkDoneSideTaskKillMob(plAtt, this);
                     TaskService.gI().checkDoneClanTaskKillMob(plAtt, this);
                     AchievementService.gI().checkDoneTaskKillMob(plAtt, this);
+                    
+                    try {
+                        if (plAtt.inventory != null && plAtt.inventory.itemsBody.size() > 9) {
+                            Item pet = plAtt.inventory.itemsBody.get(9);
+                            if (pet != null && pet.isNotNullItem() && pet.template.id >= 1765 && pet.template.id <= 1771) {
+                                boolean hasExpOpt = false;
+                                for (ItemOption opt : pet.itemOptions) {
+                                    if (opt.optionTemplate.id == 257) {
+                                        opt.param += 1;
+                                        hasExpOpt = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasExpOpt) {
+                                    pet.itemOptions.add(new ItemOption(257, 1));
+                                }
+                                InventoryService.gI().sendItemBody(plAtt);
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
                 }
                 if (this.id == 13) {
                     this.zone.isbulon1Alive = false;

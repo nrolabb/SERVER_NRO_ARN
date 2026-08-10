@@ -81,6 +81,13 @@ public final class Manager {
     public static boolean TEST = false;
     public static boolean DAO_AUTO_UPDATER = false;
     public static int ACTIVATION_FEE = 20000;
+    
+    // Cấu hình Nâng Cấp Pet Rồng Nhí
+    public static int PET_RONG_EXP_REQ = 10000;
+    public static int PET_RONG_UPGRADE_PERCENT = 50;
+    public static int PET_RONG_ADD_PERCENT = 5;
+    public static int PET_RONG_ADD_ABSOLUTE = 10;
+
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -1451,6 +1458,20 @@ public final class Manager {
         }
         if ((value = properties.get("server.activation_fee")) != null) {
             ACTIVATION_FEE = Integer.parseInt(String.valueOf(value));
+        }
+        
+        // Load cấu hình Nâng Cấp Pet Rồng Nhí
+        if ((value = properties.get("pet_rong_nhi.exp_req")) != null) {
+            PET_RONG_EXP_REQ = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("pet_rong_nhi.upgrade_percent")) != null) {
+            PET_RONG_UPGRADE_PERCENT = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("pet_rong_nhi.add_percent")) != null) {
+            PET_RONG_ADD_PERCENT = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("pet_rong_nhi.add_absolute")) != null) {
+            PET_RONG_ADD_ABSOLUTE = Integer.parseInt(String.valueOf(value));
         }
     }
 
