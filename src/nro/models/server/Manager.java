@@ -94,6 +94,17 @@ public final class Manager {
     public static int RATE_SKH_PRIVATE = 300;
     public static int RATE_MANHSKH = 3;
 
+    // Cấu hình Thú Cưỡi
+    public static List<Integer> THU_CUOI_FLYING_MOBS = new ArrayList<>();
+    public static int THU_CUOI_ABS_MIN = 1000;
+    public static int THU_CUOI_ABS_MAX = 5000;
+    public static int THU_CUOI_PCT_MIN = 5;
+    public static int THU_CUOI_PCT_MAX = 15;
+    public static int THU_CUOI_EXP_REQ = 10000;
+    public static int THU_CUOI_UPGRADE_PERCENT = 50;
+    public static int THU_CUOI_ADD_PERCENT = 3;
+    public static int THU_CUOI_ADD_ABSOLUTE = 20;
+
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
