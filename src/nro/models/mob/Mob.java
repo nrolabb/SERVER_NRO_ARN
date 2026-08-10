@@ -199,6 +199,29 @@ public class Mob {
                         }
                     } catch (Exception e) {
                     }
+
+                    // Cộng EXP thú cưỡi khi đánh quái bay
+                    try {
+                        if (isFlyingMob() && plAtt.inventory != null && plAtt.inventory.itemsBody.size() > 7) {
+                            Item mount = plAtt.inventory.itemsBody.get(7);
+                            if (mount != null && mount.isNotNullItem() && isMountItem(mount.template.id)) {
+                                int expGain = Util.nextInt(1, 5);
+                                boolean hasExpOpt = false;
+                                for (ItemOption opt : mount.itemOptions) {
+                                    if (opt.optionTemplate.id == 257) {
+                                        opt.param += expGain;
+                                        hasExpOpt = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasExpOpt) {
+                                    mount.itemOptions.add(new ItemOption(257, expGain));
+                                }
+                                InventoryService.gI().sendItemBody(plAtt);
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
                 }
                 if (this.id == 13) {
                     this.zone.isbulon1Alive = false;
@@ -352,6 +375,14 @@ public class Mob {
                 || this.tempId == ConstMob.VOI_CHIN_NGA || this.tempId == ConstMob.GA_CHIN_CUA
                 || this.tempId == ConstMob.NGUA_CHIN_LMAO || this.tempId == ConstMob.MAY_DO_SUC_MANH
                 || this.tempId == ConstMob.PIANO);
+    }
+    
+    private boolean isFlyingMob() {
+        return nro.models.server.Manager.THU_CUOI_FLYING_MOBS.contains((int) this.tempId);
+    }
+    
+    private static boolean isMountItem(int itemId) {
+        return itemId == 1468 || itemId == 1734 || itemId == 1886 || itemId == 1947 || itemId == 1948 || itemId == 1949;
     }
 
     public void attack() {

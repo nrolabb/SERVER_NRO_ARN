@@ -35,10 +35,12 @@ public class TruongLaoGuru extends Npc {
                 ArrayList<String> menu = new ArrayList<>();
                 if (player.gender != ConstPlayer.NAMEC) {
                     menu.add("Nâng Cấp\nPet rồng");
+                    menu.add("Nâng Cấp\nThú cưỡi");
                 } else {
                     menu.add("Nhiệm vụ");
                     menu.add("Học\nKỹ năng");
                     menu.add("Nâng Cấp\nPet rồng");
+                    menu.add("Nâng Cấp\nThú cưỡi");
                 }
 
                 String[] menus = menu.toArray(String[]::new);
@@ -55,6 +57,10 @@ public class TruongLaoGuru extends Npc {
                 handleBaseMenu(player, select);
             } else if (player.idMark.getIndexMenu() == 12) {
                 handleSkillLearning(player, select);
+            } else if (player.idMark.getIndexMenu() == 50) {
+                if (select == 0) {
+                    nro.models.npc_list.NangCapThuCuoi.upgradeMount(player);
+                }
             }
         }
     }
@@ -63,6 +69,8 @@ public class TruongLaoGuru extends Npc {
         if (player.gender != ConstPlayer.NAMEC) {
             if (select == 0) {
                 nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
+            } else if (select == 1) {
+                nro.models.npc_list.NangCapThuCuoi.showUpgradeInfo(player, this);
             }
             return;
         }
@@ -73,6 +81,8 @@ public class TruongLaoGuru extends Npc {
                 handleSkillLearningMenu(player);
             case 2 ->
                 nro.models.combine.CombineService.gI().openTabCombine(player, nro.models.combine.CombineService.NANG_CAP_PET_RONG);
+            case 3 ->
+                nro.models.npc_list.NangCapThuCuoi.showUpgradeInfo(player, this);
         }
     }
 

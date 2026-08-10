@@ -88,6 +88,17 @@ public final class Manager {
     public static int PET_RONG_ADD_PERCENT = 5;
     public static int PET_RONG_ADD_ABSOLUTE = 10;
 
+    // Cấu hình Thú Cưỡi
+    public static List<Integer> THU_CUOI_FLYING_MOBS = new ArrayList<>();
+    public static int THU_CUOI_ABS_MIN = 1000;
+    public static int THU_CUOI_ABS_MAX = 5000;
+    public static int THU_CUOI_PCT_MIN = 5;
+    public static int THU_CUOI_PCT_MAX = 15;
+    public static int THU_CUOI_EXP_REQ = 10000;
+    public static int THU_CUOI_UPGRADE_PERCENT = 50;
+    public static int THU_CUOI_ADD_PERCENT = 3;
+    public static int THU_CUOI_ADD_ABSOLUTE = 20;
+
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -1472,6 +1483,38 @@ public final class Manager {
         }
         if ((value = properties.get("pet_rong_nhi.add_absolute")) != null) {
             PET_RONG_ADD_ABSOLUTE = Integer.parseInt(String.valueOf(value));
+        }
+
+        // Load cấu hình Thú Cưỡi
+        if ((value = properties.get("thu_cuoi.flying_mobs")) != null) {
+            String[] split = String.valueOf(value).split(",");
+            for (String s : split) {
+                THU_CUOI_FLYING_MOBS.add(Integer.parseInt(s.trim()));
+            }
+        }
+        if ((value = properties.get("thu_cuoi.abs_min")) != null) {
+            THU_CUOI_ABS_MIN = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.abs_max")) != null) {
+            THU_CUOI_ABS_MAX = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.pct_min")) != null) {
+            THU_CUOI_PCT_MIN = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.pct_max")) != null) {
+            THU_CUOI_PCT_MAX = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.exp_req")) != null) {
+            THU_CUOI_EXP_REQ = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.upgrade_percent")) != null) {
+            THU_CUOI_UPGRADE_PERCENT = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.add_percent")) != null) {
+            THU_CUOI_ADD_PERCENT = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("thu_cuoi.add_absolute")) != null) {
+            THU_CUOI_ADD_ABSOLUTE = Integer.parseInt(String.valueOf(value));
         }
     }
 
