@@ -30,9 +30,7 @@ public class Clan {
     public static int NEXT_ID = 0;
 
     public int clanMessageId = 0;
-    public int voiceMessageId = 0;
     private final List<ClanMessage> clanMessages;
-    private final List<ClanVoiceMessage> voiceMessages;
 
     public static final byte LEADER = 0;
     public static final byte DEPUTY = 1;
@@ -99,7 +97,6 @@ public class Clan {
         this.members = new ArrayList<>();
         this.membersInGame = new ArrayList<>();
         this.clanMessages = new ArrayList<>();
-        this.voiceMessages = new ArrayList<>();
     }
 
     public int getClanBoxCapacity() {
@@ -314,93 +311,6 @@ public class Clan {
         }
         return list;
     }
-
-    // ========== Voice Message ==========
-
-    /**
-     * Thêm voice message vào danh sách. Tự động xóa message cũ nhất khi vượt quá giới hạn.
-     * @param maxStored số lượng voice message tối đa lưu trữ
-     */
-    public void addVoiceMessage(ClanVoiceMessage vmsg, int maxStored) {
-        this.voiceMessages.add(0, vmsg);
-        if (voiceMessages.size() > maxStored) {
-            for (int i = voiceMessages.size() - 1; i >= maxStored; i--) {
-                voiceMessages.remove(i).dispose();
-            }
-        }
-    }
-
-    /**
-     * Lấy voice message theo ID.
-     */
-    public ClanVoiceMessage getVoiceMessage(int voiceId) {
-        for (ClanVoiceMessage vmsg : this.voiceMessages) {
-            if (vmsg.id == voiceId) {
-                return vmsg;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Lấy danh sách voice message hiện tại (metadata only, không gửi audio data).
-     */
-    public List<ClanVoiceMessage> getCurrVoiceMessages() {
-        return new ArrayList<>(this.voiceMessages);
-    }
-
-    /**
-     * Gửi thông báo voice message mới đến tất cả member online.
-     * Chỉ gửi metadata (không gửi audio data) để tiết kiệm bandwidth.
-     */
-    public void sendVoiceNotification(ClanVoiceMessage vmsg) {
-        Message msg;
-        try {
-            msg = new Message(-51);
-            msg.writer().writeByte(3); // type = VOICE_MESSAGE
-            msg.writer().writeByte(0); // subType = NOTIFICATION
-            msg.writer().writeInt(vmsg.id);
-            msg.writer().writeInt(vmsg.playerId);
-            msg.writer().writeUTF(vmsg.playerName);
-            msg.writer().writeByte(vmsg.role);
-            msg.writer().writeInt(vmsg.time);
-            msg.writer().writeShort(vmsg.audioDuration);
-            msg.writer().writeByte(vmsg.audioFormat);
-            for (Player pl : this.membersInGame) {
-                pl.sendMessage(msg);
-            }
-            msg.cleanup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Gửi audio data của voice message cho một player cụ thể.
-     * Được gọi khi player click nghe voice message.
-     */
-    public void sendVoiceData(Player player, int voiceId) {
-        ClanVoiceMessage vmsg = getVoiceMessage(voiceId);
-        if (vmsg == null || vmsg.audioData == null) {
-            return;
-        }
-        Message msg;
-        try {
-            msg = new Message(-51);
-            msg.writer().writeByte(3); // type = VOICE_MESSAGE
-            msg.writer().writeByte(1); // subType = VOICE_DATA
-            msg.writer().writeInt(vmsg.id);
-            msg.writer().writeByte(vmsg.audioFormat);
-            msg.writer().writeInt(vmsg.audioData.length);
-            msg.writer().write(vmsg.audioData);
-            player.sendMessage(msg);
-            msg.cleanup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // ========== End Voice Message ==========
 
     public void sendMyClanForAllMember() {
         for (Player pl : this.membersInGame) {

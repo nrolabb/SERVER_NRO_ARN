@@ -11,7 +11,6 @@ import nro.models.player_system.Template.FlagBag;
 import nro.models.clan.Clan;
 import nro.models.clan.ClanMember;
 import nro.models.clan.ClanMessage;
-import nro.models.clan.ClanVoiceMessage;
 import nro.models.consts.ConstAchievement;
 import nro.models.player.Player;
 import nro.models.network.Message;
@@ -48,8 +47,6 @@ public class ClanService {
     private static final byte CHAT = 0;
     private static final byte ASK_FOR_PEA = 1;
     private static final byte ASK_FOR_JOIN_CLAN = 2;
-    private static final byte VOICE_MESSAGE = 3;
-    private static final byte REQUEST_VOICE_DATA = 4;
 
     // join clan
     private static final byte ACCEPT_ASK_JOIN_CLAN = 0;
@@ -166,12 +163,6 @@ public class ClanService {
                     break;
                 case ASK_FOR_JOIN_CLAN:
                     askForJoinClan(player, msg.reader().readInt());
-                    break;
-                case VOICE_MESSAGE:
-                    handleVoiceMessage(player, msg);
-                    break;
-                case REQUEST_VOICE_DATA:
-                    requestVoiceData(player, msg);
                     break;
             }
         } catch (Exception e) {
@@ -925,18 +916,6 @@ public class ClanService {
                     }
                 }
             }
-            // Gửi voice message metadata (không gửi audio data)
-            List<ClanVoiceMessage> voiceMessages = player.clan.getCurrVoiceMessages();
-            msg.writer().writeByte(voiceMessages.size());
-            for (ClanVoiceMessage vmsg : voiceMessages) {
-                msg.writer().writeInt(vmsg.id);
-                msg.writer().writeInt(vmsg.playerId);
-                msg.writer().writeUTF(vmsg.playerName);
-                msg.writer().writeByte(vmsg.role);
-                msg.writer().writeInt(vmsg.time);
-                msg.writer().writeShort(vmsg.audioDuration);
-                msg.writer().writeByte(vmsg.audioFormat);
-            }
             player.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
@@ -1217,89 +1196,6 @@ public class ClanService {
             }
         }
     }
-
-    // ========== Voice Message ==========
-
-    /**
-     * Xử lý khi player gửi voice message.
-     * Đọc audio data từ message, validate, lưu và broadcast notification.
-     */
-    private void handleVoiceMessage(Player player, Message msg) {
-        try {
-            Clan clan = player.clan;
-            if (clan == null) {
-                Service.gI().sendThongBao(player, "Bạn chưa có bang hội");
-                return;
-            }
-            if (!Manager.VOICE_ENABLED) {
-                Service.gI().sendThongBao(player, "Tính năng voice message đang tắt");
-                return;
-            }
-
-            ClanMember cm = clan.getClanMember((int) player.id);
-            if (cm == null) {
-                return;
-            }
-
-            short audioDuration = msg.reader().readShort();
-            byte audioFormat = msg.reader().readByte();
-            int audioDataLength = msg.reader().readInt();
-
-            // Validate duration
-            if (audioDuration <= 0 || audioDuration > Manager.VOICE_MAX_DURATION) {
-                Service.gI().sendThongBao(player, "Tin nhắn voice tối đa " + Manager.VOICE_MAX_DURATION + " giây");
-                return;
-            }
-
-            // Validate size
-            int maxSizeBytes = Manager.VOICE_MAX_SIZE_KB * 1024;
-            if (audioDataLength <= 0 || audioDataLength > maxSizeBytes) {
-                Service.gI().sendThongBao(player, "Dữ liệu voice quá lớn (tối đa " + Manager.VOICE_MAX_SIZE_KB + "KB)");
-                return;
-            }
-
-            // Đọc audio data
-            byte[] audioData = new byte[audioDataLength];
-            msg.reader().readFully(audioData);
-
-            // Tạo voice message
-            ClanVoiceMessage vmsg = new ClanVoiceMessage(clan);
-            vmsg.playerId = cm.id;
-            vmsg.playerName = cm.name;
-            vmsg.role = cm.role;
-            vmsg.audioDuration = audioDuration;
-            vmsg.audioFormat = audioFormat;
-            vmsg.audioData = audioData;
-
-            // Lưu và broadcast
-            clan.addVoiceMessage(vmsg, Manager.VOICE_MAX_STORED);
-            clan.sendVoiceNotification(vmsg);
-
-            Logger.log("[VOICE] " + player.name + " gửi voice message " + audioDuration + "s ("
-                    + audioDataLength + " bytes) cho bang " + clan.name);
-        } catch (Exception e) {
-            Logger.logException(ClanService.class, e, "Lỗi xử lý voice message");
-        }
-    }
-
-    /**
-     * Xử lý khi player yêu cầu tải audio data của voice message.
-     */
-    private void requestVoiceData(Player player, Message msg) {
-        try {
-            Clan clan = player.clan;
-            if (clan == null) {
-                return;
-            }
-
-            int voiceId = msg.reader().readInt();
-            clan.sendVoiceData(player, voiceId);
-        } catch (Exception e) {
-            Logger.logException(ClanService.class, e, "Lỗi gửi voice data");
-        }
-    }
-
-    // ========== End Voice Message ==========
 
     private void checkDoneTaskJoinClan(Clan clan) {
         if (clan.getMembers().size() >= 2) {

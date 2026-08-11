@@ -105,12 +105,6 @@ public final class Manager {
     public static int THU_CUOI_ADD_PERCENT = 3;
     public static int THU_CUOI_ADD_ABSOLUTE = 20;
 
-    // Cấu hình Voice Message Bang Hội
-    public static boolean VOICE_ENABLED = true;
-    public static int VOICE_MAX_DURATION = 15; // giây
-    public static int VOICE_MAX_SIZE_KB = 250;  // KB
-    public static int VOICE_MAX_STORED = 10;   // số voice message tối đa lưu trữ per clan
-
     public static MapTemplate[] MAP_TEMPLATES;
     public static final List<nro.models.map.Map> MAPS = new ArrayList<>();
     private final ScheduledExecutorService mapUpdater = Executors.newSingleThreadScheduledExecutor();
@@ -1546,20 +1540,6 @@ public final class Manager {
         }
         if ((value = properties.get("thu_cuoi.add_absolute")) != null) {
             THU_CUOI_ADD_ABSOLUTE = Integer.parseInt(String.valueOf(value));
-        }
-
-        // Load cấu hình Voice Message
-        if ((value = properties.get("voice.enabled")) != null) {
-            VOICE_ENABLED = String.valueOf(value).equalsIgnoreCase("true");
-        }
-        if ((value = properties.get("voice.max_duration")) != null) {
-            VOICE_MAX_DURATION = Integer.parseInt(String.valueOf(value));
-        }
-        if ((value = properties.get("voice.max_size_kb")) != null) {
-            VOICE_MAX_SIZE_KB = Integer.parseInt(String.valueOf(value));
-        }
-        if ((value = properties.get("voice.max_stored")) != null) {
-            VOICE_MAX_STORED = Integer.parseInt(String.valueOf(value));
         }
     }
 
