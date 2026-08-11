@@ -47,22 +47,38 @@ public class NangCapPetRong {
             }
         }
 
-        if (exp < Manager.PET_RONG_EXP_REQ) {
-            Service.gI().sendThongBao(player, "Pet Rồng Nhí cần đạt " + Util.numberToMoney(Manager.PET_RONG_EXP_REQ)
-                    + " điểm kinh nghiệm (hiện có: " + Util.numberToMoney(exp) + ")");
-            return;
+        Item thoiVang = null;
+        for (Item item : player.inventory.itemsBag) {
+            if (item.isNotNullItem() && item.template.id == 457) {
+                thoiVang = item;
+                break;
+            }
         }
+        int tvQuantity = thoiVang != null ? thoiVang.quantity : 0;
+
+        boolean isLackTV = tvQuantity < 100;
+        boolean isLackGem = player.inventory.gem < 1000;
+        boolean isLackExp = exp < Manager.PET_RONG_EXP_REQ;
 
         int level = pet.template.id - 1765;
         int rate = Manager.PET_RONG_UPGRADE_PERCENT - (level * 5);
         if (rate < 0)
             rate = 0;
 
-        String info = "|2|Nâng cấp Pet Rồng Nhí lên cấp " + (level + 1) + "\n"
-                + "|1|Yêu cầu 100 Thỏi Vàng\n"
-                + "|1|Yêu cầu 1.000 Ngọc Xanh\n"
+        String tvString = (isLackTV ? "|7|" : "|1|") + "Yêu cầu 100 Thỏi Vàng (hiện có: " + Util.numberToMoney(tvQuantity) + ")\n";
+        String gemString = (isLackGem ? "|7|" : "|1|") + "Yêu cầu 1.000 Ngọc Xanh (hiện có: " + Util.numberToMoney(player.inventory.gem) + ")\n";
+        String expString = (isLackExp ? "|7|" : "|1|") + "Yêu cầu " + Util.numberToMoney(Manager.PET_RONG_EXP_REQ) + " điểm kinh nghiệm (hiện có: " + Util.numberToMoney(exp) + ")\n";
+
+        String info = "|2|Pet Rồng Nhí hiện tại: Cấp " + level + "\n"
+                + "|2|Sau khi nâng cấp: Cấp " + (level + 1) + "\n"
+                + "|1|Chỉ số ngẫu nhiên được cộng thêm:\n"
+                + "|1|+ " + Manager.PET_RONG_ADD_PERCENT + "% (chỉ số %)\n"
+                + "|1|+ " + Manager.PET_RONG_ADD_ABSOLUTE + "% (chỉ số cộng thẳng)\n"
+                + expString
+                + tvString
+                + gemString
                 + "|1|Tỷ lệ thành công: " + rate + "%\n"
-                + "|7|Thất bại sẽ bị trừ 1.000 EXP Pet";
+                + "|7|Thất bại sẽ bị trừ 1.000 điểm kinh nghiệm";
 
         player.combineNew.goldCombine = 0;
         player.combineNew.gemCombine = 1000;
