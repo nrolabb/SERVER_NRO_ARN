@@ -24,7 +24,7 @@ public class ClanVoiceMessage {
 
     public ClanVoiceMessage(Clan clan) {
         this.clan = clan;
-        this.id = clan.clanMessageId++;
+        this.id = clan.voiceMessageId++;
         this.time = (int) (System.currentTimeMillis() / 1000 - 1000000000);
     }
 
