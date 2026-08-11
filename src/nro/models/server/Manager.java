@@ -1464,6 +1464,12 @@ public final class Manager {
         if ((value = properties.get("server.expserver")) != null) {
             RATE_EXP_SERVER = Double.parseDouble(String.valueOf(value));
         }
+        if ((value = properties.get("server.max_items_bag")) != null) {
+            nro.models.player.Inventory.MAX_ITEMS_BAG = Integer.parseInt(String.valueOf(value));
+        }
+        if ((value = properties.get("server.max_items_box")) != null) {
+            nro.models.player.Inventory.MAX_ITEMS_BOX = Integer.parseInt(String.valueOf(value));
+        }
         if ((value = properties.get("server.local")) != null) {
             LOCAL = String.valueOf(value).toLowerCase().equals("true");
         }
