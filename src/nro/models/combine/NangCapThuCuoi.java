@@ -1,4 +1,4 @@
-package nro.models.npc_list;
+package nro.models.combine;
 
 import nro.models.item.Item;
 import nro.models.item.Item.ItemOption;
@@ -10,7 +10,6 @@ import nro.models.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 import nro.models.consts.ConstNpc;
-import nro.models.combine.CombineService;
 
 public class NangCapThuCuoi {
 
@@ -54,20 +53,36 @@ public class NangCapThuCuoi {
             return;
         }
 
-        if (exp < Manager.THU_CUOI_EXP_REQ) {
-            Service.gI().sendThongBao(player, "Thú cưỡi cần đạt " + Util.numberToMoney(Manager.THU_CUOI_EXP_REQ)
-                    + " điểm kinh nghiệm (hiện có: " + Util.numberToMoney(exp) + ")");
-            return;
+        Item thoiVang = null;
+        for (Item item : player.inventory.itemsBag) {
+            if (item.isNotNullItem() && item.template.id == 457) {
+                thoiVang = item;
+                break;
+            }
         }
+        int tvQuantity = thoiVang != null ? thoiVang.quantity : 0;
+
+        boolean isLackTV = tvQuantity < 100;
+        boolean isLackGem = player.inventory.gem < 1000;
+        boolean isLackExp = exp < Manager.THU_CUOI_EXP_REQ;
 
         int rate = Manager.THU_CUOI_UPGRADE_PERCENT - (level * 5);
         if (rate < 0) rate = 0;
 
-        String info = "|2|Nâng cấp Thú cưỡi lên cấp " + (level + 1) + "\n"
-                + "|1|Yêu cầu 100 Thỏi Vàng\n"
-                + "|1|Yêu cầu 1.000 Ngọc Xanh\n"
+        String tvString = (isLackTV ? "|7|" : "|1|") + "Yêu cầu 100 Thỏi Vàng (hiện có: " + Util.numberToMoney(tvQuantity) + ")\n";
+        String gemString = (isLackGem ? "|7|" : "|1|") + "Yêu cầu 1.000 Ngọc Xanh (hiện có: " + Util.numberToMoney(player.inventory.gem) + ")\n";
+        String expString = (isLackExp ? "|7|" : "|1|") + "Yêu cầu " + Util.numberToMoney(Manager.THU_CUOI_EXP_REQ) + " điểm kinh nghiệm (hiện có: " + Util.numberToMoney(exp) + ")\n";
+
+        String info = "|2|Thú cưỡi hiện tại: Cấp " + level + "\n"
+                + "|2|Sau khi nâng cấp: Cấp " + (level + 1) + "\n"
+                + "|1|Chỉ số ngẫu nhiên được cộng thêm:\n"
+                + "|1|+ " + Manager.THU_CUOI_ADD_PERCENT + "% (chỉ số %)\n"
+                + "|1|+ " + Manager.THU_CUOI_ADD_ABSOLUTE + "% (chỉ số cộng thẳng)\n"
+                + expString
+                + tvString
+                + gemString
                 + "|1|Tỷ lệ thành công: " + rate + "%\n"
-                + "|7|Thất bại sẽ bị trừ 1.000 EXP";
+                + "|7|Thất bại sẽ bị trừ 1.000 điểm kinh nghiệm";
 
         player.combineNew.goldCombine = 0;
         player.combineNew.gemCombine = 1000;

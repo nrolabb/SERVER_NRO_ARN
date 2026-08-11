@@ -184,7 +184,7 @@ public class CombineService {
                 NangCapPetRong.showInfoCombine(player);
                 break;
             case NANG_CAP_THU_CUOI:
-                nro.models.npc_list.NangCapThuCuoi.showInfoCombine(player);
+                NangCapThuCuoi.showInfoCombine(player);
                 break;
         }
     }
@@ -284,7 +284,7 @@ public class CombineService {
                 NangCapPetRong.nangCapPetRong(player);
                 break;
             case NANG_CAP_THU_CUOI:
-                nro.models.npc_list.NangCapThuCuoi.upgradeMount(player);
+                NangCapThuCuoi.upgradeMount(player);
                 break;
         }
         
