@@ -26,6 +26,14 @@ public class MessageSendCollect implements IMessageSendCollect {
         } else {
             size = dis.readUnsignedShort();
         }
+        if (cmd == -32 || cmd == -66 || cmd == -74 || cmd == 11 || cmd == -67 || cmd == -87 || cmd == -28 || cmd == 66 || cmd == -51) {
+            byte b3 = dis.readByte();
+            if (session.sentKey()) {
+                size = (size << 8) | (this.readKey(session, b3) & 0xFF);
+            } else {
+                size = (size << 8) | (b3 & 0xFF);
+            }
+        }
         byte[] data = new byte[size];
         int len = 0;
         for (int byteRead = 0; len != -1 && byteRead < size; byteRead += len) {
@@ -60,7 +68,7 @@ public class MessageSendCollect implements IMessageSendCollect {
             }
             if (data != null) {
                 int size = data.length;
-                if (msg.command == -32 || msg.command == -66 || msg.command == -74 || msg.command == 11 || msg.command == -67 || msg.command == -87 || msg.command == -28 || msg.command == 66) {
+                if (msg.command == -32 || msg.command == -66 || msg.command == -74 || msg.command == 11 || msg.command == -67 || msg.command == -87 || msg.command == -28 || msg.command == 66 || msg.command == -51) {
                     byte b2 = this.writeKey(session, (byte) size);
                     dos.writeByte(b2 - 128);
                     byte b3 = this.writeKey(session, (byte) (size >> 8));
