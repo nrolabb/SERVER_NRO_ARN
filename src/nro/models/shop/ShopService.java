@@ -701,6 +701,18 @@ public class ShopService {
             return;
         }
 
+        if (is.temp.id == 517) {
+            if (player.inventory.itemsBag.size() >= nro.models.player.Inventory.MAX_ITEMS_BAG) {
+                Service.gI().sendThongBao(player, "Hành trang của bạn đã đạt tối đa");
+                return;
+            }
+        } else if (is.temp.id == 518) {
+            if (player.inventory.itemsBox.size() >= nro.models.player.Inventory.MAX_ITEMS_BOX) {
+                Service.gI().sendThongBao(player, "Rương đồ của bạn đã đạt tối đa");
+                return;
+            }
+        }
+
         // Route by sell type before every legacy tab-specific or personal-bag path.
         // Type 4 purchases belong to the clan and must never reach addItemBag().
         if (is.typeSell == ShopSellType.CLAN_POINT) {
@@ -977,7 +989,10 @@ public class ShopService {
             player.clan.sendMyClanForAllMember();
             Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name + " vào kho bang");
         } else {
-            InventoryService.gI().addItemBag(player, item);
+            if (!InventoryService.gI().addItemBag(player, item)) {
+                // addItemBag failed (e.g. bag expansion at max) - already sent error message inside
+                return;
+            }
             InventoryService.gI().sendItemBags(player);
             Service.gI().sendThongBao(player, "Mua thành công " + is.temp.name);
         }
