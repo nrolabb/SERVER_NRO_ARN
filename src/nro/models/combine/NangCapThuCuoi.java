@@ -17,7 +17,7 @@ public class NangCapThuCuoi {
     private static final int[] PERCENT_OPTIONS = { 5, 14, 16, 50, 77, 80, 81, 95, 96, 97, 100, 103, 108 };
 
     private static boolean isMountItem(int itemId) {
-        return itemId == 1468 || itemId == 1734 || itemId == 1886 || itemId == 1947 || itemId == 1948 || itemId == 1949;
+        return Manager.THU_CUOI_MOUNT_IDS.contains((short) itemId);
     }
 
     public static void showInfoCombine(Player player) {

@@ -95,6 +95,7 @@ public final class Manager {
     public static int RATE_MANHSKH = 3;
 
     // Cấu hình Thú Cưỡi
+    public static List<Short> THU_CUOI_MOUNT_IDS = new ArrayList<>(Arrays.asList((short)1468, (short)1734, (short)1886, (short)1947, (short)1948, (short)1949));
     public static List<Integer> THU_CUOI_FLYING_MOBS = new ArrayList<>();
     public static int THU_CUOI_ABS_MIN = 1000;
     public static int THU_CUOI_ABS_MAX = 5000;
@@ -1511,6 +1512,13 @@ public final class Manager {
         }
 
         // Load cấu hình Thú Cưỡi
+        if ((value = properties.get("thu_cuoi.mount_ids")) != null) {
+            String[] split = String.valueOf(value).split(",");
+            THU_CUOI_MOUNT_IDS.clear();
+            for (String s : split) {
+                THU_CUOI_MOUNT_IDS.add(Short.parseShort(s.trim()));
+            }
+        }
         if ((value = properties.get("thu_cuoi.flying_mobs")) != null) {
             String[] split = String.valueOf(value).split(",");
             for (String s : split) {

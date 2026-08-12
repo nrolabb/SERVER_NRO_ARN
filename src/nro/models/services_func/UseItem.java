@@ -318,8 +318,7 @@ public class UseItem {
                     }
                     InventoryService.gI().subQuantityItemsBag(pl, item, 1);
 
-                    short[] MOUNT_IDS = { 1468, 1734, 1886, 1947, 1948, 1949 };
-                    short mountId = MOUNT_IDS[Util.nextInt(0, MOUNT_IDS.length - 1)];
+                    short mountId = Manager.THU_CUOI_MOUNT_IDS.get(Util.nextInt(0, Manager.THU_CUOI_MOUNT_IDS.size() - 1));
                     Item mount = ItemService.gI().createNewItem(mountId);
 
                     mount.itemOptions.add(new Item.ItemOption(21, 5));
