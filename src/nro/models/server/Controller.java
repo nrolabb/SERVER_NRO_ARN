@@ -1111,10 +1111,19 @@ public class Controller implements IMessageHandler {
                     for (int i = 0; i < recipe.nguyen_lieu.length; i++) if (recipe.soluong_nguyen_lieu[i] > 1) InventoryService.gI().addItemBag(player, ItemService.gI().createNewItem(recipe.nguyen_lieu[i], recipe.soluong_nguyen_lieu[i] / 2));
                     InventoryService.gI().sendItemBags(player); slots[index] = "0,-1,0";
                     Service.gI().sendThongBao(player, "Đã hủy nấu, hoàn lại 50% nguyên liệu!");
-                } else if (action == 5 && finish > System.currentTimeMillis() && player.inventory.gold >= 5) {
-                    player.inventory.gold -= 5; Service.gI().sendMoney(player);
-                    slots[index] = "0," + recipe.id + "," + Math.max(System.currentTimeMillis(), finish - 300000L);
-                    Service.gI().sendThongBao(player, "Nấu nhanh thành công! Giảm 5 phút.");
+                } else if (action == 5 && finish > System.currentTimeMillis()) {
+                    int count = 0;
+                    for (Item item : player.inventory.itemsBag) {
+                        if (item.isNotNullItem() && item.template.id == 457) count += item.quantity;
+                    }
+                    if (count >= 10) {
+                        removeMaterial(player, (short) 457, (short) 10);
+                        InventoryService.gI().sendItemBags(player);
+                        slots[index] = "0," + recipe.id + "," + Math.max(System.currentTimeMillis(), finish - 300000L);
+                        Service.gI().sendThongBao(player, "Nấu nhanh thành công! Giảm 5 phút.");
+                    } else {
+                        Service.gI().sendThongBao(player, "Bạn không đủ 10 thỏi vàng!");
+                    }
                 } else return;
                 saveCooking(player, slots);
             }
