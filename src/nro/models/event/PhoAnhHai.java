@@ -7,6 +7,7 @@ import nro.models.services.ItemService;
 import nro.models.services.Service;
 import nro.models.consts.ConstNpc;
 import nro.models.item.Item;
+import nro.models.map.service.NpcService;
 import nro.models.shop.ShopService;
 import nro.models.utils.Util;
 
@@ -22,12 +23,16 @@ public class PhoAnhHai extends Npc {
         if (!canOpenNpc(player)) {
             return;
         }
+        player.idMark.setIndexMenu(ConstNpc.BASE_MENU);
+
         if (!EventConfig.isActive(EventConfig.TOP_UP)) {
-            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
+            createOtherMenu(player,
+                    ConstNpc.BASE_MENU,
+                    "Chào mừng bạn đến với nhà bếp, bạn muốn chế biến món gì?",
+                    "Chế biến",
+                    "Từ chối");
             return;
         }
-
-        player.idMark.setIndexMenu(ConstNpc.BASE_MENU);
 
         createOtherMenu(player,
                 ConstNpc.BASE_MENU,
@@ -35,7 +40,8 @@ public class PhoAnhHai extends Npc {
                 "Thực Đơn\ncủa\nCậu Vàng",
                 "Sờ\nCậu Vàng",
                 "Trao Trả\nCậu Vàng",
-                "Đốt\nTiệm");
+                "Đốt\nTiệm",
+                "Chế biến");
     }
 
     // ================== XỬ LÝ MENU ==================
@@ -44,13 +50,15 @@ public class PhoAnhHai extends Npc {
         if (!canOpenNpc(player)) {
             return;
         }
-        if (!EventConfig.isActive(EventConfig.TOP_UP)) {
-            Service.gI().sendThongBao(player, "Sự kiện chưa mở hoặc đã kết thúc.");
-            return;
-        }
-
         // ===== MENU CHÍNH =====
         if (player.idMark.isBaseMenu()) {
+            if (!EventConfig.isActive(EventConfig.TOP_UP)) {
+                if (select == 0) {
+                    NpcService.gI().sendPanelCheBien(player);
+                }
+                return;
+            }
+
             switch (select) {
 
                 case 0: // Shop
@@ -99,6 +107,10 @@ public class PhoAnhHai extends Npc {
                 case 3: // Đốt Tiệm
                     Service.gI().sendThongBaoOK(player,
                             "Chức năng đã đóng");
+                    break;
+
+                case 4: // Chế biến
+                    NpcService.gI().sendPanelCheBien(player);
                     break;
             }
         }

@@ -105,4 +105,39 @@ public class NpcService {
         }
         return 1139;
     }
+
+    public void sendPanelCheBien(Player player) {
+        sendPanelCheBien(player, (byte) 0);
+    }
+
+    public void updateCookingSlots(Player player) {
+        sendPanelCheBien(player, (byte) 1);
+    }
+
+    private void sendPanelCheBien(Player player, byte action) {
+        try {
+            Message msg = new Message(-114);
+            msg.writer().writeByte(action);
+            if (action == 0) {
+                msg.writer().writeByte(Manager.ITEM_NHA_BEP.size());
+                for (nro.models.item.ItemNhaBep recipe : Manager.ITEM_NHA_BEP) {
+                    msg.writer().writeShort(recipe.id);
+                    msg.writer().writeShort(recipe.item_id);
+                    msg.writer().writeInt(recipe.thoi_gian_nau);
+                    msg.writer().writeShort(recipe.don_gia_id);
+                    msg.writer().writeInt(recipe.gia);
+                    msg.writer().writeByte(recipe.nguyen_lieu.length);
+                    for (int i = 0; i < recipe.nguyen_lieu.length; i++) {
+                        msg.writer().writeShort(recipe.nguyen_lieu[i]);
+                        msg.writer().writeShort(recipe.soluong_nguyen_lieu[i]);
+                    }
+                }
+            }
+            msg.writer().writeUTF(player.dataCooking == null ? "" : player.dataCooking);
+            player.sendMessage(msg);
+            msg.cleanup();
+        } catch (Exception e) {
+            Logger.logException(NpcService.class, e);
+        }
+    }
 }

@@ -182,6 +182,8 @@ public class Player implements Runnable {
     public boolean isOffline = false;
 
     public String notify = null;
+    /** Five cooking slots: locked,recipeId,finishTimestamp separated by |. */
+    public String dataCooking = "";
 
     public int mapIdBeforeLogout;
     public List<Zone> mapBlackBall;

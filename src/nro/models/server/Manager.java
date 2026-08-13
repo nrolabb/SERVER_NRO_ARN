@@ -19,6 +19,7 @@ import nro.models.player_system.GiftCode;
 import nro.models.managers.GiftCodeManager;
 import nro.models.intrinsic.Intrinsic;
 import nro.models.item.Item;
+import nro.models.item.ItemNhaBep;
 import nro.models.item.Item.ItemOption;
 import nro.models.map.WayPoint;
 import nro.models.npc.Npc;
@@ -71,6 +72,14 @@ import nro.models.services.ItemService;
  *
  */
 public final class Manager {
+
+    private static short[] parseCookingArray(String value) {
+        if (value == null || value.trim().length() < 3) return new short[0];
+        String[] values = value.replaceAll("[\\[\\]\\s]", "").split(",");
+        short[] result = new short[values.length];
+        for (int i = 0; i < values.length; i++) result[i] = Short.parseShort(values[i]);
+        return result;
+    }
 
     private static Manager instance;
     public static long timeRealTop = 0;
@@ -138,6 +147,7 @@ public final class Manager {
     public static final List<NClass> NCLASS = new ArrayList<>();
     public static final List<Npc> NPCS = new ArrayList<>();
     public static List<Shop> SHOPS = new ArrayList<>();
+    public static final List<ItemNhaBep> ITEM_NHA_BEP = new ArrayList<>();
     public static final List<Clan> CLANS = new ArrayList<>();
     public static final List<String> NOTIFY = new ArrayList<>();
     public static final List<BadgesTaskTemplate> TASKS_BADGES_TEMPLATE = new ArrayList<>();
@@ -898,6 +908,25 @@ public final class Manager {
                 } catch (SQLException e) {
                     Logger.error("Error closing resources: " + e.getMessage());
                 }
+            }
+
+            // Load cooking recipes. Arrays in SQL are stored as [id,id,...].
+            ITEM_NHA_BEP.clear();
+            try {
+                ps = ConnectionDatabase.prepareStatement("select * from item_nhabep");
+                rs = ps.executeQuery();
+                while (rs.next()) {
+                    ItemNhaBep recipe = new ItemNhaBep();
+                    recipe.id = rs.getInt("id"); recipe.item_id = rs.getInt("item_id");
+                    recipe.thoi_gian_nau = rs.getInt("thoi_gian_nau"); recipe.don_gia_id = rs.getInt("don_gia_id");
+                    recipe.gia = rs.getInt("gia");
+                    recipe.nguyen_lieu = parseCookingArray(rs.getString("nguyen_lieu"));
+                    recipe.soluong_nguyen_lieu = parseCookingArray(rs.getString("soluong_nguyen_lieu"));
+                    if (recipe.nguyen_lieu.length == recipe.soluong_nguyen_lieu.length) ITEM_NHA_BEP.add(recipe);
+                }
+                Logger.success("Successfully loaded item_nhabep (" + ITEM_NHA_BEP.size() + ")\n");
+            } catch (SQLException e) {
+                Logger.error("Failed to load item_nhabep: " + e.getMessage());
             }
 
             // load crop templates for Cloud Garden. FarmService validates the seed

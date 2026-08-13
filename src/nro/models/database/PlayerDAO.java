@@ -1123,6 +1123,15 @@ public static void updateVnd(Player player) {
     }
 }
 
+    /** Persists cooking immediately, so timers survive disconnects between normal saves. */
+    public static void updateCookingData(Player player) {
+        try {
+            LocalManager.executeUpdate("UPDATE player SET data_cooking = ? WHERE id = ?", player.dataCooking, player.id);
+        } catch (Exception e) {
+            Logger.logException(PlayerDAO.class, e, "Không thể lưu dữ liệu chế biến");
+        }
+    }
+
 
 
     public static boolean checkLogout(Connection con, Player player) {

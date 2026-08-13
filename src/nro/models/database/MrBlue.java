@@ -346,6 +346,13 @@ public class MrBlue {
             
             String cloudGardenData = rs.getString("data_cloud_garden");
             nro.models.services.FarmService.gI().loadCloudGarden(player, cloudGardenData);
+            try {
+                player.dataCooking = rs.getString("data_cooking");
+                if (player.dataCooking == null) player.dataCooking = "";
+            } catch (Exception ignored) {
+                // The migration may not yet have been run on an old database.
+                player.dataCooking = "";
+            }
 
             byte level = Byte.parseByte(String.valueOf(dataArray.get(0)));
             byte currPea = Byte.parseByte(String.valueOf(dataArray.get(1)));
