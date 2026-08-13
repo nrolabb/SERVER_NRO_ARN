@@ -153,6 +153,7 @@ public class ConstNpc {
     public static final byte RUONG_SUU_TAM = 82;
     public static final byte DR_MYUU = 83;
     public static final byte PHO_ANH_HAI = 84;
+    public static final byte NONG_DAN = 85;
     public static final byte VUA_HAI_TAC = 111;
     //----------------------index menu------------------------------------------
     //menu o len tang map mabu

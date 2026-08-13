@@ -355,11 +355,11 @@ public class PlayerDAO {
 
             LocalManager.executeUpdate("insert into player"
                     + "(account_id, name, head, gender, have_tennis_space_ship, clan_id, "
-                    + "data_inventory, data_location, data_point, data_magic_tree, items_body, "
+                    + "data_inventory, data_location, data_point, data_magic_tree, data_cloud_garden, items_body, "
                     + "items_bag, items_box, items_box_lucky_round, items_daban, friends, enemies, data_intrinsic, data_item_time,"
                     + "data_task, data_mabu_egg, data_charm, skills, skills_shortcut, pet,"
                     + "data_black_ball, data_side_task, BoughtSkill, dailyGift, masterDoesNotAttack, data_luyentap, data_achievement, giftcode, total_damage_maydam, data_duahau_egg, nhiem_vu_kol) "
-                    + "values ()", userId, name, hair, gender, 0, -1, inventory, location, point, magicTree,
+                    + "values ()", userId, name, hair, gender, 0, -1, inventory, location, point, magicTree, nro.models.services.FarmService.gI().saveCloudGarden(player),
                     itemsBody, itemsBag, itemsBox, itemsBoxLuckyRound, itemsDaBan, friends, enemies, intrinsic,
                     itemTime, task, mabuEgg, charms, skills, skillsShortcut, petData, dataBlackBall, dataSideTask, dataBoughtSkill, dailyGift, 0, luyenTapData, achievementData, giftCode, 0, DuaHauEgg, dataKol);
             Logger.success(Logger.PURPLE + "Tạo player mới thành công!\n");
@@ -1019,14 +1019,14 @@ public class PlayerDAO {
 
                 String dataDailyGift = JSONValue.toJSONString(player.dailyGiftData);
                 String query = "update player set head = ?, have_tennis_space_ship = ?, "
-                        + "clan_id = ?, data_inventory = ?, data_location = ?, data_point = ?, data_magic_tree = ?, "
+                        + "clan_id = ?, data_inventory = ?, data_location = ?, data_point = ?, data_magic_tree = ?, data_cloud_garden = ?, "
                         + "items_body = ?, items_bag = ?, items_box = ?, items_box_lucky_round = ?, items_daban = ?, friends = ?, "
                         + "enemies = ?, data_intrinsic = ?, data_item_time = ?, data_task = ?, data_mabu_egg = ?, pet = ?, "
                         + "data_black_ball = ?, data_side_task = ?, data_charm = ?, skills = ?, skills_shortcut = ?, notify = ?, "
                         + "baovetaikhoan = ?, data_card = ?, lasttimepkcommeson = ?, bandokhobau = ?, doanhtrai = ?, conduongrandoc = ?, masterDoesNotAttack = ?, "
                         + "nhanthoivang = ?, ruonggo = ?, sieuthanthuy = ?, vodaisinhtu = ?, rongxuong = ?, data_item_event = ?, data_luyentap = ?, data_clan_task = ?, data_vip = ?, "
                         + "`rank` = ?, data_achievement = ?, giftcode = ?, event_point = ?, data_event = ?, dataBadges = ?, dataTaskBadges = ?, BoughtSkill = ?, LearnSkill = ?, "
-                        + "firstTimeLogin = ?,  dailyGift = ?, point_sukien = ?, thachdauwhis = ?, point_sukien1 = ?, point_maydam = ?, total_damage_maydam = ?, data_duahau_egg = ?, checkNhanQua = ?, nhiem_vu_kol = ?, point_sukien2 = ? , lucky_round_point = ?, reward_100 = ?, reward_200 = ?, reward_300 = ?, reward_500 = ?, reward_700 = ?, reward_1000 = ?,point_2207 = ?, reward_100_2207 = ?, reward_200_2207 = ?, reward_300_2207 = ?, reward_500_2207 = ? where id = ?";
+                        + "firstTimeLogin = ?,  dailyGift = ?, point_sukien = ?, thachdauwhis = ?, point_sukien1 = ?, point_maydam = ?, total_damage_maydam = ?, data_duahau_egg = ?, checkNhanQua = ?, nhiem_vu_kol = ? where id = ?";
                 LocalManager.executeUpdate(query,
                         player.head,
                         player.haveTennisSpaceShip,
@@ -1035,6 +1035,7 @@ public class PlayerDAO {
                         location,
                         point,
                         magicTree,
+                        nro.models.services.FarmService.gI().saveCloudGarden(player),
                         itemsBody,
                         itemsBag,
                         itemsBox,
@@ -1073,7 +1074,7 @@ public class PlayerDAO {
                         achievement,
                         giftCode,
                         player.event.getEventPoint(),
-                        dataEvent, // Thêm data_event vào đây
+                        dataEvent,
                         dataBadges,
                         dataTaskBadges,
                         BoughtSkill,
@@ -1088,19 +1089,6 @@ public class PlayerDAO {
                         DuaHauEgg,
                         checkNhanQua,
                         dataKol,
-                        player.point_sukien2,
-                        player.luckyRoundPoint,
-player.reward100 ? 1 : 0,
-player.reward200 ? 1 : 0,
-player.reward300 ? 1 : 0,
-player.reward500 ? 1 : 0,
-player.reward700 ? 1 : 0,
-player.reward1000 ? 1 : 0,
-player.point_2207,
-player.reward_100_2207 ? 1 : 0,
-player.reward_200_2207 ? 1 : 0,
-player.reward_300_2207 ? 1 : 0,
-player.reward_500_2207 ? 1 : 0,
                         player.id);
                 ActivePointService.gI().save(player);
                 SuperRankDAO.updateData(player);

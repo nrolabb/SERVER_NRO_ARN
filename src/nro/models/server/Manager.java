@@ -1,5 +1,7 @@
 package nro.models.server;
 
+import nro.models.Farm.CropTemplate;
+import nro.models.Farm.CropType;
 import nro.models.radar.OptionCard;
 import nro.models.services.RadarService;
 import nro.models.services.ClanIntrinsicService;
@@ -117,6 +119,7 @@ public final class Manager {
     public static final List<ArrHead2Frames> ARR_HEAD_2_FRAMES = new ArrayList<>();
     public static final Map<String, Byte> IMAGES_BY_NAME = new HashMap<>();
     public static final List<ItemTemplate> ITEM_TEMPLATES = new ArrayList<>();
+    public static final Map<Short, ItemTemplate> ITEM_TEMPLATE_MAP = new HashMap<>(); // Map để truy cập theo ID
     private static final Map<Integer, Byte> PART_TYPES = new ConcurrentHashMap<>();
     public static final List<MobTemplate> MOB_TEMPLATES = new ArrayList<>();
     public static final List<NpcTemplate> NPC_TEMPLATES = new ArrayList<>();
@@ -873,6 +876,7 @@ public final class Manager {
                         itemTemp.leg = rs.getInt("leg");
 
                         ITEM_TEMPLATES.add(itemTemp);
+                        ITEM_TEMPLATE_MAP.put(itemTemp.id, itemTemp); // Thêm vào map để truy cập theo ID
                     } while (rs.next());
                     offset += batchSize;
                 }
@@ -895,6 +899,30 @@ public final class Manager {
                     Logger.error("Error closing resources: " + e.getMessage());
                 }
             }
+
+            // load crop templates for Cloud Garden. FarmService validates the seed
+            // item ID against this in-memory map before allowing a plant action.
+            CropTemplate.clear();
+            ps = ConnectionDatabase.prepareStatement("SELECT * FROM crop_template ORDER BY id");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                CropTemplate cropTemplate = new CropTemplate();
+                cropTemplate.id = rs.getByte("id");
+                cropTemplate.name = rs.getString("name");
+                cropTemplate.seedItemId = rs.getShort("seed_item_id");
+                cropTemplate.harvestItemId = rs.getShort("harvest_item_id");
+                cropTemplate.totalGrowthTimeMs = rs.getLong("growth_time_minutes") * 60_000L;
+                cropTemplate.minHarvest = rs.getInt("min_harvest");
+                cropTemplate.maxHarvest = rs.getInt("max_harvest");
+                cropTemplate.imgYoung = rs.getShort("img_young");
+                cropTemplate.imgMature = rs.getShort("img_mature");
+                cropTemplate.imgWithered = rs.getShort("img_withered");
+                cropTemplate.calculateStageTimes();
+                CropTemplate.addCropTemplate(cropTemplate);
+            }
+            CropType.refreshFromTemplates();
+            Logger.success(Logger.PURPLE + "Successfully loaded crop template ("
+                    + CropTemplate.getCropTypeCount() + ")\n");
 
             // load shop
             SHOPS = ShopDAO.getShops(ConnectionDatabase);

@@ -91,6 +91,7 @@ import nro.models.event.summer.VuaHaiTac;
 import nro.models.npc_list.ChiChi;
 import nro.models.npc_list.DrMyuu;
 import nro.models.npc_list.DuaHau;
+import nro.models.npc_list.NongDan;
 import nro.models.npc_list.ToriBot;
 import nro.models.services.shenron.SummonDragon;
 import static nro.models.services.shenron.SummonDragon.SHENRON_1_STAR_WISHES_1;
@@ -235,6 +236,8 @@ public class NpcFactory {
                     new VuaHaiTac(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.BARDOCK ->
                     new Bardock(mapId, status, cx, cy, tempId, avatar);
+                case ConstNpc.NONG_DAN ->
+                    new NongDan(mapId, status, cx, cy, tempId, avatar);
                 default ->
                     new Npc(mapId, status, cx, cy, tempId, avatar) {
                         @Override

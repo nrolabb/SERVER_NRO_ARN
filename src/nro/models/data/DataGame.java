@@ -1,5 +1,8 @@
 package nro.models.data;
 
+import nro.models.Farm.CropTemplate;
+import java.io.File;
+
 import nro.models.player_system.Template.HeadAvatar;
 import nro.models.player_system.Template.MapTemplate;
 
@@ -25,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import nro.models.server.Manager;
 import nro.models.network.MySession;
+import nro.models.player_system.Template;
 import nro.models.utils.Logger;
 
 import nro.models.player_system.Template.BgItem;
@@ -51,9 +55,10 @@ public class DataGame {
             msg.writer().writeByte(vsItem);
             msg.writer().writeByte(0);
 
-            long[] smtieuchuan = {1000L, 3000L, 15000L, 40000L, 90000L, 170000L, 340000L, 700000L,
-                1500000L, 15000000L, 150000000L, 1500000000L, 5000000000L, 10000000000L, 40000000000L,
-                50010000000L, 60010000000L, 70010000000L, 80010000000L, 100010000000L, 1000010000000L, 10000010000000L};
+            long[] smtieuchuan = { 1000L, 3000L, 15000L, 40000L, 90000L, 170000L, 340000L, 700000L,
+                    1500000L, 15000000L, 150000000L, 1500000000L, 5000000000L, 10000000000L, 40000000000L,
+                    50010000000L, 60010000000L, 70010000000L, 80010000000L, 100010000000L, 1000010000000L,
+                    10000010000000L };
             msg.writer().writeByte(smtieuchuan.length);
             for (int i = 0; i < smtieuchuan.length; i++) {
                 msg.writer().writeLong(smtieuchuan[i]);
@@ -64,7 +69,7 @@ public class DataGame {
         }
     }
 
-    //vData
+    // vData
     public static void updateData(MySession session) {
         final byte[] dart = FileIO.readFile("data/update_data/dart");
         final byte[] arrow = FileIO.readFile("data/update_data/arrow");
@@ -97,7 +102,7 @@ public class DataGame {
         }
     }
 
-    //vMap
+    // vMap
     public static void updateMap(MySession session) {
         Message msg;
         try {
@@ -131,7 +136,7 @@ public class DataGame {
         }
     }
 
-    //vSkill
+    // vSkill
     public static void updateSkill(MySession session) {
         Message msg;
         try {
@@ -139,7 +144,7 @@ public class DataGame {
 
             msg.writer().writeByte(7);
             msg.writer().writeByte(vsSkill);
-            msg.writer().writeByte(0); //count skill option
+            msg.writer().writeByte(0); // count skill option
 
             msg.writer().writeByte(Manager.NCLASS.size());
             for (NClass nClass : Manager.NCLASS) {
@@ -171,7 +176,7 @@ public class DataGame {
                             msg.writer().writeUTF(skill.moreInfo);
                         }
                     } else {
-                        //Thêm 2 skill trống 105, 106
+                        // Thêm 2 skill trống 105, 106
                         msg.writer().writeByte(skillTemp.skillss.size() + 2);
                         for (Skill skill : skillTemp.skillss) {
                             msg.writer().writeShort(skill.skillId);
@@ -345,15 +350,15 @@ public class DataGame {
     public static void requestMobTemplate(MySession session, int id) {
         Message msg;
         try {
-//            if (!session.check && id > 106) {
-//                byte[] mob = FileIO.readFile("data/mob/x" + session.zoomLevel + "/" + 0);
-//                msg = new Message(11);
-//                msg.writer().writeByte(id);
-//                msg.writer().write(mob);
-//                session.sendMessage(msg);
-//                msg.cleanup();
-//                return;
-//            }
+            // if (!session.check && id > 106) {
+            // byte[] mob = FileIO.readFile("data/mob/x" + session.zoomLevel + "/" + 0);
+            // msg = new Message(11);
+            // msg.writer().writeByte(id);
+            // msg.writer().write(mob);
+            // session.sendMessage(msg);
+            // msg.cleanup();
+            // return;
+            // }
             final byte[] mob = FileIO.readFile("data/mob/x" + session.zoomLevel + "/" + id);
             msg = new Message(11);
             msg.writer().writeByte(id);
@@ -377,7 +382,7 @@ public class DataGame {
         }
     }
 
-    //data vẽ map
+    // data vẽ map
     public static void sendMapTemp(MySession session, int id) {
         Message msg;
         try {
@@ -395,7 +400,7 @@ public class DataGame {
         }
     }
 
-    //head-avatar
+    // head-avatar
     public static void sendHeadAvatar(Message msg) {
         try {
             msg.writer().writeShort(Manager.HEAD_AVATARS.size());
@@ -463,6 +468,7 @@ public class DataGame {
     }
 
     public static void sendRes(MySession session) {
+        sendCropTemplateInfo(session);
         Message msg;
         try {
             File dir = new File("data/res/x" + session.zoomLevel);
@@ -515,4 +521,42 @@ public class DataGame {
             e.printStackTrace();
         }
     }
+
+    // ===================== FARM ASSETS =====================
+
+    /**
+     * Gửi tất cả farm assets cho client (khi vào map farming)
+     * 
+     * @param session Session của client
+     */
+    public static void sendAllFarmAssets(MySession session) {
+        // Gửi thông tin Crop Templates cho client
+        sendCropTemplateInfo(session);
+    }
+
+    /**
+     * Gửi thông tin các loại cây (Crop Templates) cho client
+     */
+    public static void sendCropTemplateInfo(MySession session) {
+        try {
+            Message msg = new Message(-58);
+            msg.writer().writeByte(13); // Sub-type: 13 (CROP_TEMPLATE_INFO)
+            msg.writer().writeByte(CropTemplate.CROP_TEMPLATES.size());
+            for (CropTemplate crop : CropTemplate.CROP_TEMPLATES) {
+                msg.writer().writeByte(crop.id);
+                msg.writer().writeUTF(crop.name);
+                msg.writer().writeShort(crop.seedItemId);
+                msg.writer().writeShort(crop.harvestItemId);
+                msg.writer().writeShort(crop.imgYoung);
+                msg.writer().writeShort(crop.imgMature);
+                msg.writer().writeShort(crop.imgWithered);
+            }
+            session.sendMessage(msg);
+            msg.cleanup();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

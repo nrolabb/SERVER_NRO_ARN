@@ -56,6 +56,7 @@ import nro.models.skill.Skill;
 import nro.models.utils.Logger;
 import nro.models.data.LocalResultSet;
 import nro.models.shop_ky_gui.ConsignShopService;
+import nro.models.server.FarmController;
 
 /**
  *
@@ -235,6 +236,10 @@ public class Controller implements IMessageHandler {
                                 break;
                             case 2:
                                 player.magicTree.loadMagicTree();
+                                break;
+                            case 10: // Farm sub-type
+                                byte farmAction = _msg.reader().readByte();
+                                FarmController.gI().handleFarmAction(player, farmAction, _msg);
                                 break;
                         }
                     }
@@ -835,7 +840,9 @@ public class Controller implements IMessageHandler {
                         if (player != null && player.isPl()) {
                             Service.gI().player(player);
                             Service.gI().Send_Caitrang(player);
-
+                            
+                            // Send Farm crop templates info on login
+                            DataGame.sendCropTemplateInfo(_session);
                             // -64 my flag bag
                             Service.gI().sendFlagBag(player);
 

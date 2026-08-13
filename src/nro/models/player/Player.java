@@ -205,6 +205,7 @@ public class Player implements Runnable {
     public ItemTime itemTime;
     public Fusion fusion;
     public MagicTree magicTree;
+    public nro.models.Farm.CloudGarden cloudGarden;
     public IntrinsicPlayer playerIntrinsic;
     public Inventory inventory;
     public PlayerSkill playerSkill;
@@ -453,6 +454,9 @@ public class Player implements Runnable {
                     }
                     if (magicTree != null) {
                         magicTree.update();
+                    }
+                    if (this.zone != null && nro.models.services.FarmService.gI().isInCloudGardenMap(this)) {
+                        nro.models.services.FarmService.gI().updateGarden(this);
                     }
                     if (puppetBoss != null) {
                         puppetBoss.update();

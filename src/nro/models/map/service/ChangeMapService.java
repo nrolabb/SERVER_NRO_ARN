@@ -31,6 +31,8 @@ import nro.models.server.Manager;
 import nro.models.services.InventoryService;
 import nro.models.services.ItemService;
 import nro.models.services_dungeon.NgocRongNamecService;
+import nro.models.services.FarmService;
+import nro.models.server.FarmController;
 
 public class ChangeMapService {
 
@@ -487,6 +489,7 @@ public class ChangeMapService {
                 Service.gI().Send_Info_NV(pl);
             }
             checkJoinSpecialMap(pl);
+            checkJoinCloudGarden(pl);
             checkJoinMapMaBu(pl);
         } else {
             int plX = pl.location.x;
@@ -1151,6 +1154,16 @@ public class ChangeMapService {
                     MajinBuuService.gI().joinMapMabu(player);
                     break;
             }
+        }
+    }
+
+    /**
+     * Kiểm tra và gửi garden data khi player vào map nhà (Cloud Garden)
+     */
+    private void checkJoinCloudGarden(Player player) {
+        if (player != null && player.isPl() && FarmController.gI().isInHomeMap(player)) {
+            FarmService.gI().initCloudGarden(player);
+            FarmService.gI().sendGardenUpdate(player);
         }
     }
 

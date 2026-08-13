@@ -8,6 +8,7 @@ import nro.models.map.service.NpcManager;
 import nro.models.network.MySession;
 import nro.models.player.Player;
 import nro.models.services.Service;
+import nro.models.services.FarmService;
 import nro.models.services_func.TransactionService;
 
 /**
@@ -46,6 +47,12 @@ public class MenuController {
 
     public void doSelectMenu(Player player, int npcId, int select) throws IOException {
         TransactionService.gI().cancelTrade(player);
+        // Farm menus use npcId = -1, route by indexMenu range 6000-6009
+        int menuIndex = player.idMark.getIndexMenu();
+        if (menuIndex >= 6000 && menuIndex <= 6009) {
+            FarmService.gI().handleMenuSelection(player, menuIndex, select);
+            return;
+        }
         switch (npcId) {
             case ConstNpc.RONG_THIENG, ConstNpc.CON_MEO ->
                 Objects.requireNonNull(NpcManager.getNpc((byte) npcId)).confirmMenu(player, select);

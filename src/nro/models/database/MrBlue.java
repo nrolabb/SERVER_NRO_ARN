@@ -134,7 +134,6 @@ public class MrBlue {
                                 player.deltaTime = deltaTime;
                                 player.point_sukien = rs.getInt("point_sukien");
                                 player.point_sukien1 = rs.getInt("point_sukien1");
-                                player.point_sukien2 = rs.getInt("point_sukien2");
                                 player.thachdauwhis = rs.getInt("thachdauwhis");
                                 player.point_maydam = rs.getInt("point_maydam");
                                 player.total_damage_maydam = rs.getLong("total_damage_maydam");
@@ -344,6 +343,10 @@ public class MrBlue {
 
             //data đậu thần
             dataArray = (JSONArray) JSONValue.parse(rs.getString("data_magic_tree"));
+            
+            String cloudGardenData = rs.getString("data_cloud_garden");
+            nro.models.services.FarmService.gI().loadCloudGarden(player, cloudGardenData);
+
             byte level = Byte.parseByte(String.valueOf(dataArray.get(0)));
             byte currPea = Byte.parseByte(String.valueOf(dataArray.get(1)));
             boolean isUpgrade = Byte.parseByte(String.valueOf(dataArray.get(2))) == 1;
@@ -986,12 +989,17 @@ public class MrBlue {
             }
 
             // data rada card
-            dataArray = (JSONArray) JSONValue.parse(rs.getString("data_card"));
-            for (int i = 0; i < dataArray.size(); i++) {
-                JSONObject obj = (JSONObject) dataArray.get(i);
-                player.Cards.add(new Card(Short.parseShort(obj.get("id").toString()), Byte.parseByte(obj.get("amount").toString()), Byte.parseByte(obj.get("max").toString()), Byte.parseByte(obj.get("level").toString()), loadOptionCard((JSONArray) JSONValue.parse(obj.get("option").toString())), Byte.parseByte(obj.get("used").toString())));
+            String dataCardStr = rs.getString("data_card");
+            if (dataCardStr != null && !dataCardStr.isEmpty()) {
+                dataArray = (JSONArray) JSONValue.parse(dataCardStr);
+                if (dataArray != null) {
+                    for (int i = 0; i < dataArray.size(); i++) {
+                        JSONObject obj = (JSONObject) dataArray.get(i);
+                        player.Cards.add(new Card(Short.parseShort(obj.get("id").toString()), Byte.parseByte(obj.get("amount").toString()), Byte.parseByte(obj.get("max").toString()), Byte.parseByte(obj.get("level").toString()), loadOptionCard((JSONArray) JSONValue.parse(obj.get("option").toString())), Byte.parseByte(obj.get("used").toString())));
+                    }
+                    dataArray.clear();
+                }
             }
-            dataArray.clear();
 
             //data PK Commeson
             player.lastPkCommesonTime = rs.getLong("lasttimepkcommeson");
@@ -1084,18 +1092,6 @@ public class MrBlue {
 
             //Thời gian gọi rồng
             player.lastTimeShenronAppeared = rs.getLong("rongxuong");
-// player.luckyRoundPoint = rs.getInt("lucky_round_point");
-// player.reward100 = rs.getInt("reward_100") == 1;
-// player.reward200 = rs.getInt("reward_200") == 1;
-// player.reward300 = rs.getInt("reward_300") == 1;
-// player.reward500 = rs.getInt("reward_500") == 1;
-// player.reward700 = rs.getInt("reward_700") == 1;
-// player.reward1000 = rs.getInt("reward_1000") == 1;
-player.point_2207 = rs.getInt("point_2207");
-player.reward_100_2207 = rs.getInt("reward_100_2207") == 1;
-player.reward_200_2207 = rs.getInt("reward_200_2207") == 1;
-player.reward_300_2207 = rs.getInt("reward_300_2207") == 1;
-player.reward_500_2207 = rs.getInt("reward_500_2207") == 1;
             int evPoint = rs.getInt("event_point");
             player.event.setEventPoint(evPoint);
 
