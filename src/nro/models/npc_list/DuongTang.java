@@ -16,9 +16,11 @@ public class DuongTang extends Npc {
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             if (player.nPoint.power >= 5_000_000_000L) {
-                this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi có muốn đến Ngũ Hành Sơn không?", "Đến\nNgũ Hành Sơn", "Đóng");
+                this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi có muốn đến Ngũ Hành Sơn không?",
+                        "Đến\nNgũ Hành Sơn", "Đóng");
             } else {
-                this.createOtherMenu(player, ConstNpc.IGNORE_MENU, "Con cần đạt 5 tỷ sức mạnh mới có thể đến Ngũ Hành Sơn.", "Đóng");
+                this.createOtherMenu(player, ConstNpc.IGNORE_MENU,
+                        "Con cần đạt 5 tỷ sức mạnh mới có thể đến Ngũ Hành Sơn.", "Đóng");
             }
         }
     }
@@ -29,7 +31,7 @@ public class DuongTang extends Npc {
             if (player.idMark.getIndexMenu() == ConstNpc.BASE_MENU) {
                 if (select == 0) {
                     if (player.nPoint.power >= 5_000_000_000L) {
-                        ChangeMapService.gI().changeMapNonSpaceship(player, 123, -1, -1);
+                        ChangeMapService.gI().changeMapNonSpaceship(player, 123, 103, 384);
                     } else {
                         Service.gI().sendThongBao(player, "Con cần đạt 5 tỷ sức mạnh mới có thể đến Ngũ Hành Sơn.");
                     }

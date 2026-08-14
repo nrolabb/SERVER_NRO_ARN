@@ -311,7 +311,15 @@ public class ChangeMapService {
             if (zoneJoin.map.mapWidth - 100 < 100) {
                 x = x != -1 ? x : Util.nextInt(100, 700);
             } else {
-                x = x != -1 ? x : Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                if (x == -1) {
+                    int randomX = Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                    int attempts = 0;
+                    while (zoneJoin.map.yPhysicInTop(randomX, 100) == 0 && attempts < 50) {
+                        randomX = Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                        attempts++;
+                    }
+                    x = randomX;
+                }
             }
             changeMap(pl, zoneJoin, -1, -1, x, zoneJoin.map.yPhysicInTop(x, 100), NON_SPACE_SHIP);
         }
@@ -420,7 +428,13 @@ public class ChangeMapService {
                 pl.location.x = x;
             } else {
                 if (zoneJoin.map.mapWidth - 100 > 100) {
-                    pl.location.x = Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                    int randomX = Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                    int attempts = 0;
+                    while (zoneJoin.map.yPhysicInTop(randomX, 100) == 0 && attempts < 50) {
+                        randomX = Util.nextInt(100, zoneJoin.map.mapWidth - 100);
+                        attempts++;
+                    }
+                    pl.location.x = randomX;
                 } else {
                     pl.location.x = 100;
                 }
