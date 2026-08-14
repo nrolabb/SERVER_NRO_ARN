@@ -93,6 +93,7 @@ import nro.models.npc_list.DrMyuu;
 import nro.models.npc_list.DuaHau;
 import nro.models.npc_list.NongDan;
 import nro.models.npc_list.ToriBot;
+import nro.models.npc_list.DuongTang;
 import nro.models.services.shenron.SummonDragon;
 import static nro.models.services.shenron.SummonDragon.SHENRON_1_STAR_WISHES_1;
 import static nro.models.services.shenron.SummonDragon.SHENRON_1_STAR_WISHES_2;
@@ -238,6 +239,8 @@ public class NpcFactory {
                     new Bardock(mapId, status, cx, cy, tempId, avatar);
                 case ConstNpc.NONG_DAN ->
                     new NongDan(mapId, status, cx, cy, tempId, avatar);
+                case ConstNpc.DUONG_TANG ->
+                    new DuongTang(mapId, status, cx, cy, tempId, avatar);
                 default ->
                     new Npc(mapId, status, cx, cy, tempId, avatar) {
                         @Override
