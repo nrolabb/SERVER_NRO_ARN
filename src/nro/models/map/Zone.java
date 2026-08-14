@@ -347,7 +347,7 @@ public class Zone {
                             }
 
                             if (InventoryService.gI().addItemBag(player, item)) {
-                                Logger.log("[Zone.pickItem] Player " + player.name + " nhặt " + item.template.name + " thành công, options.size=" + item.itemOptions.size() + ", info: " + item.info.replace("\n", " - "));
+                                //Logger.log("[Zone.pickItem] Player " + player.name + " nhặt " + item.template.name + " thành công, options.size=" + item.itemOptions.size() + ", info: " + item.info.replace("\n", " - "));
                                 int itemType = item.template.type;
                                 Message msg;
                                 try {
