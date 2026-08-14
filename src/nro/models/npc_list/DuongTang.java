@@ -12,28 +12,16 @@ import java.util.TimerTask;
 
 public class DuongTang extends Npc {
 
-    private final String[] textchat = {"Thiện tai, thiện tai!", "Ngộ Không cứu tao", "Yêu quái phương nào!", "A di đà phật!"};
-    private Timer timer;
-
     public DuongTang(int mapId, int status, int cx, int cy, int tempId, int avartar) {
         super(mapId, status, cx, cy, tempId, avartar);
-        this.timer = new Timer();
-        this.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    npcChat(textchat[Util.nextInt(textchat.length)]);
-                } catch (Exception e) {
-                }
-            }
-        }, Util.nextInt(15000, 30000), 20000);
     }
 
     @Override
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             if (this.mapId == 122) {
-                this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi muốn gì ở ta?", "Cửa hàng", "Về\nVách núi Aru", "Đóng");
+                this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi muốn gì ở ta?", "Cửa hàng", "Về\nVách núi Aru",
+                        "Đóng");
             } else if (this.mapId == 123) {
                 this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ngươi muốn gì ở ta?", "Về\nVách núi Aru", "Đóng");
             } else {
