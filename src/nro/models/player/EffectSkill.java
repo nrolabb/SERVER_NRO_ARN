@@ -151,6 +151,12 @@ public class EffectSkill {
     public int timeDameBuff;
     public int tileDameBuff;
 
+    //Trị thương buff
+    public boolean isTriThuong;
+    public long lastTimeTriThuong;
+    public int timeTriThuong;
+    public int countTriThuong;
+
     public boolean isBodyChangeTechnique;
     boolean isXinbato;
 
@@ -295,6 +301,20 @@ public class EffectSkill {
         }
         if (isDameBuff && Util.canDoWithTime(lastTimeDameBuff, timeDameBuff)) {
             EffectSkillService.gI().removeDameBuff(this.player);
+        }
+        if (isTriThuong) {
+            if (Util.canDoWithTime(lastTimeTriThuong, 1000)) {
+                lastTimeTriThuong = System.currentTimeMillis();
+                countTriThuong++;
+                int heal = (int) (player.nPoint.hpMax * 20 / 100);
+                player.nPoint.addHp(heal);
+                nro.models.services.PlayerService.gI().sendInfoHpMp(player);
+                Service.gI().Send_Info_NV(player);
+                if (countTriThuong >= 5) {
+                    isTriThuong = false;
+                    Service.gI().removeEffPlayer(player, 78);
+                }
+            }
         }
     }
 
