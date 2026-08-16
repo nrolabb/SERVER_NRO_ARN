@@ -157,6 +157,11 @@ public class EffectSkill {
     public int timeTriThuong;
     public int countTriThuong;
 
+    //Buff Pea 10-11
+    public boolean isBuffPea;
+    public long lastTimeBuffPea;
+    public int countBuffPea;
+
     public boolean isBodyChangeTechnique;
     boolean isXinbato;
 
@@ -210,6 +215,10 @@ public class EffectSkill {
         }
         if (isBienHinh) {
             EffectSkillService.gI().downBienHinh(this.player);
+        }
+        if (isBuffPea) {
+            isBuffPea = false;
+            Service.gI().removeEffPlayer(this.player, 78);
         }
     }
 
@@ -312,6 +321,20 @@ public class EffectSkill {
                 Service.gI().Send_Info_NV(player);
                 if (countTriThuong >= 5) {
                     isTriThuong = false;
+                    Service.gI().removeEffPlayer(player, 78);
+                }
+            }
+        }
+        if (isBuffPea) {
+            if (Util.canDoWithTime(lastTimeBuffPea, 1000)) {
+                lastTimeBuffPea = System.currentTimeMillis();
+                countBuffPea++;
+                int heal = (int) (player.nPoint.hpMax * 10 / 100);
+                player.nPoint.addHp(heal);
+                nro.models.services.PlayerService.gI().sendInfoHpMp(player);
+                Service.gI().Send_Info_NV(player);
+                if (countBuffPea >= 3) {
+                    isBuffPea = false;
                     Service.gI().removeEffPlayer(player, 78);
                 }
             }

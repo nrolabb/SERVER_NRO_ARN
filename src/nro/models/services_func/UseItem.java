@@ -2313,6 +2313,13 @@ public class UseItem {
                 Service.gI().chatJustForMe(player, player.pet, "Cám ơn sư phụ");
             }
 
+            if (pea.template.id == 595 || pea.template.id == 1715) {
+                player.effectSkill.isBuffPea = true;
+                player.effectSkill.countBuffPea = 0;
+                player.effectSkill.lastTimeBuffPea = System.currentTimeMillis();
+                Service.gI().sendEffAllPlayer(player, 78, 1, -1, 1);
+            }
+
             InventoryService.gI().subQuantityItemsBag(player, pea, 1);
             InventoryService.gI().sendItemBags(player);
         }
