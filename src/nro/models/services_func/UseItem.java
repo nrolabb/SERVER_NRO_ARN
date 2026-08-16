@@ -2311,6 +2311,13 @@ public class UseItem {
                 player.pet.nPoint.setMp(player.pet.nPoint.mp + hpKiHoiPhuc);
                 Service.gI().sendInfoPlayerEatPea(player.pet);
                 Service.gI().chatJustForMe(player, player.pet, "Cám ơn sư phụ");
+
+                if (pea.template.id == 595 || pea.template.id == 1715) {
+                    player.pet.effectSkill.isBuffPea = true;
+                    player.pet.effectSkill.countBuffPea = 0;
+                    player.pet.effectSkill.lastTimeBuffPea = System.currentTimeMillis();
+                    Service.gI().sendEffAllPlayer(player.pet, 78, 1, -1, 1);
+                }
             }
 
             if (pea.template.id == 595 || pea.template.id == 1715) {

@@ -329,8 +329,10 @@ public class EffectSkill {
             if (Util.canDoWithTime(lastTimeBuffPea, 1000)) {
                 lastTimeBuffPea = System.currentTimeMillis();
                 countBuffPea++;
-                int heal = (int) (player.nPoint.hpMax * 10 / 100);
-                player.nPoint.addHp(heal);
+                int healHp = (int) (player.nPoint.hpMax * 10 / 100);
+                player.nPoint.addHp(healHp);
+                int healMp = (int) (player.nPoint.mpMax * 10 / 100);
+                player.nPoint.addMp(healMp);
                 nro.models.services.PlayerService.gI().sendInfoHpMp(player);
                 Service.gI().Send_Info_NV(player);
                 if (countBuffPea >= 3) {
