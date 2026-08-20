@@ -239,7 +239,7 @@ public class Whis extends Npc {
         int targetLevel = success ? skill.point + 1 : skill.point;
         String skin = ess.getBienHinhSpineSkin(targetLevel);
         nro.models.services.SpineService.gI().sendSpineSkillEffect(player,
-                nro.models.services.EffectSkillService.BIEN_HINH_SPINE_PATH,
+                nro.models.services.EffectSkillService.gI().getBienHinhSpinePath(player),
                 nro.models.services.EffectSkillService.BIEN_HINH_SPINE_ANIM,
                 skin, nro.models.services.EffectSkillService.TIME_TRANSFORM_BIEN_HINH_SPINE);
 
