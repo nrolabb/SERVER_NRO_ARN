@@ -34,8 +34,13 @@ public class SkillUtil {
         SkillTemplate template = findSkillTemplate(tempId);
         if (template != null) {
             List<Skill> skills = template.skillss;
-            if (skills != null && level >= 1 && level <= skills.size()) {
-                skill = skills.get(level - 1);
+            if (skills != null) {
+                for (Skill s : skills) {
+                    if (s.point == level) {
+                        skill = s;
+                        break;
+                    }
+                }
             }
         }
         return skill != null ? new Skill(skill) : null;
@@ -244,7 +249,7 @@ public class SkillUtil {
             return Skill.TROI;
         } else if (id >= 509 && id <= 515) {
             return Skill.HUYT_SAO;
-        } else if (id >= 1950 && id <= 1964) {
+        } else if (id >= 1950 && id <= 1970) {
             return Skill.BIEN_HINH;
         } else {
             return -1;
@@ -296,7 +301,7 @@ public class SkillUtil {
             return getSkillbyId(pl, Skill.TROI);
         } else if (tempId >= 509 && tempId <= 515) {
             return getSkillbyId(pl, Skill.HUYT_SAO);
-        } else if (tempId >= 1950 && tempId <= 1964) {
+        } else if (tempId >= 1950 && tempId <= 1970) {
             return getSkillbyId(pl, Skill.BIEN_HINH);
         } else {
             return null;

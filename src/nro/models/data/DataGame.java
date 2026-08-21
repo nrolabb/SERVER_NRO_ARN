@@ -37,12 +37,14 @@ public class DataGame {
 
     public static byte vsData = 13;
     public static byte vsMap = 2;
-    public static byte vsSkill = 3;
+    // Tăng phiên bản mỗi khi thay đổi skill_template/skillId để client không dùng
+    // cache NRskill cũ (có thể ánh xạ skillId của Biến Hình sang skill cấp 7).
+    public static byte vsSkill = 6;
     public static byte vsItem = 12;
     public static int vsRes = 1;
     public static short maxSmallVersion = 32767;
 
-    public static String LINK_IP_PORT = "Ngọc Rồng Online:36.50.134.190:14445:0";
+    public static String LINK_IP_PORT = "Ngọc Rồng Online:127.0.0.1:14445:0";
     public static Map<Object, Object> MAP_MOUNT_NUM = new HashMap<>();
 
     public static void sendVersionGame(MySession session) {
@@ -557,6 +559,5 @@ public class DataGame {
             e.printStackTrace();
         }
     }
-
 
 }

@@ -43,11 +43,13 @@ public class ItemTimeService {
                 0;
         };
         int timeIcon = player.effectSkill.timeBienHinh / 1000;
+        int currentIcon = iconLvFirst + Math.min(level, 6) - 1;
         if (level == 1) {
-            sendItemTime(player, iconLvFirst, timeIcon);
+            sendItemTime(player, currentIcon, timeIcon);
         } else {
-            removeItemTime(player, iconLvFirst + level - 2);
-            sendItemTime(player, iconLvFirst + level - 1, timeIcon);
+            int previousIcon = iconLvFirst + Math.min(level - 1, 6) - 1;
+            removeItemTime(player, previousIcon);
+            sendItemTime(player, currentIcon, timeIcon);
         }
     }
 

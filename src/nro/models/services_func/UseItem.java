@@ -2099,7 +2099,8 @@ public class UseItem {
                 if (curSkill == null) {
                     curSkill = SkillUtil.createSkillLevel0(SkillUtil.getTempSkillSkillByItemID(item.template.id));
                 }
-                if (curSkill.point == 7) {
+                int maxPoint = curSkill.template != null && curSkill.template.maxPoint > 0 ? curSkill.template.maxPoint : 7;
+                if (curSkill.point >= maxPoint) {
                     Service.gI().sendThongBao(pl, "Kỹ năng đã đạt tối đa!");
                 } else {
                     if (curSkill.point == 0) {
