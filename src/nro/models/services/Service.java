@@ -2670,7 +2670,7 @@ public class Service {
         try {
             msg = new Message(-102);
             msg.writer().writeByte(isLoggingIn ? 1 : 0);
-            session.doSendMessage(msg);
+            session.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
             e.printStackTrace();
