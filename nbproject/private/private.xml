@@ -38,6 +38,11 @@
             <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/npc/NpcFactory.java</file>
             <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/data/DataGame.java</file>
             <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/npc_list/DuongTang.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/services/EffectSkillService.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/services/PlayerService.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/services/Service.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/services/SpinRewardService.java</file>
+            <file>file:/D:/NRO/NROKHACH/SERVER_NRO_ARN/src/nro/models/Bot/BotPemQuai.java</file>
         </group>
     </open-files>
 </project-private>

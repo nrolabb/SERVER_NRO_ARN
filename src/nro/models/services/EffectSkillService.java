@@ -37,7 +37,6 @@ public class EffectSkillService {
     public static final byte SLEEP_EFFECT = 41;
     public static final byte STONE_EFFECT = 42;
 
-
     private static EffectSkillService instance;
 
     private EffectSkillService() {
@@ -65,7 +64,9 @@ public class EffectSkillService {
         player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
         sendEffectCharge(player);
         if (isUseSpineBienHinh(player)) {
-            int targetLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? Math.min(skill.point, player.effectSkill.levelBienHinh + 1) : skill.point;
+            int targetLevel = nro.models.server.ModFunc.isMultiLevelBienHinh
+                    ? Math.min(skill.point, player.effectSkill.levelBienHinh + 1)
+                    : skill.point;
             String skin = getBienHinhSpineSkin(player, targetLevel);
             String skeletonPath = getBienHinhSpinePath(player, targetLevel);
             SpineService.gI().sendSpineSkillEffect(player, skeletonPath, BIEN_HINH_SPINE_ANIM, skin,
@@ -80,7 +81,9 @@ public class EffectSkillService {
                         .filter(s -> s.point == skill.point)
                         .findFirst()
                         .orElse(skill);
-        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? (player.effectSkill.levelBienHinh >= skill.point - 1) : true;
+        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh
+                ? (player.effectSkill.levelBienHinh >= skill.point - 1)
+                : true;
         if (!lastLevel && baseSkill.coolDown > 0) {
             skill.coolDown = baseSkill.coolDown * 5 / 100;
         } else {
@@ -111,10 +114,14 @@ public class EffectSkillService {
             return;
         }
         int skillLevel = pendingSkillLevel;
-        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? (player.effectSkill.levelBienHinh >= skillLevel - 1) : true;
+        boolean lastLevel = nro.models.server.ModFunc.isMultiLevelBienHinh
+                ? (player.effectSkill.levelBienHinh >= skillLevel - 1)
+                : true;
 
         player.effectSkill.isBienHinh = true;
-        player.effectSkill.levelBienHinh = nro.models.server.ModFunc.isMultiLevelBienHinh ? Math.min(skillLevel, player.effectSkill.levelBienHinh + 1) : skillLevel;
+        player.effectSkill.levelBienHinh = nro.models.server.ModFunc.isMultiLevelBienHinh
+                ? Math.min(skillLevel, player.effectSkill.levelBienHinh + 1)
+                : skillLevel;
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
         player.effectSkill.wasSpineBienHinh = isUseSpineBienHinh(player);
@@ -179,7 +186,8 @@ public class EffectSkillService {
         if (player == null) {
             return false;
         }
-        if ((player.gender == ConstPlayer.XAYDA || player.gender == ConstPlayer.TRAI_DAT || player.gender == ConstPlayer.NAMEC) && player.fusion != null
+        if ((player.gender == ConstPlayer.XAYDA || player.gender == ConstPlayer.TRAI_DAT
+                || player.gender == ConstPlayer.NAMEC) && player.fusion != null
                 && player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
             return true;
         }
@@ -194,7 +202,7 @@ public class EffectSkillService {
         return ITEM_BIEN_HINH_SPINE.contains((int) item.template.id);
     }
 
-        public String getBienHinhSpinePath(Player player, int skillLevel) {
+    public String getBienHinhSpinePath(Player player, int skillLevel) {
         if (player.gender == ConstPlayer.TRAI_DAT) {
             return "Skills/Skill_2/Hero_2";
         } else if (player.gender == ConstPlayer.NAMEC) {
@@ -205,7 +213,7 @@ public class EffectSkillService {
         return BIEN_HINH_SPINE_PATH;
     }
 
-        public String getBienHinhSpineSkin(Player player, int skillLevel) {
+    public String getBienHinhSpineSkin(Player player, int skillLevel) {
         if (player.gender == ConstPlayer.TRAI_DAT) {
             return "V" + skillLevel;
         } else if (player.gender == ConstPlayer.NAMEC) {
@@ -217,10 +225,14 @@ public class EffectSkillService {
             case 2:
                 return "V6";
             case 3:
-                return "V2";
+                return "V7";
             case 4:
-                return "V1";
+                return "V2";
             case 5:
+                return "V3";
+            case 6:
+                return "V1";
+            case 7:
                 return "V4";
             default:
                 return "V1";

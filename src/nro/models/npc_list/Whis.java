@@ -197,11 +197,11 @@ public class Whis extends Npc {
             Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
             return;
         }
-        if (skill.point >= 5) {
+        if (skill.point >= skill.template.maxPoint) {
             Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
             return;
         }
-        int successRate = 30 - (skill.point * 5);
+        int successRate = Math.max(1, 30 - (skill.point * 4));
         String message = "|1|Ta sẽ giúp ngươi nâng cấp kỹ năng Biến Hình\n"
                 + "|7|Cấp hiện tại: " + skill.point + "\n"
                 + "|2|Tiêu tốn: 10 Tỷ Tiềm Năng Sức Mạnh\n"
@@ -219,7 +219,7 @@ public class Whis extends Npc {
             Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
             return;
         }
-        if (skill.point >= 5) {
+        if (skill.point >= skill.template.maxPoint) {
             Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
             return;
         }
@@ -231,7 +231,7 @@ public class Whis extends Npc {
         player.nPoint.tiemNang -= 10_000_000_000L;
         Service.gI().point(player);
 
-        int successRate = 30 - (skill.point * 5);
+        int successRate = Math.max(1, 30 - (skill.point * 4));
         boolean success = Util.isTrue(successRate, 100);
 
         // Gửi animation spine mặc định
