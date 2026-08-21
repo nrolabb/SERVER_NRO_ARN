@@ -19,6 +19,7 @@ import nro.models.services.TaskService;
 import nro.models.map.service.ItemMapService;
 import nro.models.services.FriendAndEnemyService;
 import nro.models.data.LocalManager;
+import nro.models.data.LocalResultSet;
 import nro.models.consts.ConstIgnoreName;
 import nro.models.consts.ConstMap;
 import nro.models.utils.Util;
@@ -209,9 +210,9 @@ public class Controller implements IMessageHandler {
                     }
                     break;
                 case 42:
-                    // //Đăng ký tài khoản nhanh
-                    // Service.gI().regisAccount(_session, _msg);
-                    // break;
+                    // Đăng ký tài khoản nhanh
+                    login2(_session, _msg);
+                    break;
                 case -127:
                     if (player != null) {
                         LuckyRound.gI().readOpenBall(player, _msg);
@@ -805,6 +806,9 @@ public class Controller implements IMessageHandler {
                     case 0:
                         session.login(msg.reader().readUTF(), msg.reader().readUTF());
                         break;
+                    case 1:
+                        login2(session, msg);
+                        break;
                     case 2:
                         Service.gI().setClientType(session, msg);
                         break;
@@ -989,51 +993,153 @@ public class Controller implements IMessageHandler {
         try {
             String user = "";
             String pass = "";
-            String email = "";
+            String referralCode = "";
+            boolean isRegistrationRequest = false;
             try {
                 user = msg.reader().readUTF();
                 pass = msg.reader().readUTF();
-                email = msg.reader().readUTF();
+                if (msg.reader().available() > 0) {
+                    referralCode = msg.reader().readUTF();
+                }
+                isRegistrationRequest = true;
             } catch (Exception e) {
                 if (pass == null || pass.isEmpty()) {
                     pass = user;
                 }
             }
-            if (user == null || user.isEmpty() || user.length() < 3) {
-                user = "u" + System.currentTimeMillis();
-                pass = user;
-            }
-            user = user.toLowerCase();
             
-            LocalResultSet rs = LocalManager.executeQuery("select count(1) from account where ip_address = ?", session.ipAddress);
-            if (rs.next()) {
-                if (rs.getInt(1) >= 3) {
-                    Service.gI().sendThongBaoOK(session, "Một địa chỉ IP chỉ được tạo tối đa 3 tài khoản!");
-                    rs.dispose();
+            if (isRegistrationRequest && pass != null && !pass.isEmpty() && !pass.equals(user)) {
+                user = user == null ? "" : user.trim().toLowerCase();
+                if (!user.matches("[a-z0-9_]{5,20}")) {
+                    Service.gI().sendRegistrationResult(session, false, "Tên tài khoản gồm 5-20 ký tự: a-z, 0-9 hoặc _", "");
                     return;
                 }
-            }
-            rs.dispose();
-
-            rs = LocalManager.executeQuery("select * from account where username = ?", user);
-            if (rs.next()) {
-                rs.dispose();
+                if (pass.length() < 6 || pass.length() > 64) {
+                    Service.gI().sendRegistrationResult(session, false, "Mật khẩu phải từ 6 đến 64 ký tự", "");
+                    return;
+                }
+                
+                LocalResultSet rs = null;
+                try {
+                    rs = LocalManager.executeQuery("SELECT id FROM account WHERE username = ? LIMIT 1", user);
+                    if (rs.next()) {
+                        Service.gI().sendRegistrationResult(session, false, "Tên tài khoản đã tồn tại!", "");
+                        return;
+                    }
+                } catch (Exception ex) {
+                    Logger.logException(Controller.class, ex);
+                } finally {
+                    if (rs != null) {
+                        rs.dispose();
+                    }
+                }
+                
+                String email = user + "@gmail.com";
+                String refCode = (referralCode != null && !referralCode.trim().isEmpty()) ? referralCode.trim() : "";
+                
+                boolean inserted = createNewAccount(user, pass, email, refCode);
+                if (inserted) {
+                    Service.gI().sendRegistrationResult(session, true, "Đăng ký tài khoản thành công!", user);
+                } else {
+                    Service.gI().sendRegistrationResult(session, false, "Không thể tạo tài khoản, vui lòng thử lại sau!", "");
+                }
+            } else {
+                if (user == null || user.isEmpty() || user.length() < 3) {
+                    user = "u" + System.currentTimeMillis();
+                    pass = user;
+                }
+                user = user.toLowerCase();
                 session.login(user, pass);
-                return;
             }
-            rs.dispose();
-
-            String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-            StringBuilder maGtBuilder = new StringBuilder();
-            for (int i = 0; i < 5; i++) {
-                maGtBuilder.append(chars.charAt(nro.models.utils.Util.nextInt(chars.length())));
-            }
-            String refCode = user + "_" + maGtBuilder.toString();
-
-            LocalManager.executeUpdate("insert into account(username, password, ip_address, active, email, token, xsrf_token, newpass, gioithieu) values(?, ?, ?, ?, ?, '', '', '', ?)", user, pass, session.ipAddress, 1, email, refCode);
-            session.login(user, pass);
         } catch (Exception e) {
             Logger.logException(Controller.class, e);
+            Service.gI().sendRegistrationResult(session, false, "Lỗi tạo tài khoản: " + e.getMessage(), "");
+        }
+    }
+
+    private boolean createNewAccount(String user, String pass, String email, String refCode) {
+        try (java.sql.Connection con = LocalManager.getConnection()) {
+            java.sql.DatabaseMetaData meta = con.getMetaData();
+            java.util.List<String> colNames = new java.util.ArrayList<>();
+            java.util.List<Object> colValues = new java.util.ArrayList<>();
+            
+            try (java.sql.ResultSet rs = meta.getColumns(con.getCatalog(), null, "account", null)) {
+                while (rs.next()) {
+                    String colName = rs.getString("COLUMN_NAME").toLowerCase();
+                    int dataType = rs.getInt("DATA_TYPE");
+                    String isNullable = rs.getString("IS_NULLABLE");
+                    String colDef = rs.getString("COLUMN_DEF");
+                    
+                    if (colName.equals("id")) {
+                        continue;
+                    }
+                    
+                    if (colName.equals("username")) {
+                        colNames.add("username");
+                        colValues.add(user);
+                    } else if (colName.equals("password")) {
+                        colNames.add("password");
+                        colValues.add(pass);
+                    } else if (colName.equals("email")) {
+                        colNames.add("email");
+                        colValues.add(email);
+                    } else if (colName.equals("token")) {
+                        colNames.add("token");
+                        colValues.add("");
+                    } else if (colName.equals("active")) {
+                        colNames.add("active");
+                        colValues.add(0);
+                    } else if (colName.equals("gioithieu")) {
+                        colNames.add("gioithieu");
+                        colValues.add(refCode);
+                    } else if (colName.equals("create_time")) {
+                        colNames.add("create_time");
+                        colValues.add(new java.sql.Timestamp(System.currentTimeMillis()));
+                    } else if ("NO".equalsIgnoreCase(isNullable) && colDef == null) {
+                        colNames.add(colName);
+                        if (dataType == java.sql.Types.VARCHAR || dataType == java.sql.Types.CHAR || dataType == java.sql.Types.LONGVARCHAR) {
+                            colValues.add("");
+                        } else if (dataType == java.sql.Types.INTEGER || dataType == java.sql.Types.BIGINT || dataType == java.sql.Types.SMALLINT || dataType == java.sql.Types.TINYINT || dataType == java.sql.Types.DOUBLE || dataType == java.sql.Types.FLOAT) {
+                            colValues.add(0);
+                        } else if (dataType == java.sql.Types.TIMESTAMP || dataType == java.sql.Types.DATE) {
+                            colValues.add(new java.sql.Timestamp(System.currentTimeMillis()));
+                        } else {
+                            colValues.add("");
+                        }
+                    }
+                }
+            }
+            
+            if (!colNames.contains("username")) {
+                colNames.add("username");
+                colValues.add(user);
+            }
+            if (!colNames.contains("password")) {
+                colNames.add("password");
+                colValues.add(pass);
+            }
+            
+            StringBuilder sql = new StringBuilder("INSERT INTO account (");
+            StringBuilder placeholders = new StringBuilder(" VALUES (");
+            for (int i = 0; i < colNames.size(); i++) {
+                sql.append("`").append(colNames.get(i)).append("`");
+                placeholders.append("?");
+                if (i < colNames.size() - 1) {
+                    sql.append(", ");
+                    placeholders.append(", ");
+                }
+            }
+            sql.append(")").append(placeholders).append(")");
+            
+            try (java.sql.PreparedStatement ps = con.prepareStatement(sql.toString())) {
+                for (int i = 0; i < colValues.size(); i++) {
+                    ps.setObject(i + 1, colValues.get(i));
+                }
+                return ps.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            Logger.logException(Controller.class, e);
+            return false;
         }
     }
 

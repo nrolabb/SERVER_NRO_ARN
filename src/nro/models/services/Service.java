@@ -1291,6 +1291,25 @@ public class Service {
         }
     }
 
+    public void sendRegistrationResult(MySession session, boolean success, String text, String username) {
+        Message msg = null;
+        try {
+            msg = new Message((byte) 120);
+            msg.writer().writeBoolean(success);
+            msg.writer().writeUTF(text);
+            if (success) {
+                msg.writer().writeUTF(username);
+            }
+            session.sendMessage(msg);
+        } catch (Exception e) {
+            Logger.logException(Service.class, e);
+        } finally {
+            if (msg != null) {
+                msg.cleanup();
+            }
+        }
+    }
+
     public void sendThongBaoAllPlayer(String thongBao) {
         Message msg;
         try {
