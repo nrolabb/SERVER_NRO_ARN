@@ -237,9 +237,9 @@ public class Whis extends Npc {
         // Gửi animation spine mặc định
         nro.models.services.EffectSkillService ess = nro.models.services.EffectSkillService.gI();
         int targetLevel = success ? skill.point + 1 : skill.point;
-        String skin = ess.getBienHinhSpineSkin(targetLevel);
+        String skin = ess.getBienHinhSpineSkin(player, targetLevel);
         nro.models.services.SpineService.gI().sendSpineSkillEffect(player,
-                nro.models.services.EffectSkillService.gI().getBienHinhSpinePath(player),
+                nro.models.services.EffectSkillService.gI().getBienHinhSpinePath(player, targetLevel),
                 nro.models.services.EffectSkillService.BIEN_HINH_SPINE_ANIM,
                 skin, nro.models.services.EffectSkillService.TIME_TRANSFORM_BIEN_HINH_SPINE);
 

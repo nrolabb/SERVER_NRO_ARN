@@ -1,5 +1,5 @@
 package nro.models.server;
 
 public class ModFunc {
-    public static boolean isMultiLevelBienHinh = false; // Bật tắt cơ chế biến hình từng cấp
+    public static boolean isMultiLevelBienHinh = true; // Bật tắt cơ chế biến hình từng cấp
 }

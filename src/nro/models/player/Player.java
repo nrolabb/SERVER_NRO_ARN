@@ -1028,11 +1028,9 @@ public class Player implements Runnable {
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
             if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
-                // short[] HEADS = {2259, 2261, 2265, 2263, 2264};
-                short[] HEADS = { 2287, 2288, 2289, 2291, 2292 };
                 int lvl = effectSkill.levelBienHinh - 1;
-                if (lvl >= 0 && lvl < HEADS.length) {
-                    return HEADS[lvl];
+                if (lvl >= 0 && lvl < ConstPlayer.HEADBIENHINH_SPINE[this.gender].length) {
+                    return ConstPlayer.HEADBIENHINH_SPINE[this.gender][lvl];
                 }
             }
             int lvlNormal = Math.max(0,
@@ -1105,7 +1103,10 @@ public class Player implements Runnable {
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
             if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
-                return 2294;
+                int lvl = effectSkill.levelBienHinh - 1;
+                if (lvl >= 0 && lvl < ConstPlayer.BODYBIENHINH_SPINE[this.gender].length) {
+                    return ConstPlayer.BODYBIENHINH_SPINE[this.gender][lvl];
+                }
             }
             return ConstPlayer.BODYBIENHINH[this.gender];
         }
@@ -1181,7 +1182,10 @@ public class Player implements Runnable {
         }
         if (effectSkill != null && effectSkill.isBienHinh) {
             if (nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this)) {
-                return 2295;
+                int lvl = effectSkill.levelBienHinh - 1;
+                if (lvl >= 0 && lvl < ConstPlayer.LEGBIENHINH_SPINE[this.gender].length) {
+                    return ConstPlayer.LEGBIENHINH_SPINE[this.gender][lvl];
+                }
             }
             return ConstPlayer.LEGBIENHINH[this.gender];
         }

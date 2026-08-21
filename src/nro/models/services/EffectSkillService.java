@@ -66,8 +66,8 @@ public class EffectSkillService {
         sendEffectCharge(player);
         if (isUseSpineBienHinh(player)) {
             int targetLevel = nro.models.server.ModFunc.isMultiLevelBienHinh ? Math.min(skill.point, player.effectSkill.levelBienHinh + 1) : skill.point;
-            String skin = getBienHinhSpineSkin(targetLevel);
-            String skeletonPath = getBienHinhSpinePath(player);
+            String skin = getBienHinhSpineSkin(player, targetLevel);
+            String skeletonPath = getBienHinhSpinePath(player, targetLevel);
             SpineService.gI().sendSpineSkillEffect(player, skeletonPath, BIEN_HINH_SPINE_ANIM, skin,
                     TIME_TRANSFORM_BIEN_HINH_SPINE);
         } else {
@@ -194,18 +194,23 @@ public class EffectSkillService {
         return ITEM_BIEN_HINH_SPINE.contains((int) item.template.id);
     }
 
-        public String getBienHinhSpinePath(Player player) {
+        public String getBienHinhSpinePath(Player player, int skillLevel) {
         if (player.gender == ConstPlayer.TRAI_DAT) {
             return "Skills/Skill_2/Hero_2";
         } else if (player.gender == ConstPlayer.NAMEC) {
-            return "Skills/Skill_3/Hero_3";
+            return "Skills/Skill_3/" + skillLevel;
         } else if (player.gender == ConstPlayer.XAYDA) {
             return "Skills/Skill_1/Hero_1";
         }
         return BIEN_HINH_SPINE_PATH;
     }
 
-    public String getBienHinhSpineSkin(int skillLevel) {
+        public String getBienHinhSpineSkin(Player player, int skillLevel) {
+        if (player.gender == ConstPlayer.TRAI_DAT) {
+            return "V" + skillLevel;
+        } else if (player.gender == ConstPlayer.NAMEC) {
+            return String.valueOf(skillLevel);
+        }
         switch (skillLevel) {
             case 1:
                 return "V5";

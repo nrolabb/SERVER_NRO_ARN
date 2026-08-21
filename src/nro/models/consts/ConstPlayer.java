@@ -19,31 +19,47 @@ public class ConstPlayer {
     }
 
     public static final byte[][] AURABIENHINH = {
-        {7, 7, 13, 6, 31},
-        {7, 7, 13, 6, 31},
-        {7, 7, 13, 6, 31}
+            { 7, 7, 13, 6, 31 },
+            { 7, 7, 13, 6, 31 },
+            { 7, 7, 13, 6, 31 }
     };
     public static final short[][] HEADBIENHINH = {
-        {1992, 1993, 1994, 1995, 1996},
-        {1997, 1998, 1999, 2000, 2001},
-        {2002, 2003, 2004, 2005, 2006}
+            { 1992, 1993, 1994, 1995, 1996 },
+            { 1997, 1998, 1999, 2000, 2001 },
+            { 2002, 2003, 2004, 2005, 2006 }
     };
-    public static final short[] BODYBIENHINH = {1986, 1988, 1990};
-    public static final short[] LEGBIENHINH = {1987, 1989, 1991};
+    public static final short[] BODYBIENHINH = { 1986, 1988, 1990 };
+    public static final short[] LEGBIENHINH = { 1987, 1989, 1991 };
 
-    public static final int[] HEADMONKEY = {192, 195, 196, 199, 197, 200, 198};
+    public static final short[][] HEADBIENHINH_SPINE = {
+            { 2323, 2323, 2317, 2299, 2326, 2329, 2332 }, // Trái Đất
+            { 2352, 2355, 2339, 2406, 2409, 2351, 2400 }, // Namec
+            { 2287, 2288, 2289, 2291, 2292, 2292, 2292 } // Xayda
+    };
+    public static final short[][] BODYBIENHINH_SPINE = {
+            { 2324, 2324, 2318, 2300, 2327, 2330, 2333 }, // Trái Đất
+            { 2353, 2356, 2340, 2407, 2410, 2349, 2401 }, // Namec
+            { 2294, 2294, 2294, 2294, 2294, 2294, 2294 } // Xayda
+    };
+    public static final short[][] LEGBIENHINH_SPINE = {
+            { 2325, 2325, 2319, 2301, 2328, 2331, 2334 }, // Trái Đất
+            { 2354, 2357, 2341, 2408, 2411, 2350, 2402 }, // Namec
+            { 2295, 2295, 2295, 2295, 2295, 2295, 2295 } // Xayda
+    };
+
+    public static final int[] HEADMONKEY = { 192, 195, 196, 199, 197, 200, 198 };
 
     public static final byte TRAI_DAT = 0;
     public static final byte NAMEC = 1;
     public static final byte XAYDA = 2;
 
-    //type pk
+    // type pk
     public static final byte NON_PK = 0;
     public static final byte PK_PVP = 3;
     public static final byte PK_PVP_2 = 4;
     public static final byte PK_ALL = 5;
 
-    //type fushion
+    // type fushion
     public static final byte NON_FUSION = 0;
     public static final byte LUONG_LONG_NHAT_THE = 4;
     public static final byte HOP_THE_PORATA = 6;
