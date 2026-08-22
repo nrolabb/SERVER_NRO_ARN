@@ -214,28 +214,10 @@ public class EffectSkillService {
     }
 
     public String getBienHinhSpineSkin(Player player, int skillLevel) {
-        if (player.gender == ConstPlayer.TRAI_DAT) {
-            return "V" + skillLevel;
-        } else if (player.gender == ConstPlayer.NAMEC) {
+        if (player.gender == ConstPlayer.NAMEC) {
             return String.valueOf(skillLevel);
-        }
-        switch (skillLevel) {
-            case 1:
-                return "V5";
-            case 2:
-                return "V6";
-            case 3:
-                return "V7";
-            case 4:
-                return "V2";
-            case 5:
-                return "V3";
-            case 6:
-                return "V1";
-            case 7:
-                return "V4";
-            default:
-                return "V1";
+        } else {
+            return "V" + skillLevel;
         }
     }
 
