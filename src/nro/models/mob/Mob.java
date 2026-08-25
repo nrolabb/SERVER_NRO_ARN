@@ -39,7 +39,7 @@ public class Mob {
     public Zone zone;
     public int tempId;
     public String name;
-    public byte level;
+    public int level;
     private int mapId;
 
     public List<Player> temporaryEnemies = new ArrayList<>();

@@ -119,13 +119,13 @@ public class Template {
         public byte maxPlayerPerZone;
         public List<WayPoint> wayPoints;
 
-        public byte[] mobTemp;
-        public byte[] mobLevel;
+        public int[] mobTemp;
+        public int[] mobLevel;
         public int[] mobHp;
         public short[] mobX;
         public short[] mobY;
 
-        public byte[] npcId;
+        public int[] npcId;
         public short[] npcX;
         public short[] npcY;
 

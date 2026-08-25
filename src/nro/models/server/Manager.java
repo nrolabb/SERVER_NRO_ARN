@@ -1013,7 +1013,7 @@ public final class Manager {
             rs = ps.executeQuery();
             while (rs.next()) {
                 MobTemplate mobTemp = new MobTemplate();
-                mobTemp.id = rs.getByte("id");
+                mobTemp.id = rs.getInt("id");
                 mobTemp.type = rs.getByte("type");
                 mobTemp.name = rs.getString("name");
                 mobTemp.hp = rs.getInt("hp");
@@ -1031,7 +1031,7 @@ public final class Manager {
             rs = ps.executeQuery();
             while (rs.next()) {
                 NpcTemplate npcTemp = new NpcTemplate();
-                npcTemp.id = rs.getByte("id");
+                npcTemp.id = rs.getInt("id");
                 npcTemp.name = rs.getString("name");
                 npcTemp.head = rs.getShort("head");
                 npcTemp.body = rs.getShort("body");
@@ -1109,15 +1109,15 @@ public final class Manager {
                     dataArray.clear();
                     // load mobs
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("mobs").replaceAll("\\\"", ""));
-                    mapTemplate.mobTemp = new byte[dataArray.size()];
-                    mapTemplate.mobLevel = new byte[dataArray.size()];
+                    mapTemplate.mobTemp = new int[dataArray.size()];
+                    mapTemplate.mobLevel = new int[dataArray.size()];
                     mapTemplate.mobHp = new int[dataArray.size()];
                     mapTemplate.mobX = new short[dataArray.size()];
                     mapTemplate.mobY = new short[dataArray.size()];
                     for (int j = 0; j < dataArray.size(); j++) {
                         JSONArray dtm = (JSONArray) JSONValue.parse(String.valueOf(dataArray.get(j)));
-                        mapTemplate.mobTemp[j] = Byte.parseByte(String.valueOf(dtm.get(0)));
-                        mapTemplate.mobLevel[j] = Byte.parseByte(String.valueOf(dtm.get(1)));
+                        mapTemplate.mobTemp[j] = Integer.parseInt(String.valueOf(dtm.get(0)));
+                        mapTemplate.mobLevel[j] = Integer.parseInt(String.valueOf(dtm.get(1)));
                         mapTemplate.mobHp[j] = Integer.parseInt(String.valueOf(dtm.get(2)));
                         mapTemplate.mobX[j] = Short.parseShort(String.valueOf(dtm.get(3)));
                         mapTemplate.mobY[j] = Short.parseShort(String.valueOf(dtm.get(4)));
@@ -1126,12 +1126,12 @@ public final class Manager {
                     dataArray.clear();
                     // load npcs
                     dataArray = (JSONArray) JSONValue.parse(rs.getString("npcs").replaceAll("\\\"", ""));
-                    mapTemplate.npcId = new byte[dataArray.size()];
+                    mapTemplate.npcId = new int[dataArray.size()];
                     mapTemplate.npcX = new short[dataArray.size()];
                     mapTemplate.npcY = new short[dataArray.size()];
                     for (int j = 0; j < dataArray.size(); j++) {
                         JSONArray dtn = (JSONArray) JSONValue.parse(String.valueOf(dataArray.get(j)));
-                        mapTemplate.npcId[j] = Byte.parseByte(String.valueOf(dtn.get(0)));
+                        mapTemplate.npcId[j] = Integer.parseInt(String.valueOf(dtn.get(0)));
                         mapTemplate.npcX[j] = Short.parseShort(String.valueOf(dtn.get(1)));
                         mapTemplate.npcY[j] = Short.parseShort(String.valueOf(dtn.get(2)));
                         dtn.clear();

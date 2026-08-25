@@ -175,7 +175,7 @@ public class Map implements Runnable {
         }
     }
 
-    public void initNpc(byte[] npcId, short[] npcX, short[] npcY) {
+    public void initNpc(int[] npcId, short[] npcX, short[] npcY) {
         for (int i = 0; i < npcId.length; i++) {
             this.npcs.add(NpcFactory.createNPC(this.mapId, 1, npcX[i], npcY[i], npcId[i]));
         }
@@ -197,7 +197,7 @@ public class Map implements Runnable {
         }, 0, 5000, TimeUnit.MILLISECONDS);  // Cập nhật mỗi 1 giây
     }
 
-    public void initMob(byte[] mobTemp, byte[] mobLevel, int[] mobHp, short[] mobX, short[] mobY) {
+    public void initMob(int[] mobTemp, int[] mobLevel, int[] mobHp, short[] mobX, short[] mobY) {
         for (int i = 0; i < mobTemp.length; i++) {
             int mobTempId = mobTemp[i];
             Template.MobTemplate temp = Manager.getMobTemplateByTemp(mobTempId);

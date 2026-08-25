@@ -637,7 +637,7 @@ public class Controller implements IMessageHandler {
                     }
                     break;
                 case 11:
-                    byte modId = _msg.reader().readByte();
+                    int modId = _msg.reader().readUnsignedByte();
                     DataGame.requestMobTemplate(_session, modId);
                     break;
                 case 44:
