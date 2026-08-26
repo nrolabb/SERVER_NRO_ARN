@@ -874,10 +874,19 @@ public class Player implements Runnable {
     }
 
     public byte getAura() {
+        if (effectSkill != null && effectSkill.isBienHinh) {
+            int lvl = effectSkill.levelBienHinh - 1;
+            if (lvl >= 0 && lvl < ConstPlayer.AURABIENHINH.length) {
+                return (byte) ConstPlayer.AURABIENHINH[lvl];
+            }
+        }
         if (this.inventory != null && this.inventory.itemsBody.size() > 5) {
             Item item = this.inventory.itemsBody.get(5);
             if (item != null && item.isNotNullItem()) {
                 int id = item.template.id;
+                if (id == 2172) {
+                    return 7;
+                }
                 // Namec
                 if (id >= 2114 && id <= 2124) {
                     return 42;

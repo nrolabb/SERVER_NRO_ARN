@@ -18,11 +18,7 @@ public class ConstPlayer {
                 return (short) (HERO1_BIEN_HINH_BODY_START + safeFrame - 1);
         }
 
-        public static final byte[][] AURABIENHINH = {
-                        { 7, 7, 13, 6, 31 },
-                        { 7, 7, 13, 6, 31 },
-                        { 7, 7, 13, 6, 31 }
-        };
+        public static final short[] AURABIENHINH = { 86, 7, 88, 84, 87, 90, 8 };
         public static final short[][] HEADBIENHINH = {
                         { 1992, 1993, 1994, 1995, 1996 },
                         { 1997, 1998, 1999, 2000, 2001 },
