@@ -496,10 +496,14 @@ public class Controller implements IMessageHandler {
                         }
                         int shenronType = player.zone.shenronType;
                         if (idT == 25 && shenronType != -1) {
-                            if (shenronType == 2) idT = 50;
-                            else if (shenronType == 1) idT = 51;
-                            else if (shenronType == 0) idT = 59;
-                            else idT = 60;
+                            if (shenronType == 2)
+                                idT = 50;
+                            else if (shenronType == 1)
+                                idT = 51;
+                            else if (shenronType == 0)
+                                idT = 59;
+                            else
+                                idT = 60;
                         }
                         DataGame.sendEffectTemplate(_session, effId, idT);
                     }
@@ -764,16 +768,17 @@ public class Controller implements IMessageHandler {
                     break;
                 case 126: // androidPack2
                     break;
-		case 125: // Admin mở danh sách boss bằng phím B
-		    if (player != null && player.isAdmin()) {
-			BossManager.gI().showListBoss(player);
-		    }
-		    break;
+                case 125: // Admin mở danh sách boss bằng phím B
+                    if (player != null && player.isAdmin()) {
+                        BossManager.gI().showListBoss(player);
+                    }
+                    break;
                 case -78: // checkMMove
                     _msg.reader().readInt(); // second
                     break;
                 case -114: // Nha bep cooking
-                    if (player != null) handleCooking(player, _msg);
+                    if (player != null)
+                        handleCooking(player, _msg);
                     break;
                 case 27:
                     // short menuid
@@ -856,7 +861,7 @@ public class Controller implements IMessageHandler {
                         if (player != null && player.isPl()) {
                             Service.gI().player(player);
                             Service.gI().Send_Caitrang(player);
-                            
+
                             // Send Farm crop templates info on login
                             DataGame.sendCropTemplateInfo(_session);
                             // -64 my flag bag
@@ -883,7 +888,8 @@ public class Controller implements IMessageHandler {
                                 // sendThongBaoServer(player);
                             }
 
-                            if (player.inventory.itemsBody.get(10).isNotNullItem()) {
+                            if (player.inventory.itemsBody.size() > 10
+                                    && player.inventory.itemsBody.get(10).isNotNullItem()) {
                                 Service.gI().sendChibi(player);
                             }
                             player.zone.mapInfo(player);
@@ -1014,18 +1020,19 @@ public class Controller implements IMessageHandler {
                     pass = user;
                 }
             }
-            
+
             if (isRegistrationRequest && pass != null && !pass.isEmpty() && !pass.equals(user)) {
                 user = user == null ? "" : user.trim().toLowerCase();
                 if (!user.matches("[a-z0-9_]{5,20}")) {
-                    Service.gI().sendRegistrationResult(session, false, "Tên tài khoản gồm 5-20 ký tự: a-z, 0-9 hoặc _", "");
+                    Service.gI().sendRegistrationResult(session, false, "Tên tài khoản gồm 5-20 ký tự: a-z, 0-9 hoặc _",
+                            "");
                     return;
                 }
                 if (pass.length() < 6 || pass.length() > 64) {
                     Service.gI().sendRegistrationResult(session, false, "Mật khẩu phải từ 6 đến 64 ký tự", "");
                     return;
                 }
-                
+
                 LocalResultSet rs = null;
                 try {
                     rs = LocalManager.executeQuery("SELECT id FROM account WHERE username = ? LIMIT 1", user);
@@ -1040,15 +1047,16 @@ public class Controller implements IMessageHandler {
                         rs.dispose();
                     }
                 }
-                
+
                 String email = user + "@gmail.com";
                 String refCode = (referralCode != null && !referralCode.trim().isEmpty()) ? referralCode.trim() : "";
-                
+
                 boolean inserted = createNewAccount(user, pass, email, refCode);
                 if (inserted) {
                     Service.gI().sendRegistrationResult(session, true, "Đăng ký tài khoản thành công!", user);
                 } else {
-                    Service.gI().sendRegistrationResult(session, false, "Không thể tạo tài khoản, vui lòng thử lại sau!", "");
+                    Service.gI().sendRegistrationResult(session, false,
+                            "Không thể tạo tài khoản, vui lòng thử lại sau!", "");
                 }
             } else {
                 if (user == null || user.isEmpty() || user.length() < 3) {
@@ -1069,18 +1077,18 @@ public class Controller implements IMessageHandler {
             java.sql.DatabaseMetaData meta = con.getMetaData();
             java.util.List<String> colNames = new java.util.ArrayList<>();
             java.util.List<Object> colValues = new java.util.ArrayList<>();
-            
+
             try (java.sql.ResultSet rs = meta.getColumns(con.getCatalog(), null, "account", null)) {
                 while (rs.next()) {
                     String colName = rs.getString("COLUMN_NAME").toLowerCase();
                     int dataType = rs.getInt("DATA_TYPE");
                     String isNullable = rs.getString("IS_NULLABLE");
                     String colDef = rs.getString("COLUMN_DEF");
-                    
+
                     if (colName.equals("id")) {
                         continue;
                     }
-                    
+
                     if (colName.equals("username")) {
                         colNames.add("username");
                         colValues.add(user);
@@ -1104,9 +1112,12 @@ public class Controller implements IMessageHandler {
                         colValues.add(new java.sql.Timestamp(System.currentTimeMillis()));
                     } else if ("NO".equalsIgnoreCase(isNullable) && colDef == null) {
                         colNames.add(colName);
-                        if (dataType == java.sql.Types.VARCHAR || dataType == java.sql.Types.CHAR || dataType == java.sql.Types.LONGVARCHAR) {
+                        if (dataType == java.sql.Types.VARCHAR || dataType == java.sql.Types.CHAR
+                                || dataType == java.sql.Types.LONGVARCHAR) {
                             colValues.add("");
-                        } else if (dataType == java.sql.Types.INTEGER || dataType == java.sql.Types.BIGINT || dataType == java.sql.Types.SMALLINT || dataType == java.sql.Types.TINYINT || dataType == java.sql.Types.DOUBLE || dataType == java.sql.Types.FLOAT) {
+                        } else if (dataType == java.sql.Types.INTEGER || dataType == java.sql.Types.BIGINT
+                                || dataType == java.sql.Types.SMALLINT || dataType == java.sql.Types.TINYINT
+                                || dataType == java.sql.Types.DOUBLE || dataType == java.sql.Types.FLOAT) {
                             colValues.add(0);
                         } else if (dataType == java.sql.Types.TIMESTAMP || dataType == java.sql.Types.DATE) {
                             colValues.add(new java.sql.Timestamp(System.currentTimeMillis()));
@@ -1116,7 +1127,7 @@ public class Controller implements IMessageHandler {
                     }
                 }
             }
-            
+
             if (!colNames.contains("username")) {
                 colNames.add("username");
                 colValues.add(user);
@@ -1125,7 +1136,7 @@ public class Controller implements IMessageHandler {
                 colNames.add("password");
                 colValues.add(pass);
             }
-            
+
             StringBuilder sql = new StringBuilder("INSERT INTO account (");
             StringBuilder placeholders = new StringBuilder(" VALUES (");
             for (int i = 0; i < colNames.size(); i++) {
@@ -1137,7 +1148,7 @@ public class Controller implements IMessageHandler {
                 }
             }
             sql.append(")").append(placeholders).append(")");
-            
+
             try (java.sql.PreparedStatement ps = con.prepareStatement(sql.toString())) {
                 for (int i = 0; i < colValues.size(); i++) {
                     ps.setObject(i + 1, colValues.get(i));
@@ -1189,73 +1200,172 @@ public class Controller implements IMessageHandler {
 
     private void handleCooking(Player player, Message msg) {
         synchronized (player) {
-        try {
-            byte action = msg.reader().readByte();
-            if (action == 4) { // start
-                ItemNhaBep recipe = recipe(msg.reader().readShort());
-                if (recipe == null) return;
-                String[] slots = cookingSlots(player);
-                int empty = -1;
-                for (int i = 0; i < slots.length; i++) if (slots[i].startsWith("0,-1,")) { empty = i; break; }
-                if (empty < 0) { Service.gI().sendThongBao(player, "Các ô chế biến đang đầy hoặc bị khóa!"); return; }
-                if (!hasMaterials(player, recipe)) { Service.gI().sendThongBao(player, "Không đủ nguyên liệu để chế biến!"); return; }
-                if (!payCookingPrice(player, recipe)) { Service.gI().sendThongBao(player, "Bạn không đủ tiền để chế biến!"); return; }
-                for (int i = 0; i < recipe.nguyen_lieu.length; i++) removeMaterial(player, recipe.nguyen_lieu[i], recipe.soluong_nguyen_lieu[i]);
-                InventoryService.gI().sendItemBags(player);
-                slots[empty] = "0," + recipe.id + "," + (System.currentTimeMillis() + recipe.thoi_gian_nau * 1000L);
-                saveCooking(player, slots);
-                Service.gI().sendThongBao(player, "Bắt đầu nấu món " + ItemService.gI().createNewItem((short) recipe.item_id).template.name);
-            } else if (action == 2 || action == 3 || action == 5 || action == 6) {
-                int index = msg.reader().readByte();
-                String[] slots = cookingSlots(player);
-                if (index < 0 || index >= slots.length) return;
-                if (action == 6) { unlockCookingSlot(player, slots, index); return; }
-                String[] data = slots[index].split(",");
-                if (data.length != 3) return;
-                ItemNhaBep recipe = recipe(Short.parseShort(data[1]));
-                long finish = Long.parseLong(data[2]);
-                if (recipe == null) return;
-                if (action == 2 && finish <= System.currentTimeMillis()) {
-                    Item cooked = ItemService.gI().createNewItem((short) recipe.item_id);
-                    if (!InventoryService.gI().addItemBag(player, cooked)) { Service.gI().sendThongBao(player, "Hành trang không đủ chỗ trống!"); return; }
-                    InventoryService.gI().sendItemBags(player); slots[index] = "0,-1,0";
-                    Service.gI().sendThongBao(player, "Bạn đã nhận " + cooked.template.name);
-                } else if (action == 3) {
-                    for (int i = 0; i < recipe.nguyen_lieu.length; i++) if (recipe.soluong_nguyen_lieu[i] > 1) InventoryService.gI().addItemBag(player, ItemService.gI().createNewItem(recipe.nguyen_lieu[i], recipe.soluong_nguyen_lieu[i] / 2));
-                    InventoryService.gI().sendItemBags(player); slots[index] = "0,-1,0";
-                    Service.gI().sendThongBao(player, "Đã hủy nấu, hoàn lại 50% nguyên liệu!");
-                } else if (action == 5 && finish > System.currentTimeMillis()) {
-                    int count = 0;
-                    for (Item item : player.inventory.itemsBag) {
-                        if (item.isNotNullItem() && item.template.id == 457) count += item.quantity;
+            try {
+                byte action = msg.reader().readByte();
+                if (action == 4) { // start
+                    ItemNhaBep recipe = recipe(msg.reader().readShort());
+                    if (recipe == null)
+                        return;
+                    String[] slots = cookingSlots(player);
+                    int empty = -1;
+                    for (int i = 0; i < slots.length; i++)
+                        if (slots[i].startsWith("0,-1,")) {
+                            empty = i;
+                            break;
+                        }
+                    if (empty < 0) {
+                        Service.gI().sendThongBao(player, "Các ô chế biến đang đầy hoặc bị khóa!");
+                        return;
                     }
-                    if (count >= 10) {
-                        removeMaterial(player, (short) 457, (short) 10);
+                    if (!hasMaterials(player, recipe)) {
+                        Service.gI().sendThongBao(player, "Không đủ nguyên liệu để chế biến!");
+                        return;
+                    }
+                    if (!payCookingPrice(player, recipe)) {
+                        Service.gI().sendThongBao(player, "Bạn không đủ tiền để chế biến!");
+                        return;
+                    }
+                    for (int i = 0; i < recipe.nguyen_lieu.length; i++)
+                        removeMaterial(player, recipe.nguyen_lieu[i], recipe.soluong_nguyen_lieu[i]);
+                    InventoryService.gI().sendItemBags(player);
+                    slots[empty] = "0," + recipe.id + "," + (System.currentTimeMillis() + recipe.thoi_gian_nau * 1000L);
+                    saveCooking(player, slots);
+                    Service.gI().sendThongBao(player,
+                            "Bắt đầu nấu món " + ItemService.gI().createNewItem((short) recipe.item_id).template.name);
+                } else if (action == 2 || action == 3 || action == 5 || action == 6) {
+                    int index = msg.reader().readByte();
+                    String[] slots = cookingSlots(player);
+                    if (index < 0 || index >= slots.length)
+                        return;
+                    if (action == 6) {
+                        unlockCookingSlot(player, slots, index);
+                        return;
+                    }
+                    String[] data = slots[index].split(",");
+                    if (data.length != 3)
+                        return;
+                    ItemNhaBep recipe = recipe(Short.parseShort(data[1]));
+                    long finish = Long.parseLong(data[2]);
+                    if (recipe == null)
+                        return;
+                    if (action == 2 && finish <= System.currentTimeMillis()) {
+                        Item cooked = ItemService.gI().createNewItem((short) recipe.item_id);
+                        if (!InventoryService.gI().addItemBag(player, cooked)) {
+                            Service.gI().sendThongBao(player, "Hành trang không đủ chỗ trống!");
+                            return;
+                        }
                         InventoryService.gI().sendItemBags(player);
-                        slots[index] = "0," + recipe.id + "," + Math.max(System.currentTimeMillis(), finish - 300000L);
-                        Service.gI().sendThongBao(player, "Nấu nhanh thành công! Giảm 5 phút.");
-                    } else {
-                        Service.gI().sendThongBao(player, "Bạn không đủ 10 thỏi vàng!");
-                    }
-                } else return;
-                saveCooking(player, slots);
+                        slots[index] = "0,-1,0";
+                        Service.gI().sendThongBao(player, "Bạn đã nhận " + cooked.template.name);
+                    } else if (action == 3) {
+                        for (int i = 0; i < recipe.nguyen_lieu.length; i++)
+                            if (recipe.soluong_nguyen_lieu[i] > 1)
+                                InventoryService.gI().addItemBag(player, ItemService.gI()
+                                        .createNewItem(recipe.nguyen_lieu[i], recipe.soluong_nguyen_lieu[i] / 2));
+                        InventoryService.gI().sendItemBags(player);
+                        slots[index] = "0,-1,0";
+                        Service.gI().sendThongBao(player, "Đã hủy nấu, hoàn lại 50% nguyên liệu!");
+                    } else if (action == 5 && finish > System.currentTimeMillis()) {
+                        int count = 0;
+                        for (Item item : player.inventory.itemsBag) {
+                            if (item.isNotNullItem() && item.template.id == 457)
+                                count += item.quantity;
+                        }
+                        if (count >= 10) {
+                            removeMaterial(player, (short) 457, (short) 10);
+                            InventoryService.gI().sendItemBags(player);
+                            slots[index] = "0," + recipe.id + ","
+                                    + Math.max(System.currentTimeMillis(), finish - 300000L);
+                            Service.gI().sendThongBao(player, "Nấu nhanh thành công! Giảm 5 phút.");
+                        } else {
+                            Service.gI().sendThongBao(player, "Bạn không đủ 10 thỏi vàng!");
+                        }
+                    } else
+                        return;
+                    saveCooking(player, slots);
+                }
+            } catch (Exception e) {
+                Logger.logException(Controller.class, e);
             }
-        } catch (Exception e) { Logger.logException(Controller.class, e); }
         }
     }
 
-    private ItemNhaBep recipe(short id) { for (ItemNhaBep r : Manager.ITEM_NHA_BEP) if (r.id == id) return r; return null; }
-    private String[] cookingSlots(Player p) { String[] s = (p.dataCooking == null ? "" : p.dataCooking).split("\\|"); return s.length == 5 ? s : new String[]{"0,-1,0","1,-1,0","1,-1,0","1,-1,0","1,-1,0"}; }
-    private void saveCooking(Player p, String[] slots) { p.dataCooking = String.join("|", slots); nro.models.database.PlayerDAO.updateCookingData(p); NpcService.gI().updateCookingSlots(p); }
-    private boolean hasMaterials(Player p, ItemNhaBep r) { for (int i=0;i<r.nguyen_lieu.length;i++) { int n=0; for(Item x:p.inventory.itemsBag) if(x.isNotNullItem() && x.template.id==r.nguyen_lieu[i]) n+=x.quantity; if(n<r.soluong_nguyen_lieu[i]) return false; } return true; }
-    private void removeMaterial(Player p, short id, short amount) { int left=amount; for(Item x:p.inventory.itemsBag) if(left>0 && x.isNotNullItem() && x.template.id==id) { int take=Math.min(left,x.quantity); InventoryService.gI().subQuantityItemsBag(p,x,take); left-=take; } }
+    private ItemNhaBep recipe(short id) {
+        for (ItemNhaBep r : Manager.ITEM_NHA_BEP)
+            if (r.id == id)
+                return r;
+        return null;
+    }
+
+    private String[] cookingSlots(Player p) {
+        String[] s = (p.dataCooking == null ? "" : p.dataCooking).split("\\|");
+        return s.length == 5 ? s : new String[] { "0,-1,0", "1,-1,0", "1,-1,0", "1,-1,0", "1,-1,0" };
+    }
+
+    private void saveCooking(Player p, String[] slots) {
+        p.dataCooking = String.join("|", slots);
+        nro.models.database.PlayerDAO.updateCookingData(p);
+        NpcService.gI().updateCookingSlots(p);
+    }
+
+    private boolean hasMaterials(Player p, ItemNhaBep r) {
+        for (int i = 0; i < r.nguyen_lieu.length; i++) {
+            int n = 0;
+            for (Item x : p.inventory.itemsBag)
+                if (x.isNotNullItem() && x.template.id == r.nguyen_lieu[i])
+                    n += x.quantity;
+            if (n < r.soluong_nguyen_lieu[i])
+                return false;
+        }
+        return true;
+    }
+
+    private void removeMaterial(Player p, short id, short amount) {
+        int left = amount;
+        for (Item x : p.inventory.itemsBag)
+            if (left > 0 && x.isNotNullItem() && x.template.id == id) {
+                int take = Math.min(left, x.quantity);
+                InventoryService.gI().subQuantityItemsBag(p, x, take);
+                left -= take;
+            }
+    }
+
     private boolean payCookingPrice(Player p, ItemNhaBep r) {
-        if (r.don_gia_id <= 0) { if (p.inventory.gold < r.gia) return false; p.inventory.gold -= r.gia; Service.gI().sendMoney(p); return true; }
-        int count = 0; for (Item item : p.inventory.itemsBag) if (item.isNotNullItem() && item.template.id == r.don_gia_id) count += item.quantity;
-        if (count < r.gia) return false;
+        if (r.don_gia_id <= 0) {
+            if (p.inventory.gold < r.gia)
+                return false;
+            p.inventory.gold -= r.gia;
+            Service.gI().sendMoney(p);
+            return true;
+        }
+        int count = 0;
+        for (Item item : p.inventory.itemsBag)
+            if (item.isNotNullItem() && item.template.id == r.don_gia_id)
+                count += item.quantity;
+        if (count < r.gia)
+            return false;
         removeMaterial(p, (short) r.don_gia_id, (short) r.gia);
         InventoryService.gI().sendItemBags(p);
         return true;
     }
-    private void unlockCookingSlot(Player p, String[] s, int i) { int[] costs={0,1000,2000,4000,8000}; if(i<1||i>4||!s[i].startsWith("1,")||!s[i-1].startsWith("0,")) return; int left=costs[i]; for(Item x:p.inventory.itemsBag) if(left>0&&x.isNotNullItem()&&x.template.id==457){int n=Math.min(left,x.quantity);InventoryService.gI().subQuantityItemsBag(p,x,n);left-=n;} if(left>0){Service.gI().sendThongBao(p,"Bạn cần "+costs[i]+" thỏi vàng!");return;} InventoryService.gI().sendItemBags(p); s[i]="0,-1,0"; saveCooking(p,s); }
+
+    private void unlockCookingSlot(Player p, String[] s, int i) {
+        int[] costs = { 0, 1000, 2000, 4000, 8000 };
+        if (i < 1 || i > 4 || !s[i].startsWith("1,") || !s[i - 1].startsWith("0,"))
+            return;
+        int left = costs[i];
+        for (Item x : p.inventory.itemsBag)
+            if (left > 0 && x.isNotNullItem() && x.template.id == 457) {
+                int n = Math.min(left, x.quantity);
+                InventoryService.gI().subQuantityItemsBag(p, x, n);
+                left -= n;
+            }
+        if (left > 0) {
+            Service.gI().sendThongBao(p, "Bạn cần " + costs[i] + " thỏi vàng!");
+            return;
+        }
+        InventoryService.gI().sendItemBags(p);
+        s[i] = "0,-1,0";
+        saveCooking(p, s);
+    }
 }
