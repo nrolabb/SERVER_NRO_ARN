@@ -714,8 +714,15 @@ public class Controller implements IMessageHandler {
                     break;
                 case -15: // về nhà
                     if (player != null) {
-                        int mapId = MapService.gI().isMapMaBu(player.zone.map.mapId) ? 114 : player.gender + 21;
-                        ChangeMapService.gI().changeMapBySpaceShip(player, mapId, 0, -1);
+                        if (player.mapIdSaved == 180) {
+                            Service.gI().hsChar(player, (int) player.nPoint.hpMax, (int) player.nPoint.mpMax);
+                            player.nPoint.setFullHpMp();
+                            PlayerService.gI().sendInfoHpMp(player);
+                            ChangeMapService.gI().changeMap(player, 180, 0, 800, 264);
+                        } else {
+                            int mapId = MapService.gI().isMapMaBu(player.zone.map.mapId) ? 114 : player.gender + 21;
+                            ChangeMapService.gI().changeMapBySpaceShip(player, mapId, 0, -1);
+                        }
                     }
                     break;
                 case -16: // hồi sinh

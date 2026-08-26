@@ -267,13 +267,13 @@ public class ChangeMapService {
         if (!pl.isBoss) {
             changeMap(pl, null, mapId, zone, x, 5, AUTO_SPACE_SHIP);
             if (pl.isDie()) {
-                if (pl.haveTennisSpaceShip) {
-                    Service.gI().hsChar(pl, pl.nPoint.hpMax, pl.nPoint.mpMax);
+                if (pl.haveTennisSpaceShip || mapId == 180) {
+                    Service.gI().hsChar(pl, (int) pl.nPoint.hpMax, (int) pl.nPoint.mpMax);
                 } else {
                     Service.gI().hsChar(pl, 1, 1);
                 }
             } else {
-                if (pl.haveTennisSpaceShip) {
+                if (pl.haveTennisSpaceShip || mapId == 180) {
                     pl.nPoint.setFullHpMp();
                     PlayerService.gI().sendInfoHpMp(pl);
                 }

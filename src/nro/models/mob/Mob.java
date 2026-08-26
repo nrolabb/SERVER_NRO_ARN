@@ -32,6 +32,7 @@ import nro.models.map.service.MapService;
 import nro.models.skill.Skill;
 import nro.models.task.BadgesTaskService;
 import nro.models.utils.TimeUtil;
+import nro.models.server.ModFunc;
 
 public class Mob {
 
@@ -1639,18 +1640,21 @@ public class Mob {
 
     private ItemMap dropItemTask(Player player) {
         ItemMap itemMap = null;
+        int currentTaskId = TaskService.gI().getIdTask(player);
+        int currentMapId = (this.zone != null && this.zone.map != null) ? this.zone.map.mapId : -1;
+
         switch (tempId) {
             case ConstMob.KHUNG_LONG:
             case ConstMob.LON_LOI:
             case ConstMob.QUY_DAT:
-                if (TaskService.gI().getIdTask(player) == ConstTask.TASK_2_0) {
+                if (currentTaskId == ConstTask.TASK_2_0) {
                     itemMap = new ItemMap(zone, 73, 1, location.x, location.y, player.id);
                 }
                 break;
             case ConstMob.THAN_LAN_ME:
             case ConstMob.QUY_BAY_ME:
             case ConstMob.PHI_LONG_ME:
-                if (TaskService.gI().getIdTask(player) == ConstTask.TASK_8_1) {
+                if (currentTaskId == ConstTask.TASK_8_1) {
                     if (Util.isTrue(10, 10)) {
                         itemMap = new ItemMap(zone, 2, 1, location.x, location.y, player.id);
                     } else {
@@ -1659,6 +1663,70 @@ public class Mob {
                     }
                     TaskService.gI().checkDoneTaskFind7Stars(player);
                 }
+                break;
+            case ConstMob.ECH_BANG:
+                if (currentTaskId == ConstTask.TASK_29_2 && currentMapId == 182) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_TINH_THE_BANG, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.DAI_BANG:
+                if (currentTaskId == ConstTask.TASK_30_1 && currentMapId == 181) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_LONG_VU_DAI_BANG, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.TRAU_RUNG:
+                if (currentTaskId == ConstTask.TASK_30_3 && currentMapId == 181) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_THIT_TRAU_RUNG, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.ONG_CANH_BUOM:
+                if (currentTaskId == ConstTask.TASK_31_2 && currentMapId == 186) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_MAT_ONG_RUNG, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.RONG_XANH:
+                if (currentTaskId == ConstTask.TASK_32_1 && currentMapId == 178) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_RANG_RONG_XANH, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.GRIM_REAPER:
+                if (currentTaskId == ConstTask.TASK_32_2 && currentMapId == 178) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_LINH_HON_TU_THAN, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.KHUNG_LONG_GIAP:
+                if (currentTaskId == ConstTask.TASK_33_1 && currentMapId == 177) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_VAY_KHUNG_LONG, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.GAU_MAT_CHO:
+                if (currentTaskId == ConstTask.TASK_34_1 && currentMapId == 169) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_MAT_GAU_DA, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
+            case ConstMob.LON_CANH_BUOM:
+                if (currentTaskId == ConstTask.TASK_34_2 && currentMapId == 173) {
+                    if (Util.isTrue(ModFunc.getRateDropTaskItem(), 100)) {
+                        itemMap = new ItemMap(zone, ModFunc.ITEM_NV_TAI_LON_BUOM, 1, location.x, location.y, player.id);
+                    }
+                }
+                break;
         }
         if (itemMap != null) {
             return itemMap;

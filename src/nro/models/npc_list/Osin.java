@@ -28,9 +28,17 @@ public class Osin extends Npc {
         if (canOpenNpc(player)) {
             TaskService.gI().checkDoneTaskTalkNpc(player, this);
             switch (this.mapId) {
+                case 180 -> {
+                    if (TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
+                        return;
+                    }
+                    this.createOtherMenu(player, ConstNpc.BASE_MENU,
+                            "Chào con, ta là Thần Shin cai quản vũ trụ.\nThánh địa Kaioshin là nơi linh thiêng, hãy cố gắng tu luyện!",
+                            "Nhiệm vụ", "Về\nThánh địa Kaio", "Về\nĐại hội võ thuật", "Từ chối");
+                }
                 case 50 ->
                     this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ta có thể giúp gì cho ngươi ?",
-                            "Đến\nKaio", "Đến\nhành tinh\nBill", "Từ chối");
+                            "Đến\nKaio", "Đến\nhành tinh\nBill", "Đến\nLàng Kaioshin", "Từ chối");
                 case 154 ->
                     this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ta có thể giúp gì cho ngươi ?",
                             "Đến\nhành tinh\nngục tù", "Từ chối");
@@ -43,35 +51,72 @@ public class Osin extends Npc {
                 case 52 -> {
                     player.fightMabu.clear();
                     boolean hasEnergyJar = InventoryService.gI().findItemBag(player, 1795) != null;
+                    boolean canGoKaioshin = player.playerTask.taskMain.id >= 29;
                     if (TimeUtil.isMabu14HOpen()) {
                         if (hasEnergyJar) {
-                            this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
-                                    "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
-                                    "OK", "Bình hút năng lượng", "Từ chối");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
+                                        "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
+                                        "OK", "Bình hút năng lượng", "Đến\nLàng Kaioshin", "Từ chối");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
+                                        "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
+                                        "OK", "Bình hút năng lượng", "Từ chối");
+                            }
                         } else {
-                            this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
-                                    "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
-                                    "OK", "Từ chối");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
+                                        "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
+                                        "OK", "Đến\nLàng Kaioshin", "Từ chối");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
+                                        "Mabư đã thoát khỏi vỏ bọc\nmau đi cùng ta ngăn chặn hắn lại\ntrước khi hắn tàn phá trái đất này",
+                                        "OK", "Từ chối");
+                            }
                         }
                     } else if (TimeUtil.isMabuOpen()) {
                         if (hasEnergyJar) {
-                            this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
-                                    "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
-                                    "OK", "Bình hút năng lượng", "Từ chối");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
+                                        "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "OK", "Bình hút năng lượng", "Đến\nLàng Kaioshin", "Từ chối");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_WITH_JAR,
+                                        "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "OK", "Bình hút năng lượng", "Từ chối");
+                            }
                         } else {
-                            this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
-                                    "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
-                                    "OK", "Từ chối");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
+                                        "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "OK", "Đến\nLàng Kaioshin", "Từ chối");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_OPEN_MMB_NO_JAR,
+                                        "Bây giờ tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "OK", "Từ chối");
+                            }
                         }
                     } else {
                         if (hasEnergyJar) {
-                            this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_WITH_JAR,
-                                    "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
-                                    "Ok", "Bình hút năng lượng");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_WITH_JAR,
+                                        "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "Ok", "Bình hút năng lượng", "Đến\nLàng Kaioshin");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_WITH_JAR,
+                                        "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "Ok", "Bình hút năng lượng");
+                            }
                         } else {
-                            this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_NO_JAR,
-                                    "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
-                                    "Ok");
+                            if (canGoKaioshin) {
+                                this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_NO_JAR,
+                                        "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "Ok", "Đến\nLàng Kaioshin");
+                            } else {
+                                this.createOtherMenu(player, ConstNpc.MENU_NOT_OPEN_MMB_NO_JAR,
+                                        "Vào lúc " + MajinBuuService.HOUR_OPEN_MAP_MABU + "h tôi sẽ bí mật...\nđuổi theo 2 tên đồ tể...\nQuý vị nào muốn đi theo thì xin mời !",
+                                        "Ok");
+                            }
                         }
                     }
                 }
@@ -119,6 +164,26 @@ public class Osin extends Npc {
         int indexMenu = player.idMark.getIndexMenu();
 
         switch (mapId) {
+            case 180 -> {
+                if (player.idMark.isBaseMenu()) {
+                    switch (select) {
+                        case 0 -> {
+                            if (player.playerTask.taskMain.id == 29 || player.playerTask.taskMain.id == 30) {
+                                NpcService.gI().createTutorial(player, tempId, avartar,
+                                        "Nhiệm vụ của con:\n" + player.playerTask.taskMain.name + "\n" + player.playerTask.taskMain.detail);
+                            } else {
+                                NpcService.gI().createTutorial(player, tempId, avartar,
+                                        "Con đã hoàn thành các nhiệm vụ của ta. Hãy đến gặp Kibit và Tổ Sư Kaio để tiếp tục thử thách!");
+                            }
+                        }
+                        case 1 ->
+                            ChangeMapService.gI().changeMap(player, 50, -1, 318, 336);
+                        case 2 ->
+                            ChangeMapService.gI().changeMap(player, 52, -1, 400, 336);
+                    }
+                }
+            }
+
             case 50 -> {
                 if (player.idMark.isBaseMenu()) {
                     switch (select) {
@@ -126,6 +191,13 @@ public class Osin extends Npc {
                             ChangeMapService.gI().changeMap(player, 48, -1, 354, 240);
                         case 1 ->
                             ChangeMapService.gI().changeMap(player, 154, -1, 200, 312);
+                        case 2 -> {
+                            if (player.playerTask.taskMain.id < 29) {
+                                Service.gI().sendThongBao(player, "Con phải hoàn thành nhiệm vụ tiêu diệt Ma Bư mới có thể đến Làng Kaioshin!");
+                                return;
+                            }
+                            ChangeMapService.gI().changeMap(player, 180, -1, 800, 264);
+                        }
                     }
                 }
             }
@@ -157,13 +229,13 @@ public class Osin extends Npc {
             }
 
             case 52 -> {
+                boolean canGoKaioshin = player.playerTask.taskMain.id >= 29;
                 switch (indexMenu) {
                     case ConstNpc.MENU_OPEN_MMB_WITH_JAR -> {
                         if (select == 0) {
-                              if (TimeUtil.isMabu14HOpen()) {
-            Service.gI().sendThongBao(player, "Sự kiện Mabu 14h đã bị tắt!");
-            return;
-        
+                            if (TimeUtil.isMabu14HOpen()) {
+                                Service.gI().sendThongBao(player, "Sự kiện Mabu 14h đã bị tắt!");
+                                return;
                             } else if (TimeUtil.isMabuOpen()) {
                                 ChangeMapService.gI().changeMap(player, 114, -1, Util.nextInt(100, 500), 312);
                             }
@@ -171,18 +243,21 @@ public class Osin extends Npc {
                             createOtherMenu(player, ConstNpc.BINH_HUT_NANG_LUONG,
                                     "Cadic đã bị phù thủy Babidi thôi miên\nhãy mang bình hút năng lượng đến đây\nhút cạn năng lượng tà ác trong cậu ấy",
                                     "Ok", "Từ chối");
+                        } else if (select == 2 && canGoKaioshin) {
+                            ChangeMapService.gI().changeMap(player, 180, -1, 800, 264);
                         }
                     }
 
                     case ConstNpc.MENU_OPEN_MMB_NO_JAR -> {
                         if (select == 0) {
-                         if (TimeUtil.isMabu14HOpen()) {
-            Service.gI().sendThongBao(player, "Sự kiện Mabu 14h đã bị tắt!");
-            return;
-        
+                            if (TimeUtil.isMabu14HOpen()) {
+                                Service.gI().sendThongBao(player, "Sự kiện Mabu 14h đã bị tắt!");
+                                return;
                             } else if (TimeUtil.isMabuOpen()) {
                                 ChangeMapService.gI().changeMap(player, 114, -1, Util.nextInt(100, 500), 336);
                             }
+                        } else if (select == 1 && canGoKaioshin) {
+                            ChangeMapService.gI().changeMap(player, 180, -1, 800, 264);
                         }
                     }
 
@@ -191,6 +266,14 @@ public class Osin extends Npc {
                             createOtherMenu(player, ConstNpc.BINH_HUT_NANG_LUONG,
                                     "Cadic đã bị phù thủy Babidi thôi miên\nhãy mang bình hút năng lượng đến đây\nhút cạn năng lượng tà ác trong cậu ấy",
                                     "Ok", "Từ chối");
+                        } else if (select == 2 && canGoKaioshin) {
+                            ChangeMapService.gI().changeMap(player, 180, -1, 800, 264);
+                        }
+                    }
+
+                    case ConstNpc.MENU_NOT_OPEN_MMB_NO_JAR -> {
+                        if (select == 1 && canGoKaioshin) {
+                            ChangeMapService.gI().changeMap(player, 180, -1, 800, 264);
                         }
                     }
 

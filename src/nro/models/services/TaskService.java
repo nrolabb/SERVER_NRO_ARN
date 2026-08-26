@@ -29,6 +29,7 @@ import java.util.List;
 import nro.models.server.Client;
 import nro.models.task.BadgesTaskService;
 import nro.models.task.ClanTaskTemplate;
+import nro.models.server.ModFunc;
 
 /**
  *
@@ -251,8 +252,34 @@ public class TaskService {
                 return doneTask(player, ConstTask.TASK_27_0);
             }
             case ConstNpc.OSIN -> {
+                if (npc.mapId == 180) {
+                    return doneTask(player, ConstTask.TASK_28_0)
+                            || doneTask(player, ConstTask.TASK_28_7)
+                            || doneTask(player, ConstTask.TASK_29_0)
+                            || doneTask(player, ConstTask.TASK_29_3)
+                            || doneTask(player, ConstTask.TASK_30_0)
+                            || doneTask(player, ConstTask.TASK_30_4);
+                }
                 return doneTask(player, ConstTask.TASK_28_0)
                         || doneTask(player, ConstTask.TASK_28_7);
+            }
+            case ConstNpc.KIBIT -> {
+                if (npc.mapId == 180) {
+                    return doneTask(player, ConstTask.TASK_31_0)
+                            || doneTask(player, ConstTask.TASK_31_4)
+                            || doneTask(player, ConstTask.TASK_32_0)
+                            || doneTask(player, ConstTask.TASK_32_3);
+                }
+                return false;
+            }
+            case ConstNpc.TO_SU_KAIO -> {
+                if (npc.mapId == 180) {
+                    return doneTask(player, ConstTask.TASK_33_0)
+                            || doneTask(player, ConstTask.TASK_33_3)
+                            || doneTask(player, ConstTask.TASK_34_0)
+                            || doneTask(player, ConstTask.TASK_34_4);
+                }
+                return false;
             }
         }
         return false;
@@ -363,7 +390,8 @@ public void checkDoneTaskUseItem(Player player, Item item) {
 
     public void checkDoneTaskPickItem(Player player, ItemMap item) {
         if (!player.isBoss && !player.isBot && !player.isPet && item != null && item.itemTemplate != null) {
-            switch (item.itemTemplate.id) {
+            int itemId = item.itemTemplate.id;
+            switch (itemId) {
                 case 73: //đùi gà
                     doneTask(player, ConstTask.TASK_2_0);
                     break;
@@ -371,7 +399,7 @@ public void checkDoneTaskUseItem(Player player, Item item) {
                     doneTask(player, ConstTask.TASK_3_1);
                     Service.gI().sendFlagBag(player);
                     break;
-                       case 726: //em bé
+                case 726: //em bé
                     doneTask(player, ConstTask.TASK_17_5);
                     Service.gI().sendFlagBag(player);
                     break;
@@ -382,6 +410,27 @@ public void checkDoneTaskUseItem(Player player, Item item) {
                 case 77:
                     AchievementService.gI().checkDoneTask(player, ConstAchievement.TRUM_NHAT_NGOC);
                     break;
+            }
+
+            // Item rơi nhiệm vụ quái theo cấu hình ModFunc (Đảm bảo đang ở đúng task mới hoàn thành)
+            if (itemId == ModFunc.ITEM_NV_TINH_THE_BANG && getIdTask(player) == ConstTask.TASK_29_2) {
+                doneTask(player, ConstTask.TASK_29_2);
+            } else if (itemId == ModFunc.ITEM_NV_LONG_VU_DAI_BANG && getIdTask(player) == ConstTask.TASK_30_1) {
+                doneTask(player, ConstTask.TASK_30_1);
+            } else if (itemId == ModFunc.ITEM_NV_THIT_TRAU_RUNG && getIdTask(player) == ConstTask.TASK_30_3) {
+                doneTask(player, ConstTask.TASK_30_3);
+            } else if (itemId == ModFunc.ITEM_NV_MAT_ONG_RUNG && getIdTask(player) == ConstTask.TASK_31_2) {
+                doneTask(player, ConstTask.TASK_31_2);
+            } else if (itemId == ModFunc.ITEM_NV_RANG_RONG_XANH && getIdTask(player) == ConstTask.TASK_32_1) {
+                doneTask(player, ConstTask.TASK_32_1);
+            } else if (itemId == ModFunc.ITEM_NV_LINH_HON_TU_THAN && getIdTask(player) == ConstTask.TASK_32_2) {
+                doneTask(player, ConstTask.TASK_32_2);
+            } else if (itemId == ModFunc.ITEM_NV_VAY_KHUNG_LONG && getIdTask(player) == ConstTask.TASK_33_1) {
+                doneTask(player, ConstTask.TASK_33_1);
+            } else if (itemId == ModFunc.ITEM_NV_MAT_GAU_DA && getIdTask(player) == ConstTask.TASK_34_1) {
+                doneTask(player, ConstTask.TASK_34_1);
+            } else if (itemId == ModFunc.ITEM_NV_TAI_LON_BUOM && getIdTask(player) == ConstTask.TASK_34_2) {
+                doneTask(player, ConstTask.TASK_34_2);
             }
         }
     }
@@ -512,6 +561,9 @@ public void checkDoneTaskUseItem(Player player, Item item) {
             switch (mob.tempId) {
                 case ConstMob.MOC_NHAN ->{
                     doneTask(player, ConstTask.TASK_1_0);
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 180) {
+                        doneTask(player, ConstTask.TASK_29_1);
+                    }
                     //  doneTask(player, ConstTask.TASK_9_3);
                     }
                 case ConstMob.KHUNG_LONG_ME -> {
@@ -665,6 +717,31 @@ public void checkDoneTaskUseItem(Player player, Item item) {
                     doneTask(player, ConstTask.TASK_25_4);
                 case ConstMob.XEN_CON_CAP_8 ->
                     doneTask(player, ConstTask.TASK_26_4);
+                case ConstMob.KHI_HOANG_KIM -> {
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 181) {
+                        doneTask(player, ConstTask.TASK_30_2);
+                    }
+                }
+                case ConstMob.RUOI_MOT_MAT -> {
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 186) {
+                        doneTask(player, ConstTask.TASK_31_1);
+                    }
+                }
+                case ConstMob.TRAU_RUNG -> {
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 186) {
+                        doneTask(player, ConstTask.TASK_31_3);
+                    }
+                }
+                case ConstMob.THAN_LAN_XANH_114 -> {
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 177) {
+                        doneTask(player, ConstTask.TASK_33_2);
+                    }
+                }
+                case ConstMob.ECH_BANG -> {
+                    if (player.zone != null && player.zone.map != null && player.zone.map.mapId == 173) {
+                        doneTask(player, ConstTask.TASK_34_3);
+                    }
+                }
             }
         }
     }

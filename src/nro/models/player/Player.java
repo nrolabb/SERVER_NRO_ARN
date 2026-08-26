@@ -186,6 +186,7 @@ public class Player implements Runnable {
     public String dataCooking = "";
 
     public int mapIdBeforeLogout;
+    public int mapIdSaved = -1;
     public List<Zone> mapBlackBall;
     public List<Zone> mapMaBu;
 
@@ -885,7 +886,7 @@ public class Player implements Runnable {
             if (item != null && item.isNotNullItem()) {
                 int id = item.template.id;
                 if (id == 2172) {
-                    return 7;
+                    return 8;
                 }
                 // Namec
                 if (id >= 2114 && id <= 2124) {

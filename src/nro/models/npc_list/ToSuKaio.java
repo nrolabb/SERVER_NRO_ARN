@@ -9,6 +9,7 @@ import nro.models.map.service.NpcService;
 import nro.models.player.NPoint;
 import nro.models.services.OpenPowerService;
 import nro.models.services.Service;
+import nro.models.services.TaskService;
 import nro.models.utils.Util;
 
 public class ToSuKaio extends Npc {
@@ -20,6 +21,15 @@ public class ToSuKaio extends Npc {
     @Override
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
+            if (this.mapId == 180) {
+                if (TaskService.gI().checkDoneTaskTalkNpc(player, this)) {
+                    return;
+                }
+                this.createOtherMenu(player, ConstNpc.BASE_MENU,
+                        "Khẹc khẹc, ta là Tổ Sư Kaio 15 đời trước cai quản Thánh Địa!\nNgươi tìm ta có việc gì?",
+                        "Nhiệm vụ", "Mở giới hạn\nSức mạnh", "Từ chối");
+                return;
+            }
             String message = String.format("Tập luyện với Tổ sư Kaio sẽ tăng %s sức mạnh mỗi phút, có thể tăng giảm tùy vào khả năng đánh quái của con",
                     Util.formatNumber(TrainingService.gI().getTnsmMoiPhut(player)));
             String autoTrainingOption = player.dangKyTapTuDong ? "Hủy đăng ký tập tự động" : "Đăng ký tập tự động";
@@ -37,6 +47,38 @@ public class ToSuKaio extends Npc {
         }
 
         int menuId = player.idMark.getIndexMenu();
+
+        if (this.mapId == 180) {
+            if (player.idMark.isBaseMenu()) {
+                switch (select) {
+                    case 0 -> {
+                        if (player.playerTask.taskMain.id == 33 || player.playerTask.taskMain.id == 34) {
+                            NpcService.gI().createTutorial(player, tempId, avartar,
+                                    "Nhiệm vụ của con:\n" + player.playerTask.taskMain.name + "\n" + player.playerTask.taskMain.detail);
+                        } else {
+                            NpcService.gI().createTutorial(player, tempId, avartar,
+                                    "Hiện tại con chưa có nhiệm vụ nào với ta. Hãy rèn luyện thêm hoặc trao đổi với Thần Shin và Kibit!");
+                        }
+                    }
+                    case 1 ->
+                        showLimitPowerMenu(player);
+                }
+            } else if (menuId == ConstNpc.MENU_NANG_GIOI_HAN) {
+                switch (select) {
+                    case 0 ->
+                        showLimitPowerMyself(player);
+                    case 1 ->
+                        handleLimitPowerPet(player, 0);
+                    default ->
+                        this.npcChat(player, "Khi nào con cần thì quay lại gặp ta!");
+                }
+            } else if (menuId == ConstNpc.OPEN_POWER_MYSEFT) {
+                handleLimitPowerMyselfOptions(player, select);
+            } else if (menuId == ConstNpc.OPEN_POWER_PET) {
+                handleLimitPowerPet(player, select);
+            }
+            return;
+        }
 
         if (menuId == ConstNpc.BASE_MENU) {
             switch (select) {

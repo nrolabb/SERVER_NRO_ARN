@@ -107,8 +107,21 @@ public class ConstMob {
     public static final byte SNOWY_TANGERINE = 106;
     public static final byte DEINONYCHUS = 107;
     public static final byte SNAKE = 108;
-    public static final byte BLIZZARD_BIRD = 109;
     public static final byte MAY_DO_SUC_MANH = 117;
     public static final byte CADIC_M = 118;
 
+    public static final byte GRIM_REAPER = 112;
+    public static final byte RONG_XANH = 113;
+    public static final byte THAN_LAN_XANH_114 = 114;
+    public static final byte ONG_CANH_BUOM = 115;
+    public static final byte KHUNG_LONG_GIAP = 116;
+    public static final byte DAI_BANG = 120;
+    public static final byte GAU_MAT_CHO = 122;
+    public static final byte LON_CANH_BUOM = 123;
+    public static final byte ECH_BANG = 124;
+    public static final byte TRAU_RUNG = 125;
+    public static final byte KHI_HOANG_KIM = 126;
+    public static final byte RUOI_MOT_MAT = 127;
+
 }
+
