@@ -194,16 +194,20 @@ public class Whis extends Npc {
     private void showUpgradeBienHinhMenu(Player player) {
         Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
         if (skill == null || skill.point == 0) {
-            Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
+            Service.gI().sendThongBaoOK(player, "Ngươi chưa học skill Biến hình!\nHãy đến gặp Goku SSJ tại Núi Khỉ Vàng để nâng cấp từ cấp 1 đến 4 trước.");
             return;
         }
-        if (skill.point >= skill.template.maxPoint) {
-            Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
+        if (skill.point < 4) {
+            Service.gI().sendThongBaoOK(player, "Kỹ năng Biến hình của ngươi hiện tại mới đạt cấp " + skill.point + ".\nHãy đến gặp Goku SSJ tại Núi Khỉ Vàng để nâng cấp lên cấp 4 trước!");
+            return;
+        }
+        if (skill.point >= 7 || skill.point >= skill.template.maxPoint) {
+            Service.gI().sendThongBaoOK(player, "Kỹ năng của ngươi đã đạt cấp tối đa (cấp 7)!");
             return;
         }
         int successRate = Math.max(1, 30 - (skill.point * 4));
-        String message = "|1|Ta sẽ giúp ngươi nâng cấp kỹ năng Biến Hình\n"
-                + "|7|Cấp hiện tại: " + skill.point + "\n"
+        String message = "|1|Ta sẽ giúp ngươi nâng cấp kỹ năng Biến Hình (Cấp 4 - 7)\n"
+                + "|7|Cấp hiện tại: " + skill.point + " -> Cấp tiếp theo: " + (skill.point + 1) + "\n"
                 + "|2|Tiêu tốn: 10 Tỷ Tiềm Năng Sức Mạnh\n"
                 + "|2|Tỷ lệ thành công: " + successRate + "%";
         createOtherMenu(player, 7, message, "Nâng cấp", "Từ chối");
@@ -216,15 +220,19 @@ public class Whis extends Npc {
 
         Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
         if (skill == null || skill.point == 0) {
-            Service.gI().sendThongBao(player, "Ngươi chưa học skill Biến hình!");
+            Service.gI().sendThongBaoOK(player, "Ngươi chưa học skill Biến hình!\nHãy đến gặp Goku SSJ tại Núi Khỉ Vàng để nâng cấp từ cấp 1 đến 4 trước.");
             return;
         }
-        if (skill.point >= skill.template.maxPoint) {
-            Service.gI().sendThongBao(player, "Kỹ năng của ngươi đã đạt cấp tối đa!");
+        if (skill.point < 4) {
+            Service.gI().sendThongBaoOK(player, "Kỹ năng Biến hình của ngươi hiện tại mới đạt cấp " + skill.point + ".\nHãy đến gặp Goku SSJ tại Núi Khỉ Vàng để nâng cấp lên cấp 4 trước!");
+            return;
+        }
+        if (skill.point >= 7 || skill.point >= skill.template.maxPoint) {
+            Service.gI().sendThongBaoOK(player, "Kỹ năng của ngươi đã đạt cấp tối đa (cấp 7)!");
             return;
         }
         if (player.nPoint.tiemNang < 10_000_000_000L) {
-            Service.gI().sendThongBao(player, "Bạn không đủ 10 Tỷ Tiềm năng sức mạnh!");
+            Service.gI().sendThongBaoOK(player, "Bạn không đủ 10 Tỷ Tiềm năng sức mạnh!");
             return;
         }
 

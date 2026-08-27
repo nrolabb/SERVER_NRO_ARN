@@ -18,7 +18,7 @@ public class ConstPlayer {
                 return (short) (HERO1_BIEN_HINH_BODY_START + safeFrame - 1);
         }
 
-        public static final short[] AURABIENHINH = { 22, 7, 88, 84, 87, 90, 95 };
+        public static final short[] AURABIENHINH = { 7, 86, 88, 84, 87, 90, 95 };
         public static final short[][] HEADBIENHINH = {
                         { 1992, 1993, 1994, 1995, 1996 },
                         { 1997, 1998, 1999, 2000, 2001 },
@@ -30,17 +30,17 @@ public class ConstPlayer {
         public static final short[][] HEADBIENHINH_SPINE = {
                         { 2323, 2323, 2317, 2299, 2326, 2329, 2332 }, // Trái Đất
                         { 2352, 2355, 2339, 2406, 2409, 2351, 2400 }, // Namec
-                        { 2287, 2286, 2288, 2420, 2289, 2290, 2292 } // Xayda
+                        { 2287, 2286, 2288, 2423, 2289, 2290, 2292 } // Xayda
         };
         public static final short[][] BODYBIENHINH_SPINE = {
                         { 2324, 2324, 2318, 2300, 2327, 2330, 2333 }, // Trái Đất
                         { 2353, 2356, 2340, 2407, 2410, 2349, 2401 }, // Namec
-                        { 2294, 2294, 2294, 2421, 2294, 2294, 2294 } // Xayda
+                        { 2294, 2294, 2294, 2424, 2294, 2294, 2294 } // Xayda
         };
         public static final short[][] LEGBIENHINH_SPINE = {
                         { 2325, 2325, 2319, 2301, 2328, 2331, 2334 }, // Trái Đất
                         { 2354, 2357, 2341, 2408, 2411, 2350, 2402 }, // Namec
-                        { 2295, 2295, 2295, 2422, 2295, 2295, 2295 } // Xayda
+                        { 2295, 2295, 2295, 2425, 2295, 2295, 2295 } // Xayda
         };
 
         public static final int[] HEADMONKEY = { 192, 195, 196, 199, 197, 200, 198 };

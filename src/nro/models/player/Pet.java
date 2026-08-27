@@ -888,7 +888,10 @@ public class Pet extends Player {
             return 877;
         }
         if (inventory.itemsBody.get(0).isNotNullItem()) {
-            return inventory.itemsBody.get(0).template.part;
+            short part = inventory.itemsBody.get(0).template.part;
+            if (part != -1) {
+                return part;
+            }
         }
         if (this.nPoint.power < 1500000) {
             return PET_ID[this.gender][1];
@@ -928,7 +931,10 @@ public class Pet extends Player {
             return 878;
         }
         if (inventory.itemsBody.get(1).isNotNullItem()) {
-            return inventory.itemsBody.get(1).template.part;
+            short part = inventory.itemsBody.get(1).template.part;
+            if (part != -1) {
+                return part;
+            }
         }
 
         if (this.nPoint.power < 1500000) {

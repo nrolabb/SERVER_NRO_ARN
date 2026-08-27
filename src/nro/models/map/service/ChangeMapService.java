@@ -12,6 +12,7 @@ import nro.models.map.WayPoint;
 import nro.models.map.Zone;
 import nro.models.mob.Mob;
 import nro.models.player.Player;
+import nro.models.player.Pet;
 import nro.models.matches.TYPE_LOSE_PVP;
 import nro.models.services.Service;
 import nro.models.services_func.TransactionService;
@@ -610,6 +611,11 @@ public class ChangeMapService {
 
     public void finishLoadMap(Player player) {
         try {
+            if (player.pet != null && player.pet.status != Pet.GOHOME && player.pet.status != Pet.FUSION && !player.pet.isDie()) {
+                if (player.pet.zone == null || player.pet.zone != player.zone) {
+                    player.pet.joinMapMaster();
+                }
+            }
             player.zone.load_Me_To_Another(player);
             player.zone.load_Another_To_Me(player);
         } catch (Exception e) {
