@@ -453,18 +453,7 @@ public class ChangeMapService {
                 return;
             }
 
-            if (y != -1 && y != 5) {
-                pl.location.y = y;
-            } else {
-                int groundY = zoneJoin.map.yPhysicInTop(pl.location.x, 100);
-                if (groundY <= 0) {
-                    groundY = zoneJoin.map.yPhysicInTop(pl.location.x, pl.location.y);
-                }
-                if (groundY <= 0) {
-                    groundY = 336;
-                }
-                pl.location.y = groundY;
-            }
+            pl.location.y = y;
             this.goToMap(pl, zoneJoin);
             if (pl.pet != null) {
                 pl.pet.joinMapMaster();
