@@ -629,7 +629,12 @@ public class Zone {
             msg.writer().writeByte(this.zoneId);
 
             msg.writer().writeShort(pl.location.x);
-            msg.writer().writeShort(pl.location.y);
+            if (pl.idMark.getIdSpaceShip() != nro.models.map.service.ChangeMapService.NON_SPACE_SHIP
+                    && pl.idMark.getIdSpaceShip() != nro.models.map.service.ChangeMapService.TELEPORT_YARDRAT) {
+                msg.writer().writeShort(5);
+            } else {
+                msg.writer().writeShort(pl.location.y);
+            }
 
             // waypoint
             try {
