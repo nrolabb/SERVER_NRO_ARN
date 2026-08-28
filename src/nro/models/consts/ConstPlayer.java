@@ -19,7 +19,7 @@ public class ConstPlayer {
         }
 
         public static final short[][] AURABIENHINH = {
-                        { 7, 7, 88, 86, 84, 89, 95 }, // Trái Đất
+                        { 7, 22, 88, 86, 84, 89, 95 }, // Trái Đất
                         { 64, 65, 82, 83, 94, 93, 95 }, // Namec
                         { 7, 86, 88, 84, 87, 90, 95 } // Xayda
         };
