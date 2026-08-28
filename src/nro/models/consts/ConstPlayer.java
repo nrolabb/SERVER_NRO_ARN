@@ -18,7 +18,11 @@ public class ConstPlayer {
                 return (short) (HERO1_BIEN_HINH_BODY_START + safeFrame - 1);
         }
 
-        public static final short[] AURABIENHINH = { 7, 86, 88, 84, 87, 90, 95 };
+        public static final short[][] AURABIENHINH = {
+                        { 7, 7, 88, 86, 84, 89, 95 }, // Trái Đất
+                        { 64, 65, 82, 83, 94, 93, 95 }, // Namec
+                        { 7, 86, 88, 84, 87, 90, 95 } // Xayda
+        };
         public static final short[][] HEADBIENHINH = {
                         { 1992, 1993, 1994, 1995, 1996 },
                         { 1997, 1998, 1999, 2000, 2001 },
@@ -28,7 +32,7 @@ public class ConstPlayer {
         public static final short[] LEGBIENHINH = { 1987, 1989, 1991 };
 
         public static final short[][] HEADBIENHINH_SPINE = {
-                        { 2323, 2323, 2317, 2299, 2326, 2329, 2332 }, // Trái Đất
+                        { 2426, 2323, 2317, 2299, 2326, 2329, 2332 }, // Trái Đất
                         { 2352, 2355, 2339, 2406, 2409, 2351, 2400 }, // Namec
                         { 2287, 2286, 2288, 2423, 2289, 2290, 2292 } // Xayda
         };
