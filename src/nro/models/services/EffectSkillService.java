@@ -97,6 +97,9 @@ public class EffectSkillService {
         }
         int pendingSkillLevel = player.effectSkill.pendingBienHinhSkillLevel;
         sendEffectStopCharge(player);
+        if (!isUseSpineBienHinh(player)) {
+            Service.gI().removeEffPlayer(player, 284);
+        }
         player.effectSkill.isPreparingBienHinh = false;
         player.effectSkill.lastTimePrepareBienHinh = 0;
         player.effectSkill.timePrepareBienHinh = 0;
@@ -139,6 +142,9 @@ public class EffectSkillService {
             return;
         }
         sendEffectStopCharge(player);
+        if (!isUseSpineBienHinh(player)) {
+            Service.gI().removeEffPlayer(player, 284);
+        }
         player.effectSkill.isPreparingBienHinh = false;
         player.effectSkill.lastTimePrepareBienHinh = 0;
         player.effectSkill.timePrepareBienHinh = 0;
@@ -162,21 +168,17 @@ public class EffectSkillService {
     }
 
     public void sendEffectBienHinh(Player player) {
-        // Skill skill = SkillUtil.getSkillbyId(player, Skill.BIEN_HINH);
-        // if (skill == null) {
-        // return;
-        // }
-        // Message msg;
-        // try {
-        // msg = new Message(-45);
-        // msg.writer().writeByte(6);
-        // msg.writer().writeInt((int) player.id);
-        // msg.writer().writeShort(skill.template.id);
-        // Service.gI().sendMessAllPlayerInMap(player, msg);
-        // msg.cleanup();
-        // } catch (Exception e) {
-        // nro.models.utils.Logger.logException(EffectSkillService.class, e);
-        // }
+        Message msg;
+        try {
+            msg = new Message(-45);
+            msg.writer().writeByte(6);
+            msg.writer().writeInt((int) player.id);
+            msg.writer().writeShort(91);
+            Service.gI().sendMessAllPlayerInMap(player, msg);
+            msg.cleanup();
+        } catch (Exception e) {
+            nro.models.utils.Logger.logException(EffectSkillService.class, e);
+        }
     }
 
     public static final List<Integer> ITEM_BIEN_HINH_SPINE = List.of(2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086,
@@ -737,11 +739,9 @@ public class EffectSkillService {
     }
 
     public void sendEffectCharge(Player player) {
-        Skill skill = SkillUtil.getSkillbyId(player, Skill.TAI_TAO_NANG_LUONG);
-        if (skill == null) {
-            return;
-        }
-        sendEffectCharge(player, skill.skillId);
+        Skill skill = (player.playerSkill != null) ? player.playerSkill.skillSelect : null;
+        short skillId = (skill != null) ? skill.skillId : 0;
+        sendEffectCharge(player, skillId);
     }
 
     public void sendEffectCharge(Player player, short skillId) {

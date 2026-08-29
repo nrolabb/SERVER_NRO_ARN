@@ -24,12 +24,20 @@ public class ConstPlayer {
                         { 7, 86, 88, 84, 87, 90, 95 } // Xayda
         };
         public static final short[][] HEADBIENHINH = {
-                        { 1992, 1993, 1994, 1995, 1996 },
-                        { 1997, 1998, 1999, 2000, 2001 },
-                        { 2002, 2003, 2004, 2005, 2006 }
+                        { 1992, 1992, 1993, 2431, 1994, 1995, 1996 }, // Trái Đất
+                        { 1997, 1998, 1999, 2000, 2001, 2001, 2001 }, // Namec
+                        { 2002, 2003, 2428, 2004, 2005, 2006, 2434 } // Xayda
         };
-        public static final short[] BODYBIENHINH = { 1986, 1988, 1990 };
-        public static final short[] LEGBIENHINH = { 1987, 1989, 1991 };
+        public static final short[][] BODYBIENHINH = {
+                        { 1986, 1986, 1986, 2432, 1986, 1986, 1986 }, // Trái Đất
+                        { 1988, 1988, 1988, 1988, 1988, 1988, 1988 }, // Namec
+                        { 1990, 1990, 2429, 1990, 1990, 1990, 1990 } // Xayda
+        };
+        public static final short[][] LEGBIENHINH = {
+                        { 1987, 1987, 1987, 2433, 1987, 1987, 1987 }, // Trái Đất
+                        { 1989, 1989, 1989, 1989, 1989, 1989, 1989 }, // Namec
+                        { 1991, 1991, 2430, 1991, 1991, 1991, 1991 } // Xayda
+        };
 
         public static final short[][] HEADBIENHINH_SPINE = {
                         { 2426, 2323, 2317, 2299, 2326, 2329, 2332 }, // Trái Đất
