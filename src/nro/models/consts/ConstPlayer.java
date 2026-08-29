@@ -21,22 +21,22 @@ public class ConstPlayer {
         public static final short[][] AURABIENHINH = {
                         { 7, 93, 88, 86, 84, 6, 95 }, // Trái Đất
                         { 7, 88, 86, 91, 12, 90, 64 }, // Namec
-                        { 7, 92, 88, 84, 87, 90, 95 } // Xayda
+                        { 7, 92, 88, 84, 87, 90, 45 } // Xayda
         };
         public static final short[][] HEADBIENHINH = {
                         { 1992, 1992, 1993, 2431, 1994, 1995, 1996 }, // Trái Đất
                         { 1997, 1998, 1999, 2000, 2001, 2001, 2001 }, // Namec
-                        { 2002, 2003, 2428, 2004, 2005, 2006, 2434 } // Xayda
+                        { 2435, 2436, 2437, 2428, 2438, 2439, 2440 } // Xayda
         };
         public static final short[][] BODYBIENHINH = {
                         { 1986, 1986, 1986, 2432, 1986, 1986, 1986 }, // Trái Đất
                         { 1988, 1988, 1988, 1988, 1988, 1988, 1988 }, // Namec
-                        { 1990, 1990, 2429, 1990, 1990, 1990, 1990 } // Xayda
+                        { 2442, 2442, 2442, 2429, 2442, 2442, 2442 } // Xayda
         };
         public static final short[][] LEGBIENHINH = {
                         { 1987, 1987, 1987, 2433, 1987, 1987, 1987 }, // Trái Đất
                         { 1989, 1989, 1989, 1989, 1989, 1989, 1989 }, // Namec
-                        { 1991, 1991, 2430, 1991, 1991, 1991, 1991 } // Xayda
+                        { 2443, 2443, 2443, 2430, 2443, 2443, 2443 } // Xayda
         };
 
         public static final short[][] HEADBIENHINH_SPINE = {
