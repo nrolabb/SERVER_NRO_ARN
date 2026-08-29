@@ -875,6 +875,12 @@ public class Player implements Runnable {
     }
 
     public byte getAura() {
+        if (isPreviewBienHinh()) {
+            if (this.gender >= 0 && this.gender < ConstPlayer.AURABIENHINH.length) {
+                int lvl = Math.max(0, Math.min(getPreviewBienHinhLevel() - 1, ConstPlayer.AURABIENHINH[this.gender].length - 1));
+                return (byte) ConstPlayer.AURABIENHINH[this.gender][lvl];
+            }
+        }
         if (effectSkill != null && effectSkill.isBienHinh) {
             int lvl = effectSkill.levelBienHinh - 1;
             if (this.gender >= 0 && this.gender < ConstPlayer.AURABIENHINH.length) {
