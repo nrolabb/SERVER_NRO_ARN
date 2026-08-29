@@ -223,6 +223,14 @@ public class EffectSkill {
     }
 
     public void update() {
+        if ((isBienHinh || isPreparingBienHinh) && (player.isDie() || (player.nPoint != null && player.nPoint.hp <= player.nPoint.hpMax * 20L / 100L))) {
+            if (isPreparingBienHinh) {
+                EffectSkillService.gI().cancelPrepareBienHinh(player);
+            }
+            if (isBienHinh) {
+                EffectSkillService.gI().downBienHinh(player);
+            }
+        }
         if (isPreparingBienHinh && !nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(player) && Util.canDoWithTime(lastTimePreviewBienHinh, 150)) {
             showPreviewBienHinh = !showPreviewBienHinh;
             lastTimePreviewBienHinh = System.currentTimeMillis();

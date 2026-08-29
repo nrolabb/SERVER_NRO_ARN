@@ -866,7 +866,7 @@ public class Player implements Runnable {
     private boolean isPreviewBienHinh() {
         return effectSkill != null
                 && effectSkill.isPreparingBienHinh
-                && effectSkill.showPreviewBienHinh
+                && (effectSkill.showPreviewBienHinh || nro.models.services.EffectSkillService.gI().isUseSpineBienHinh(this))
                 && effectSkill.pendingBienHinhSkillLevel > 0;
     }
 
@@ -1486,6 +1486,16 @@ public class Player implements Runnable {
                 this.totalDamageTaken += damage;
             }
             this.nPoint.subHP(damage);
+            if (this.effectSkill != null && (this.effectSkill.isBienHinh || this.effectSkill.isPreparingBienHinh)) {
+                if (this.isDie() || (this.nPoint.hp <= this.nPoint.hpMax * 20L / 100L)) {
+                    if (this.effectSkill.isPreparingBienHinh) {
+                        EffectSkillService.gI().cancelPrepareBienHinh(this);
+                    }
+                    if (this.effectSkill.isBienHinh) {
+                        EffectSkillService.gI().downBienHinh(this);
+                    }
+                }
+            }
             if ((plAtt != null || isMobAttack) && isDie() && !isBoss && !isNewPet && !isNewPet1) {
                 if (plAtt != null && this.isPl()) {
                     // TaskService.gI().checkDoneTaskPK(plAtt);

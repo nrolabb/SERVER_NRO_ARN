@@ -53,6 +53,25 @@ public class ItemTimeService {
         }
     }
 
+    public void removeItemTimeBienHinh(Player player) {
+        if (player == null) {
+            return;
+        }
+        int iconLvFirst = switch (player.gender) {
+            case ConstPlayer.TRAI_DAT ->
+                31254;
+            case ConstPlayer.NAMEC ->
+                31266;
+            case ConstPlayer.XAYDA ->
+                31260;
+            default ->
+                0;
+        };
+        for (int i = 0; i < 6; i++) {
+            removeItemTime(player, iconLvFirst + i);
+        }
+    }
+
     public void sendAllItemTime(Player player) {
         ItemTimeService.gI().sendTextBanDoKhoBau(player);
         ItemTimeService.gI().sendTextDoanhTrai(player);

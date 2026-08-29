@@ -57,12 +57,11 @@ public class EffectSkillService {
         }
         player.effectSkill.isPreparingBienHinh = true;
         player.effectSkill.lastTimePrepareBienHinh = System.currentTimeMillis();
-        player.effectSkill.timePrepareBienHinh = isUseSpineBienHinh(player) ? TIME_TRANSFORM_BIEN_HINH_SPINE - 500
+        player.effectSkill.timePrepareBienHinh = isUseSpineBienHinh(player) ? TIME_TRANSFORM_BIEN_HINH_SPINE
                 : 2000;
         player.effectSkill.pendingBienHinhSkillLevel = skill.point;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = System.currentTimeMillis();
-        sendEffectCharge(player);
         if (isUseSpineBienHinh(player)) {
             int targetLevel = nro.models.server.ModFunc.isMultiLevelBienHinh
                     ? Math.min(skill.point, player.effectSkill.levelBienHinh + 1)
@@ -71,7 +70,9 @@ public class EffectSkillService {
             String skeletonPath = getBienHinhSpinePath(player, targetLevel);
             SpineService.gI().sendSpineSkillEffect(player, skeletonPath, BIEN_HINH_SPINE_ANIM, skin,
                     TIME_TRANSFORM_BIEN_HINH_SPINE);
+            Service.gI().Send_Caitrang(player);
         } else {
+            sendEffectCharge(player);
             Service.gI().sendEffAllPlayer(player, 284, 1, -1, -1);
         }
 
@@ -95,9 +96,10 @@ public class EffectSkillService {
         if (!player.effectSkill.isPreparingBienHinh) {
             return;
         }
+        boolean isSpine = isUseSpineBienHinh(player);
         int pendingSkillLevel = player.effectSkill.pendingBienHinhSkillLevel;
-        sendEffectStopCharge(player);
-        if (!isUseSpineBienHinh(player)) {
+        if (!isSpine) {
+            sendEffectStopCharge(player);
             Service.gI().removeEffPlayer(player, 284);
         }
         player.effectSkill.isPreparingBienHinh = false;
@@ -127,9 +129,11 @@ public class EffectSkillService {
                 : skillLevel;
         player.effectSkill.timeBienHinh = SkillUtil.getTimeBienHinh(lastLevel, baseSkill.coolDown);
         player.effectSkill.lastTimeBienHinh = System.currentTimeMillis();
-        player.effectSkill.wasSpineBienHinh = isUseSpineBienHinh(player);
+        player.effectSkill.wasSpineBienHinh = isSpine;
 
-        sendEffectBienHinh(player);
+        if (!isSpine) {
+            sendEffectBienHinh(player);
+        }
         Service.gI().Send_Caitrang(player);
         Service.gI().point(player);
         player.nPoint.setFullHpMp();
@@ -141,8 +145,8 @@ public class EffectSkillService {
         if (!player.effectSkill.isPreparingBienHinh) {
             return;
         }
-        sendEffectStopCharge(player);
         if (!isUseSpineBienHinh(player)) {
+            sendEffectStopCharge(player);
             Service.gI().removeEffPlayer(player, 284);
         }
         player.effectSkill.isPreparingBienHinh = false;
@@ -151,17 +155,22 @@ public class EffectSkillService {
         player.effectSkill.pendingBienHinhSkillLevel = 0;
         player.effectSkill.showPreviewBienHinh = false;
         player.effectSkill.lastTimePreviewBienHinh = 0;
+        ItemTimeService.gI().removeItemTimeBienHinh(player);
         Service.gI().Send_Caitrang(player);
     }
 
     public void downBienHinh(Player player) {
+        boolean wasSpine = player.effectSkill.wasSpineBienHinh;
         cancelPrepareBienHinh(player);
         player.effectSkill.isBienHinh = false;
         player.effectSkill.levelBienHinh = 0;
         player.effectSkill.frameBienHinh = 0;
         player.effectSkill.lastTimeFrameBienHinh = 0;
         player.effectSkill.wasSpineBienHinh = false;
-        sendEffectBienHinh(player);
+        ItemTimeService.gI().removeItemTimeBienHinh(player);
+        if (!wasSpine) {
+            sendEffectBienHinh(player);
+        }
         Service.gI().Send_Caitrang(player);
         Service.gI().point(player);
         PlayerService.gI().sendInfoHpMp(player);
@@ -188,20 +197,9 @@ public class EffectSkillService {
         if (player == null) {
             return false;
         }
-        if ((player.gender == ConstPlayer.XAYDA || player.gender == ConstPlayer.TRAI_DAT
+        return (player.gender == ConstPlayer.XAYDA || player.gender == ConstPlayer.TRAI_DAT
                 || player.gender == ConstPlayer.NAMEC) && player.fusion != null
-                && player.fusion.typeFusion != ConstPlayer.NON_FUSION) {
-            return true;
-        }
-        if (player.inventory == null || player.inventory.itemsBody == null
-                || player.inventory.itemsBody.size() <= 5) {
-            return false;
-        }
-        Item item = player.inventory.itemsBody.get(5);
-        if (item == null || !item.isNotNullItem()) {
-            return false;
-        }
-        return ITEM_BIEN_HINH_SPINE.contains((int) item.template.id);
+                && player.fusion.typeFusion != ConstPlayer.NON_FUSION;
     }
 
     public String getBienHinhSpinePath(Player player, int skillLevel) {
