@@ -28,13 +28,17 @@ public class GokuSSJ extends Npc {
     public void openBaseMenu(Player player) {
         if (canOpenNpc(player)) {
             switch (this.mapId) {
-                case 80 ->
+                case 80:
+                case 195:
                     this.createOtherMenu(player, ConstNpc.BASE_MENU, "Ta mới hạ Fide, nhưng nó đã kịp đào 1 cái lỗ\nHành tinh này sắp nổ tung rồi\nMau lượn thôi",
                             "Đến\nYardat", "Đến\nKaio", "Nâng cấp\nBiến hình");
-                case 131 ->
+                    break;
+                case 131:
                     this.createOtherMenu(player, ConstNpc.BASE_MENU, "Đây là đâu? Xong cmnr", "Bó tay", "Về chỗ cũ");
-                default ->
+                    break;
+                default:
                     super.openBaseMenu(player);
+                    break;
             }
         }
     }
@@ -47,7 +51,7 @@ public class GokuSSJ extends Npc {
                     if (select == 1) {
                         ChangeMapService.gI().changeMapBySpaceShip(player, 80, -1, 870);
                     }
-                } else if (this.mapId == 80) {
+                } else if (this.mapId == 80 || this.mapId == 195) {
                     switch (select) {
                         case 0 ->
                             ChangeMapService.gI().changeMapBySpaceShip(player, 131, -1, 870);
