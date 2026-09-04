@@ -123,7 +123,7 @@ public class BossesData {
             new short[]{168, 169, 170, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{15_000_000}, //hp
-            new int[]{79, 81, 82, 83, 187, 188}, //map join
+            new int[]{79, 81, 82, 83, 187, 188, 195}, //map join
             //           new int[]{86}, //map join
             new int[][]{
                 {Skill.LIEN_HOAN, 7, 1000},
@@ -150,7 +150,7 @@ public class BossesData {
             new short[]{174, 175, 176, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{20_000_000}, //hp
-            new int[]{79, 81, 82, 83, 187, 188}, //map join
+            new int[]{79, 81, 82, 83, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.LIEN_HOAN, 7, 1000},
                 {Skill.ANTOMIC, 4, 1000},},//skill
@@ -175,7 +175,7 @@ public class BossesData {
             new short[]{171, 172, 173, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{25_000_000}, //hp
-            new int[]{79, 81, 82, 83, 187, 188}, //map join
+            new int[]{79, 81, 82, 83, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.GALICK, 7, 1000},
                 {Skill.ANTOMIC, 3, 3000},},//skill//skill
@@ -199,7 +199,7 @@ public class BossesData {
             new short[]{177, 178, 179, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{30_000_000}, //hp
-            new int[]{79, 81, 82, 83, 187, 188}, //map join
+            new int[]{79, 81, 82, 83, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.LIEN_HOAN, 7, 1000},
                 {Skill.KAMEJOKO, 4, 10000},},//skill//skill
@@ -223,7 +223,7 @@ public class BossesData {
             new short[]{180, 181, 182, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{50_000_000}, //hp
-            new int[]{79, 81, 82, 83, 187, 188}, //map join
+            new int[]{79, 81, 82, 83, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.MASENKO, 7, 1000},
                 {Skill.GALICK, 7, 1000},},//skill
@@ -365,7 +365,7 @@ public class BossesData {
             new short[]{183, 184, 185, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{15000000}, //hp
-            new int[]{80, 187, 188}, //map join
+            new int[]{80, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.MASENKO, 7, 1000},
                 {Skill.GALICK, 7, 1000},},//skill
@@ -387,7 +387,7 @@ public class BossesData {
             new short[]{186, 187, 188, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{20000000}, //hp
-            new int[]{80, 187, 188}, //map join
+            new int[]{80, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.MASENKO, 7, 1000},
                 {Skill.GALICK, 7, 1000},},//skill
@@ -415,7 +415,7 @@ public class BossesData {
             new short[]{189, 190, 191, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             10000, //dame
             new int[]{25000000}, //hp
-            new int[]{80, 187, 188}, //map join
+            new int[]{80, 187, 188, 195}, //map join
             new int[][]{
                 {Skill.MASENKO, 7, 1000},
                 {Skill.GALICK, 7, 1000},},//skill
@@ -2529,7 +2529,7 @@ public class BossesData {
             new short[]{502, 503, 504, -1, -1, -1}, //outfit {head, body, leg, bag, aura, eff}
             100000, //dame
             new int[]{1000000000}, //hp
-            new int[]{6}, //map join
+            new int[]{6, 195}, //map join
             new int[][]{
                 {Skill.TAI_TAO_NANG_LUONG, 1, 120000}, {Skill.GALICK, 7, 1000},
                 {Skill.KAMEJOKO, 1, 1000}, {Skill.KAMEJOKO, 2, 1000}, {Skill.KAMEJOKO, 3, 1000}, {Skill.KAMEJOKO, 4, 1000}, {Skill.KAMEJOKO, 5, 1000}, {Skill.KAMEJOKO, 6, 1000}, {Skill.KAMEJOKO, 7, 1000},
