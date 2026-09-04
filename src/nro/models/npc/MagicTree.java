@@ -45,7 +45,7 @@ public class MagicTree {
         {378, 379, 380, 381, 382, 383, 384, 384, 384, 384}};
     private static final short[][] POS_MAGIC_TREE = {{348, 336}, {372, 336}, {348, 336}};
 
-    private static final int[] UPGRADE_GEM = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private static final int[] UPGRADE_GEM = {5, 10, 100, 1000, 2000, 5000, 10000, 20000, 30000, 0};
     private static final int[] HARVEST_GEM = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
     private boolean loadedMagicTreeToPlayer;
@@ -137,7 +137,9 @@ public class MagicTree {
                     msg.writer().writeUTF(getTextMenuUpgrade());
                 }
                 if (this.currPeas < this.getMaxPea()) {
-                    msg.writer().writeUTF("Kết hạt\nnhanh\n" + HARVEST_GEM[this.level - 1] + " ngọc");
+                    int unreleasedPeas = this.getMaxPea() - this.currPeas;
+                    int gemRequired = unreleasedPeas * 10;
+                    msg.writer().writeUTF("Kết hạt\nnhanh\n" + gemRequired + " ngọc");
                     this.player.idMark.setIndexMenu(ConstNpc.MAGIC_TREE_NON_UPGRADE_LEFT_PEA);
                 } else {
                     this.player.idMark.setIndexMenu(ConstNpc.MAGIC_TREE_NON_UPGRADE_FULL_PEA);
@@ -212,23 +214,28 @@ public class MagicTree {
     }
 
     public void fastRespawnPea() {
-        // Sử dụng mảng HARVEST_GEM để lấy số gem theo cấp độ
-        int gemRequired = HARVEST_GEM[this.level - 1];  // Lấy số gem theo cấp độ cây
+        int unreleasedPeas = this.getMaxPea() - this.currPeas;
+        if (unreleasedPeas <= 0) {
+            Service.gI().sendThongBao(player, "Cây đậu đã kết đầy hạt rồi!");
+            return;
+        }
+        int gemRequired = unreleasedPeas * 10;
 
         // Kiểm tra xem người chơi có đủ gem không
         if (this.player.inventory.gem >= gemRequired) {
             // Trừ số gem yêu cầu từ túi đồ người chơi
-            this.player.inventory.gem -= gemRequired;
+            this.player.inventory.subGem(gemRequired);
             // Cập nhật lại thông tin gem của người chơi
             Service.gI().sendMoney(player);
 
             // Cập nhật số hạt đậu
             this.currPeas = this.getMaxPea();
+            this.lastTimeHarvest = System.currentTimeMillis();
             this.loadMagicTree();
         } else {
             // Thông báo nếu người chơi không đủ gem
-            Service.gI().sendThongBao(player, "Bạn không đủ gem để kết hạt nhanh, còn thiếu "
-                    + (gemRequired - this.player.inventory.gem) + " gem.");
+            Service.gI().sendThongBao(player, "Bạn không đủ ngọc để kết hạt nhanh, còn thiếu "
+                    + (gemRequired - this.player.inventory.gem) + " ngọc.");
         }
     }
 
@@ -238,16 +245,14 @@ public class MagicTree {
 
         // Kiểm tra nếu cấp độ cây còn dưới MAX_LEVEL và người chơi đủ ngọc
         if (this.level < MAX_LEVEL && this.player.inventory.gem >= upgradeGemCost) {
-            // Lấy số ngọc trước khi nâng cấp
-            int currentGem = this.player.inventory.gem;
-           this.player.inventory.gem -= upgradeGemCost;
+            this.player.inventory.subGem(upgradeGemCost);
             this.level++;  // Tăng cấp độ cây
             this.isUpgrade = false;
             Service.gI().sendMoney(player);
-             this.loadMagicTree();
+            this.loadMagicTree();
 
             // Thông báo số ngọc đã mất
-            Service.gI().sendThongBao(player, "Nâng cấp nhanh thành công! Bạn đã mất " + upgradeGemCost + " ngọc.");
+            Service.gI().sendThongBao(player, "Nâng cấp nhanh thành công! Bạn đã mất " + Util.numberToMoney(upgradeGemCost) + " ngọc.");
         } else {
             // Thông báo nếu người chơi không đủ ngọc hoặc cây đã đạt cấp tối đa
             Service.gI().sendThongBao(player, "Bạn không đủ ngọc để nâng cấp nhanh hoặc cây đã đạt cấp tối đa.");
@@ -259,7 +264,7 @@ public class MagicTree {
     }
 
     private short getSecondPerPea() {
-        return (short) (this.level * 60);
+        return (short) (10 * 60);
     }
 
     private int getSecondPea() {
