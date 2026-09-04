@@ -16,7 +16,7 @@ public class MagicTree {
 
     public static final byte MAX_LEVEL = 10;
 
-    public static final short[] PEA_TEMP = {13, 60, 61, 62, 63, 64, 65, 352, 523, 595};
+    public static final short[] PEA_TEMP = {1715, 1715, 1715, 1715, 1715, 1715, 1715, 1715, 1715, 1715};
     public static final int[] PEA_PARAM = {100, 500, 2, 4, 8, 16, 32, 64, 128, 256};
 
     private static final int[][][] POS_PEAS = {
@@ -304,8 +304,7 @@ public class MagicTree {
     }
 
     public int addPeaHarvest(byte level, int quantity) {
-        Item pea = ItemService.gI().createNewItem(MagicTree.PEA_TEMP[level - 1], quantity);
-        pea.itemOptions.add(new Item.ItemOption(level - 1 > 1 ? 2 : 48, MagicTree.PEA_PARAM[level - 1]));
+        Item pea = ItemService.gI().createNewItem((short) 1715, quantity);
         InventoryService.gI().addItemBag(player, pea);
         if (pea.quantity > 0) {
             InventoryService.gI().addItemBox(player, pea);

@@ -22,6 +22,7 @@ import nro.models.services.EffectSkillService;
 import nro.models.services.Service;
 import nro.models.services.TaskService;
 import nro.models.task.BadgesTaskService;
+import nro.models.item.Item;
 import nro.models.utils.Logger;
 import nro.models.utils.Util;
 
@@ -262,7 +263,7 @@ public class PlayerService {
     }
 
     private static final int COST_GOLD_HOI_SINH = 20_000;
-    private static final int COST_GEM_HOI_SINH = 5000;
+    private static final int COST_GEM_HOI_SINH = 10;
     private static final int COST_GOLD_HOI_SINH_NRSD = 50_000;
 
     public void hoiSinh(Player player) {
@@ -279,14 +280,32 @@ public class PlayerService {
                         return;
                     }
                 } else {
-                    if (player.inventory.gold >= COST_GEM_HOI_SINH) {
-                        player.inventory.gold -= COST_GEM_HOI_SINH;
-                        canHs = true;
-                    } else {
-                        Service.gI().sendThongBao(player, "Không đủ vàng để thực hiện, còn thiếu "
-                                + Util.numberToMoney(COST_GEM_HOI_SINH - player.inventory.gem) + " vàng");
+                    Item pea = null;
+                    for (Item item : player.inventory.itemsBag) {
+                        if (item.isNotNullItem() && item.template.type == 6) {
+                            pea = item;
+                            break;
+                        }
+                    }
+                    boolean hasGem = player.inventory.gem >= COST_GEM_HOI_SINH;
+                    boolean hasPea = pea != null && pea.quantity >= 1;
+
+                    if (!hasGem && !hasPea) {
+                        Service.gI().sendThongBao(player, "Bạn không đủ ngọc và đậu thần để hồi sinh tại chỗ (cần 10 ngọc và 1 hạt đậu thần)!");
+                        return;
+                    } else if (!hasGem) {
+                        Service.gI().sendThongBao(player, "Bạn không đủ ngọc để hồi sinh tại chỗ, còn thiếu "
+                                + (COST_GEM_HOI_SINH - player.inventory.gem) + " ngọc!");
+                        return;
+                    } else if (!hasPea) {
+                        Service.gI().sendThongBao(player, "Bạn không có đậu thần để hồi sinh tại chỗ!");
                         return;
                     }
+
+                    player.inventory.subGem(COST_GEM_HOI_SINH);
+                    InventoryService.gI().subQuantityItemsBag(player, pea, 1);
+                    InventoryService.gI().sendItemBags(player);
+                    canHs = true;
                 }
                 if (canHs) {
                     Service.gI().sendMoney(player);

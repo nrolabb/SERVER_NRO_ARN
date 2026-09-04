@@ -397,7 +397,7 @@ public class UseItem {
                         learnSpecialSkill(pl, item);
                         break;
                     case 6: // đậu thần
-                        this.eatPea(pl);
+                        this.eatPea(pl, item);
                         break;
                     case 12: // ngọc rồng các loại
                         controllerCallRongThan(pl, item);
@@ -2274,32 +2274,47 @@ public class UseItem {
     }
 
     public void eatPea(Player player) {
+        this.eatPea(player, null);
+    }
+
+    public void eatPea(Player player, Item pea) {
         if (!Util.canDoWithTime(player.lastTimeEatPea, 1000)) {
             return;
         }
         player.lastTimeEatPea = System.currentTimeMillis();
-        Item pea = null;
-        for (Item item : player.inventory.itemsBag) {
-            if (item.isNotNullItem() && item.template.type == 6) {
-                pea = item;
-                break;
+        if (pea == null || !pea.isNotNullItem() || pea.template.type != 6) {
+            pea = null;
+            for (Item item : player.inventory.itemsBag) {
+                if (item.isNotNullItem() && item.template.type == 6) {
+                    pea = item;
+                    break;
+                }
             }
         }
         if (pea != null) {
             int hpKiHoiPhuc = 0;
-            int lvPea = Integer.parseInt(pea.template.name.substring(13));
-            for (Item.ItemOption io : pea.itemOptions) {
-                if (io.optionTemplate.id == 2) {
-                    hpKiHoiPhuc = io.param * 1000;
-                    break;
-                }
-                if (io.optionTemplate.id == 48) {
-                    hpKiHoiPhuc = io.param;
-                    break;
-                }
+            int lvPea = 1;
+            try {
+                lvPea = Integer.parseInt(pea.template.name.replaceAll("\\D+", ""));
+            } catch (Exception e) {
+                lvPea = 1;
             }
-            player.nPoint.setHp(player.nPoint.hp + hpKiHoiPhuc);
-            player.nPoint.setMp(player.nPoint.mp + hpKiHoiPhuc);
+            if (pea.template.id == 1715) {
+                player.nPoint.setFullHpMp();
+            } else {
+                for (Item.ItemOption io : pea.itemOptions) {
+                    if (io.optionTemplate.id == 2) {
+                        hpKiHoiPhuc = io.param * 1000;
+                        break;
+                    }
+                    if (io.optionTemplate.id == 48) {
+                        hpKiHoiPhuc = io.param;
+                        break;
+                    }
+                }
+                player.nPoint.setHp(player.nPoint.hp + hpKiHoiPhuc);
+                player.nPoint.setMp(player.nPoint.mp + hpKiHoiPhuc);
+            }
             PlayerService.gI().sendInfoHpMp(player);
             Service.gI().sendInfoPlayerEatPea(player);
             if (player.pet != null && player.zone.equals(player.pet.zone) && !player.pet.isDie()) {
@@ -2308,8 +2323,13 @@ public class UseItem {
                 if (player.pet.nPoint.stamina > player.pet.nPoint.maxStamina) {
                     player.pet.nPoint.stamina = player.pet.nPoint.maxStamina;
                 }
-                player.pet.nPoint.setHp(player.pet.nPoint.hp + hpKiHoiPhuc);
-                player.pet.nPoint.setMp(player.pet.nPoint.mp + hpKiHoiPhuc);
+                if (pea.template.id == 1715) {
+                    player.pet.nPoint.setFullHpMp();
+                    player.pet.nPoint.stamina = player.pet.nPoint.maxStamina;
+                } else {
+                    player.pet.nPoint.setHp(player.pet.nPoint.hp + hpKiHoiPhuc);
+                    player.pet.nPoint.setMp(player.pet.nPoint.mp + hpKiHoiPhuc);
+                }
                 Service.gI().sendInfoPlayerEatPea(player.pet);
                 Service.gI().chatJustForMe(player, player.pet, "Cám ơn sư phụ");
 
