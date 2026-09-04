@@ -90,6 +90,8 @@ public class IDMark {
     private boolean goToKGHD;
     private long lastTimeGoToKGHD;
 
+    private int mapIdGokuSSJ;
+
     private long lastTimeChangeZone;
     private long lastTimeChatGlobal;
     private long lastTimeChatPrivate;

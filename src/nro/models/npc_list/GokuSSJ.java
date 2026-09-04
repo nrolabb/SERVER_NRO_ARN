@@ -49,12 +49,15 @@ public class GokuSSJ extends Npc {
             if (player.idMark.isBaseMenu()) {
                 if (this.mapId == 131) {
                     if (select == 1) {
-                        ChangeMapService.gI().changeMapBySpaceShip(player, 80, -1, 870);
+                        int targetMap = player.idMark.getMapIdGokuSSJ() == 195 ? 195 : 80;
+                        ChangeMapService.gI().changeMapBySpaceShip(player, targetMap, -1, 870);
                     }
                 } else if (this.mapId == 80 || this.mapId == 195) {
                     switch (select) {
-                        case 0 ->
+                        case 0 -> {
+                            player.idMark.setMapIdGokuSSJ(this.mapId);
                             ChangeMapService.gI().changeMapBySpaceShip(player, 131, -1, 870);
+                        }
                         case 1 ->
                             ChangeMapService.gI().changeMapBySpaceShip(player, 95, -1, 870);
                         case 2 ->
