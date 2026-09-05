@@ -2017,7 +2017,7 @@ if (MapService.gI().isMapBanDoKhoBau(this.player.zone.map.mapId)) {
             }
         }
         if (type == 3) {
-            tiemNangUse = 2 * (this.defg + 5) / 2 * 100000;
+            tiemNangUse = (long) point * (2L * (this.defg + 5) + point - 1) / 2L * 100000L;
             if ((this.defg + point) <= getDefLimit()) {
                 if (doUseTiemNang(tiemNangUse)) {
                     defg += point;
