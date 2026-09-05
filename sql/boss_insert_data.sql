@@ -2,6 +2,16 @@
 -- DỮ LIỆU CẤU HÌNH & KHỞI TẠO BẢNG BOSS CHO NGỌC RỒNG ONLINE (NRO)
 -- ==============================================================================
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+SET character_set_client = utf8mb4;
+SET character_set_connection = utf8mb4;
+SET character_set_results = utf8mb4;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ------------------------------------------------------------------------------
@@ -21,9 +31,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- ====================================================================
 CREATE TABLE IF NOT EXISTS `boss_template` (
   `id` INT NOT NULL COMMENT 'ID Boss (khớp với BossID)',
-  `name` VARCHAR(100) NOT NULL COMMENT 'Tên hiển thị gốc',
+  `name` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên hiển thị gốc',
   `type` ENUM('NORMAL', 'TASK', 'EVENT', 'DUNGEON', 'PHOBAN', 'MINI', 'FINAL') NOT NULL DEFAULT 'NORMAL' COMMENT 'Phân loại boss',
-  `sub_type` VARCHAR(50) DEFAULT NULL COMMENT 'Nhóm boss (vd: HALLOWEEN, TRUNG_THU, NAPPA, CELL, ...)',
+  `sub_type` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Nhóm boss (vd: HALLOWEEN, TRUNG_THU, NAPPA, CELL, ...)',
   `gender` TINYINT NOT NULL DEFAULT 0 COMMENT 'Hành tinh: 0 Trái Đất, 1 Namếc, 2 Xayda',
   `enabled` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1: Bật spawn, 0: Tắt hoàn toàn (tiện tắt/bật event)',
   `spawn_count` INT NOT NULL DEFAULT 1 COMMENT 'Số lượng boss loại này xuất hiện đồng thời',
@@ -44,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `boss_form` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `boss_id` INT NOT NULL,
   `form_order` INT NOT NULL DEFAULT 0 COMMENT 'Thứ tự dạng (0: Gốc, 1: Dạng 2, 2: Dạng 3...)',
-  `name` VARCHAR(100) NOT NULL COMMENT 'Tên hiển thị ở dạng này (vd: Fide Cấp 1, Fide Cấp 2)',
+  `name` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tên hiển thị ở dạng này (vd: Fide Cấp 1, Fide Cấp 2)',
   `hp_min` BIGINT NOT NULL DEFAULT 1000000 COMMENT 'HP tối thiểu (để random)',
   `hp_max` BIGINT NOT NULL DEFAULT 1000000 COMMENT 'HP tối đa',
   `dame` INT NOT NULL DEFAULT 10000 COMMENT 'Sát thương cơ bản',
@@ -54,9 +64,9 @@ CREATE TABLE IF NOT EXISTS `boss_form` (
   `outfit_bag` SMALLINT NOT NULL DEFAULT -1 COMMENT 'Part balo/cờ',
   `outfit_aura` SMALLINT NOT NULL DEFAULT -1 COMMENT 'Hiệu ứng hào quang',
   `outfit_eff` SMALLINT NOT NULL DEFAULT -1 COMMENT 'Hiệu ứng đặc biệt',
-  `text_start` TEXT DEFAULT NULL COMMENT 'Danh sách câu thoại khi xuất hiện (cách nhau bởi ký tự | hoặc JSON array)',
-  `text_mid` TEXT DEFAULT NULL COMMENT 'Danh sách câu thoại khi giao chiến',
-  `text_end` TEXT DEFAULT NULL COMMENT 'Danh sách câu thoại trước khi chết',
+  `text_start` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Danh sách câu thoại khi xuất hiện (cách nhau bởi ký tự | hoặc JSON array)',
+  `text_mid` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Danh sách câu thoại khi giao chiến',
+  `text_end` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Danh sách câu thoại trước khi chết',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_boss_form` (`boss_id`, `form_order`),
   CONSTRAINT `fk_form_boss` FOREIGN KEY (`boss_id`) REFERENCES `boss_template` (`id`) ON DELETE CASCADE
@@ -1439,3 +1449,7 @@ REPLACE INTO `boss_reward` (`id`, `boss_id`, `item_id`, `rate`, `quantity_min`, 
 (28, -354, 457, 100, 1, 1, '[]', 2, 2),
 (29, -355, 457, 100, 1, 1, '[]', 2, 2),
 (30, -371, 457, 100, 1, 1, '[]', 2, 2);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
