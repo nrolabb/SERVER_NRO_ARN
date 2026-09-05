@@ -633,7 +633,15 @@ public class Zone {
 
             // waypoint
             try {
-                List<WayPoint> wayPoints = this.map.wayPoints;
+                List<WayPoint> wayPoints = new ArrayList<>();
+                for (WayPoint wp : this.map.wayPoints) {
+                    if (wp.goMap == 153) {
+                        if (pl.clan == null || !pl.clan.openClanLand) {
+                            continue;
+                        }
+                    }
+                    wayPoints.add(wp);
+                }
                 msg.writer().writeByte(wayPoints.size());
                 for (WayPoint wp : wayPoints) {
                     msg.writer().writeShort(wp.minX);

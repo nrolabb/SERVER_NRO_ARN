@@ -259,11 +259,43 @@ public class UseItem {
         }
     }
 
+    private void openClanLand(Player pl, Item item) {
+        if (pl.clan == null) {
+            Service.gI().sendThongBao(pl, "Bạn chưa có bang hội");
+            return;
+        }
+        if (!pl.clan.isLeader(pl) && !pl.clan.isDeputy(pl)) {
+            Service.gI().sendThongBao(pl, "Chỉ bang chủ hoặc phó bang mới có thể sử dụng");
+            return;
+        }
+        if (pl.clan.openClanLand) {
+            Service.gI().sendThongBao(pl, "Bang hội đã mở khóa lãnh địa bang rồi");
+            return;
+        }
+        InventoryService.gI().subQuantityItemsBag(pl, item, 1);
+        InventoryService.gI().sendItemBags(pl);
+        pl.clan.openClanLand = true;
+        pl.clan.update();
+        for (int i = pl.clan.membersInGame.size() - 1; i >= 0; i--) {
+            Player member = pl.clan.membersInGame.get(i);
+            if (member != null) {
+                Service.gI().sendThongBao(member, "Bang hội đã mở khóa Lãnh địa bang hội thành công!");
+                if (member.zone != null && (member.zone.map.mapId == 42 || member.zone.map.mapId == 43 || member.zone.map.mapId == 44)) {
+                    member.zone.mapInfo(member);
+                }
+            }
+        }
+    }
+
     private void useItem(Player pl, Item item, int indexBag) {
         if (item != null && item.isNotNullItem()) {
             // Nhận diện trực tiếp theo item id, sau đó PuppetService mới tra
             // id_temp trong bảng puppet_template để lấy cấu hình triệu hồi.
             switch (item.template.id) {
+                case 2186 -> {
+                    openClanLand(pl, item);
+                    return;
+                }
                 case 1946 -> {
                     if (InventoryService.gI().getCountEmptyBag(pl) == 0) {
                         Service.gI().sendThongBao(pl, "Hành trang không đủ chỗ trống");

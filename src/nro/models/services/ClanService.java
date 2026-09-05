@@ -1213,7 +1213,7 @@ public class ClanService {
         PreparedStatement ps;
         try (Connection con = LocalManager.getConnection();) {
             ps = con.prepareStatement(
-                    "update clan set slogan = ?, img_id = ?, power_point = ?, max_member = ?, clan_point = ?, level = ?, members = ?, name_2 = ?, tops = ? where id = ? limit 1");
+                    "update clan set slogan = ?, img_id = ?, power_point = ?, max_member = ?, clan_point = ?, level = ?, members = ?, name_2 = ?, tops = ?, open_clan_land = ? where id = ? limit 1");
             for (Clan clan : Manager.CLANS) {
                 JSONArray dataArray = new JSONArray();
                 JSONObject dataObject = new JSONObject();
@@ -1247,7 +1247,8 @@ public class ClanService {
                 ps.setString(7, member);
                 ps.setString(8, clan.name2);
                 ps.setString(9, clan.getClanDungeonDailyData());
-                ps.setInt(10, clan.id);
+                ps.setBoolean(10, clan.openClanLand);
+                ps.setInt(11, clan.id);
                 ps.addBatch();
             }
             ps.executeBatch();

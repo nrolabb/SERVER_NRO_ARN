@@ -32,6 +32,9 @@ public class MapService {
     public WayPoint getWaypointPlayerIn(Player player) {
         for (WayPoint wp : player.zone.map.wayPoints) {
             if (player.location.x >= wp.minX && player.location.x <= wp.maxX && player.location.y >= wp.minY && player.location.y <= wp.maxY) {
+                if (wp.goMap == 153 && (player.clan == null || !player.clan.openClanLand)) {
+                    continue;
+                }
                 return wp;
             }
         }
@@ -91,6 +94,10 @@ public class MapService {
     }
 
     public Zone getMapCanJoin(Player player, int mapId, int zoneId) {
+        if (mapId == 153 && (player.clan == null || !player.clan.openClanLand)) {
+            return null;
+        }
+
         if (isMapOffline(mapId)) {
             return getMapById(mapId).zones.get(0);
         }
@@ -103,7 +110,7 @@ public class MapService {
         }
 
         if (this.isMapClanDungeon(mapId) && (player.zone == null || player.clan == null || player.clan.clanDungeon == null)) {
-            Zone zone = getZone(153);
+            Zone zone = (player.clan != null && player.clan.openClanLand) ? getZone(153) : getZone(21 + player.gender);
             if (zone != null) {
                 player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
                 player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
@@ -183,7 +190,7 @@ public class MapService {
                     return player.clan.clanDungeon.getMapById(mapId);
                 }
                 // Not from dungeon and not entering from clan land - redirect to map 153
-                Zone zone = getZone(153);
+                Zone zone = (player.clan != null && player.clan.openClanLand) ? getZone(153) : getZone(21 + player.gender);
                 if (zone != null) {
                     player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
                     player.location.y = zone.map.yPhysicInTop(player.location.x, 100);

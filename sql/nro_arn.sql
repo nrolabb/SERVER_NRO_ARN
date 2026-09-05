@@ -1964,7 +1964,8 @@ CREATE TABLE `clan` (
   `thanhTichBDKB` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0]',
   `thongTinLeader` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '[0,0,0,0,0]',
   `items_clan_box` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `clan_intrinsics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+  `clan_intrinsics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `open_clan_land` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --

@@ -60,6 +60,7 @@ public class Clan {
     public int timesPerDayClanDungeon;
     public ClanDungeon clanDungeon;
     public Player playerOpenClanDungeon;
+    public boolean openClanLand;
 
     public final List<ClanMember> members;
     public final List<Player> membersInGame;
@@ -152,6 +153,7 @@ public class Clan {
         JSONObject data = new JSONObject();
         data.put("clan_dungeon_count", timesPerDayClanDungeon);
         data.put("clan_dungeon_last_open", lastTimeOpenClanDungeon);
+        data.put("open_clan_land", openClanLand);
         return data.toJSONString();
     }
 
@@ -164,11 +166,15 @@ public class Clan {
             }
             Object count = data.get("clan_dungeon_count");
             Object lastOpen = data.get("clan_dungeon_last_open");
+            Object openLand = data.get("open_clan_land");
             if (count != null) {
                 timesPerDayClanDungeon = Integer.parseInt(String.valueOf(count));
             }
             if (lastOpen != null) {
                 lastTimeOpenClanDungeon = Long.parseLong(String.valueOf(lastOpen));
+            }
+            if (openLand != null) {
+                openClanLand = Boolean.parseBoolean(String.valueOf(openLand));
             }
         } catch (Exception e) {
         }
@@ -439,8 +445,8 @@ public class Clan {
         PreparedStatement ps = null;
         try (Connection con = LocalManager.getConnection();) {
             ps = con.prepareStatement(
-                    "insert into clan (id, name, name_2, slogan, img_id, power_point, max_member, clan_point, level, members, tops, thanhTichBDKB, thongTinLeader, clan_intrinsics) "
-                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    "insert into clan (id, name, name_2, slogan, img_id, power_point, max_member, clan_point, level, members, tops, thanhTichBDKB, thongTinLeader, clan_intrinsics, open_clan_land) "
+                            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, this.id);
             ps.setString(2, this.name);
             ps.setString(3, this.name2);
@@ -455,6 +461,7 @@ public class Clan {
             ps.setString(12, topBanDoKhoBau);
             ps.setString(13, thongTinLeader);
             ps.setString(14, getClanIntrinsicsData());
+            ps.setBoolean(15, this.openClanLand);
             ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
@@ -527,7 +534,7 @@ public class Clan {
         try (Connection con = LocalManager.getConnection();) {
             ps = con.prepareStatement(
                     "update clan set slogan = ?, img_id = ?, power_point = ?, max_member = ?, clan_point = ?, "
-                            + "level = ?, members = ?, name_2 = ?, tops = ?, thanhTichBDKB = ?, thongTinLeader = ?, items_clan_box = ?, clan_intrinsics = ? where id = ? limit 1");
+                            + "level = ?, members = ?, name_2 = ?, tops = ?, thanhTichBDKB = ?, thongTinLeader = ?, items_clan_box = ?, clan_intrinsics = ?, open_clan_land = ? where id = ? limit 1");
             ps.setString(1, this.slogan);
             ps.setInt(2, this.imgId);
             ps.setLong(3, this.powerPoint);
@@ -541,7 +548,8 @@ public class Clan {
             ps.setString(11, thongTinLeader);
             ps.setString(12, itemsBoxStr);
             ps.setString(13, getClanIntrinsicsData());
-            ps.setInt(14, this.id);
+            ps.setBoolean(14, this.openClanLand);
+            ps.setInt(15, this.id);
             ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
