@@ -53,6 +53,8 @@ import nro.models.npc.DuaHauEgg;
 import nro.models.server.Manager;
 import static nro.models.server.Manager.isTopSukienChanged;
 import nro.models.services.ChatGlobalService;
+import nro.models.server.ServerNotify;
+import nro.models.clan.ClanMessage;
 import nro.models.task.BadgesTaskService;
 import nro.models.utils.Logger;
 
@@ -276,6 +278,21 @@ public class UseItem {
         InventoryService.gI().sendItemBags(pl);
         pl.clan.openClanLand = true;
         pl.clan.update();
+
+        String notifyText = pl.name + " bang hội: " + pl.clan.name + " đã mở lãnh địa bang hội.";
+        ServerNotify.gI().notify(notifyText);
+        ChatGlobalService.gI().chatVip(pl, notifyText);
+
+        ClanMessage cmg = new ClanMessage(pl.clan);
+        cmg.type = 0;
+        cmg.role = pl.clanMember != null ? pl.clanMember.role : 0;
+        cmg.playerId = (int) pl.id;
+        cmg.playerName = pl.name;
+        cmg.text = notifyText;
+        cmg.color = ClanMessage.RED;
+        pl.clan.addClanMessage(cmg);
+        pl.clan.sendMessageClan(cmg);
+
         for (int i = pl.clan.membersInGame.size() - 1; i >= 0; i--) {
             Player member = pl.clan.membersInGame.get(i);
             if (member != null) {
