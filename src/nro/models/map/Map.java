@@ -25,6 +25,7 @@ import nro.models.utils.Functions;
 import nro.models.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import nro.models.mob_bigboss.GaChinCua;
 import nro.models.mob_bigboss.GauTuongCuop;
 import nro.models.mob_bigboss.Hirudegarn;
@@ -104,7 +105,7 @@ public class Map implements Runnable {
         this.type = type;
         this.tileMap = tileMap;
         this.tileTop = tileTop;
-        this.zones = new ArrayList<>();
+        this.zones = new CopyOnWriteArrayList<>();
         this.wayPoints = wayPoints;
         this.npcs = new ArrayList<>();
         try {
@@ -148,6 +149,9 @@ public class Map implements Runnable {
         }
         if (this.mapId >= ClanDungeon.MAP_START && this.mapId <= ClanDungeon.MAP_END) {
             nZone = ClanDungeon.AVAILABLE;
+        }
+        if (this.mapId == 153) {
+            nZone = 0;
         }
 
         for (int i = 0; i < nZone; i++) {

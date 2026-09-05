@@ -94,8 +94,11 @@ public class MapService {
     }
 
     public Zone getMapCanJoin(Player player, int mapId, int zoneId) {
-        if (mapId == 153 && (player.clan == null || !player.clan.openClanLand)) {
-            return null;
+        if (mapId == 153) {
+            if (player.clan == null || !player.clan.openClanLand) {
+                return null;
+            }
+            return player.clan.getClanLand();
         }
 
         if (isMapOffline(mapId)) {
@@ -110,7 +113,7 @@ public class MapService {
         }
 
         if (this.isMapClanDungeon(mapId) && (player.zone == null || player.clan == null || player.clan.clanDungeon == null)) {
-            Zone zone = (player.clan != null && player.clan.openClanLand) ? getZone(153) : getZone(21 + player.gender);
+            Zone zone = (player.clan != null && player.clan.openClanLand) ? player.clan.getClanLand() : getZone(21 + player.gender);
             if (zone != null) {
                 player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
                 player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
@@ -190,7 +193,7 @@ public class MapService {
                     return player.clan.clanDungeon.getMapById(mapId);
                 }
                 // Not from dungeon and not entering from clan land - redirect to map 153
-                Zone zone = (player.clan != null && player.clan.openClanLand) ? getZone(153) : getZone(21 + player.gender);
+                Zone zone = (player.clan != null && player.clan.openClanLand) ? player.clan.getClanLand() : getZone(21 + player.gender);
                 if (zone != null) {
                     player.location.x = Util.nextInt(100, zone.map.mapWidth - 100);
                     player.location.y = zone.map.yPhysicInTop(player.location.x, 100);
@@ -564,6 +567,10 @@ public class MapService {
 
     public boolean isMapClanDungeon(int mapId) {
         return mapId >= ClanDungeon.MAP_START && mapId <= ClanDungeon.MAP_END;
+    }
+
+    public boolean isMapLanhDiaBang(int mapId) {
+        return mapId == 153;
     }
 
     public int getClanDungeonRequiredPoint(int mapId) {

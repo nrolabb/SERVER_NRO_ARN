@@ -123,7 +123,7 @@ public class ChangeMapService {
             return;
         }
         if (!pl.isAdmin()) {
-            if (MapService.gI().isMapOffline(pl.zone.map.mapId)) {
+            if (MapService.gI().isMapOffline(pl.zone.map.mapId) || pl.zone.map.mapId == 153) {
                 Service.gI().sendThongBaoOK(pl, "Không thể đổi khu vực trong map này");
                 return;
             }
@@ -178,7 +178,7 @@ public class ChangeMapService {
             return;
         }
         if (!pl.isAdmin() && !pl.isBoss) {
-            if (MapService.gI().isMapOffline(pl.zone.map.mapId)) {
+            if (MapService.gI().isMapOffline(pl.zone.map.mapId) || pl.zone.map.mapId == 153) {
                 NpcService.gI().createTutorial(pl, -1, "Không thể đến khu vực này");
                 return;
             }
@@ -248,6 +248,9 @@ public class ChangeMapService {
             return true;
         }
         if (zone == null || zone.map == null) {
+            return false;
+        }
+        if (zone.map.mapId == 153) {
             return false;
         }
         if (MapService.gI().isMapClanDungeon(zone.map.mapId)) {
@@ -1113,6 +1116,15 @@ public class ChangeMapService {
                     if (TaskService.gI().getIdTask(player) < ConstTask.TASK_27_0) {
                         return null;
                     }
+                    break;
+                case 153:
+                    if (player.clan == null || !player.clan.openClanLand) {
+                        return null;
+                    }
+                    if (player.clan.getClanLand() != null && !zoneJoin.equals(player.clan.getClanLand())) {
+                        return null;
+                    }
+                    break;
             }
         }
         if (zoneJoin != null) {
@@ -1138,7 +1150,7 @@ public class ChangeMapService {
     }
 
     public Zone checkMapCanJoinByYardart(Player player, Zone zoneJoin) {
-        if ((!player.isBoss && !player.isAdmin()) && (zoneJoin.map.mapId == 122 || zoneJoin.map.mapId == 123 || zoneJoin.map.mapId == 124)) {
+        if ((!player.isBoss && !player.isAdmin()) && (zoneJoin.map.mapId == 122 || zoneJoin.map.mapId == 123 || zoneJoin.map.mapId == 124 || zoneJoin.map.mapId == 153)) {
             return null;
         }
         return zoneJoin;

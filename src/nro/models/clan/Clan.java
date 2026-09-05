@@ -3,6 +3,7 @@ package nro.models.clan;
 import nro.models.data.LocalManager;
 import nro.models.map.phoban.RedRibbonHQ;
 import nro.models.map.phoban.ClanDungeon;
+import nro.models.map.Zone;
 import nro.models.services.ClanService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +62,20 @@ public class Clan {
     public ClanDungeon clanDungeon;
     public Player playerOpenClanDungeon;
     public boolean openClanLand;
+    public Zone clanLand;
+
+    public synchronized Zone getClanLand() {
+        if (this.clanLand == null) {
+            nro.models.map.Map map = nro.models.map.service.MapService.gI().getMapById(153);
+            if (map != null) {
+                this.clanLand = new Zone(map, 0, 30);
+                this.clanLand.trapMaps = new ArrayList<>();
+                this.clanLand.maBuHolds = new ArrayList<>();
+                map.zones.add(this.clanLand);
+            }
+        }
+        return this.clanLand;
+    }
 
     public final List<ClanMember> members;
     public final List<Player> membersInGame;

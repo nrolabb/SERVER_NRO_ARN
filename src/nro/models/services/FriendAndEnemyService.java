@@ -277,7 +277,7 @@ public class FriendAndEnemyService {
             if (pl != null) {
                 if (player.isAdmin() || player.nPoint.teleport) {
                     if (!pl.itemTime.isUseAnDanh || player.isAdmin()) {
-                        if ((player.isAdmin() || !pl.zone.isFullPlayer()) && !MapService.gI().isMapOffline(pl.zone.map.mapId) && !MapService.gI().isMapBlackBallWar(pl.zone.map.mapId) && !MapService.gI().isMapPhoBan(pl.zone.map.mapId) && !MapService.gI().isMapMaBu(pl.zone.map.mapId)) {
+                        if ((player.isAdmin() || !pl.zone.isFullPlayer()) && !MapService.gI().isMapOffline(pl.zone.map.mapId) && !MapService.gI().isMapBlackBallWar(pl.zone.map.mapId) && !MapService.gI().isMapPhoBan(pl.zone.map.mapId) && !MapService.gI().isMapMaBu(pl.zone.map.mapId) && !MapService.gI().isMapLanhDiaBang(pl.zone.map.mapId)) {
                             ChangeMapService.gI().changeMapYardrat(player, ChangeMapService.gI().checkMapCanJoin(player, pl.zone), pl.location.x + Util.nextInt(-5, 5), pl.location.y);
                         } else {
                             Service.gI().sendThongBao(player, "Không thể thực hiện");
