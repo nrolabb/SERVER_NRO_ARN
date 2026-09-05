@@ -19,7 +19,7 @@ import nro.models.utils.Util;
 public class Poc extends Boss {
 
     public Poc() throws Exception {
-        super(BossID.POC, BossesData.POC);
+        super(BossID.POC, BossesData.get(BossID.POC));
     }
 @Override
 public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {

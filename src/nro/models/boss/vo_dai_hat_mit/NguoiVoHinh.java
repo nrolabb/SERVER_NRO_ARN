@@ -18,7 +18,7 @@ public class NguoiVoHinh extends DeathOrAliveArena {
     private boolean goToPlayer;
 
     public NguoiVoHinh(Player player) throws Exception {
-        super(PHOBAN, BossID.NGUOI_VO_HINH, BossesData.NGUOI_VO_HINH);
+        super(PHOBAN, BossID.NGUOI_VO_HINH, BossesData.getFirst(BossID.NGUOI_VO_HINH));
         this.playerAtt = player;
         lastTimeTanHinh = System.currentTimeMillis();
     }

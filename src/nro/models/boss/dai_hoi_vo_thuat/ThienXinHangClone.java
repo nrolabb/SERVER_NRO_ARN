@@ -4,6 +4,7 @@ package nro.models.boss.dai_hoi_vo_thuat;
 import nro.models.consts.ConstPlayer;
 import nro.models.consts.ConstRatio;
 import nro.models.consts.BossStatus;
+import nro.models.boss.BossID;
 import nro.models.boss.BossesData;
 import static nro.models.consts.BossType.PHOBAN;
 import nro.models.matches.dai_hoi_vo_thuat.The23rdMartialArtCongressService;
@@ -20,7 +21,7 @@ public class ThienXinHangClone extends The23rdMartialArtCongress {
     private long lastUpdate = System.currentTimeMillis();
 
     public ThienXinHangClone(int id, Player player) throws Exception {
-        super(PHOBAN, id, BossesData.THIEN_XIN_HANG_CLONE);
+        super(PHOBAN, id, BossesData.getFirst(BossID.THIEN_XIN_HANG_CLONE));
         this.playerAtt = player;
         timeLive = 10;
 //        this.bossStatus = BossStatus.JOIN_MAP;

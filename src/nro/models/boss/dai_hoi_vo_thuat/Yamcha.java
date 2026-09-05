@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class Yamcha extends The23rdMartialArtCongress {
 
     public Yamcha(Player player) throws Exception {
-        super(PHOBAN, BossID.YAMCHA, BossesData.YAMCHA);
+        super(PHOBAN, BossID.YAMCHA, BossesData.getFirst(BossID.YAMCHA));
         this.playerAtt = player;
     }
 }

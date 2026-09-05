@@ -19,7 +19,7 @@ import nro.models.utils.Util;
 public class Pic extends Boss {
 
     public Pic() throws Exception {
-        super(BossID.PIC, BossesData.PIC);
+        super(BossID.PIC, BossesData.get(BossID.PIC));
     }
 
 @Override

@@ -22,7 +22,7 @@ public class LanCon extends Boss {
     private boolean afk;
 
     public LanCon() throws Exception {
-        super(TET_EVENT, BossID.LAN_CON - Util.nextInt(1000000), BossesData.LAN_CON);
+        super(TET_EVENT, BossID.LAN_CON - Util.nextInt(1000000), BossesData.get(BossID.LAN_CON));
     }
 
     @Override

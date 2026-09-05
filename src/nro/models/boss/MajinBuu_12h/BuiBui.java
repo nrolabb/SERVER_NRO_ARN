@@ -27,7 +27,7 @@ public class BuiBui extends Boss {
     private int timeChat;
 
     public BuiBui() throws Exception {
-        super(FINAL, BossID.BUI_BUI, BossesData.BUI_BUI);
+        super(FINAL, BossID.BUI_BUI, BossesData.get(BossID.BUI_BUI));
     }
 @Override
 public void reward(Player plKill) {

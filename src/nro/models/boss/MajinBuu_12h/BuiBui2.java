@@ -33,7 +33,7 @@ public class BuiBui2 extends Boss {
     private int timeChat;
 
     public BuiBui2() throws Exception {
-        super(FINAL, BossID.BUI_BUI_2, BossesData.BUI_BUI_2);
+        super(FINAL, BossID.BUI_BUI_2, BossesData.get(BossID.BUI_BUI_2));
     }
 
 @Override

@@ -26,7 +26,7 @@ public class Drabura2 extends Boss {
     private long lastTimeJoin;
 
     public Drabura2() throws Exception {
-        super(FINAL, BossID.DRABURA_2, BossesData.DRABURA_2);
+        super(FINAL, BossID.DRABURA_2, BossesData.get(BossID.DRABURA_2));
     }
 
     @Override
@@ -165,8 +165,12 @@ public void reward(Player plKill) {
 
         if (Util.canDoWithTime(lastTimeRest, 5000)) {
             if (!this.callBoss) {
-                for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
-                    boss.changeStatus(BossStatus.RESPAWN);
+                if (this.bossAppearTogether != null && this.bossAppearTogether.length > this.currentLevel && this.bossAppearTogether[this.currentLevel] != null) {
+                    for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
+                        if (boss != null) {
+                            boss.changeStatus(BossStatus.RESPAWN);
+                        }
+                    }
                 }
                 this.callBoss = true;
             }

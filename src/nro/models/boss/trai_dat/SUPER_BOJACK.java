@@ -17,7 +17,7 @@ public class SUPER_BOJACK extends Boss {
     private long st;
 
     public SUPER_BOJACK() throws Exception {
-        super(BossID.SUPER_BOJACK, false, true, BossesData.SUPER_BOJACK_2);
+        super(BossID.SUPER_BOJACK, false, true, BossesData.get(BossID.SUPER_BOJACK));
     }
 
     @Override

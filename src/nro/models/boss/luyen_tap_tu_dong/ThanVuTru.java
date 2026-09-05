@@ -12,7 +12,7 @@ import nro.models.utils.Util;
 public class ThanVuTru extends TrainingBoss {
 
     public ThanVuTru(Player player) throws Exception {
-        super(PHOBAN, BossID.THAN_VU_TRU, BossesData.THAN_VU_TRU);
+        super(PHOBAN, BossID.THAN_VU_TRU, BossesData.getFirst(BossID.THAN_VU_TRU));
         playerAtt = player;
     }
 

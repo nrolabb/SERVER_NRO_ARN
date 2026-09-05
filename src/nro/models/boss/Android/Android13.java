@@ -17,7 +17,7 @@ import nro.models.utils.Util;
 public class Android13 extends Boss {
 
     public Android13() throws Exception {
-        super(BossID.ANDROID_13, BossesData.ANDROID_13);
+        super(BossID.ANDROID_13, BossesData.get(BossID.ANDROID_13));
     }
 @Override
 public void reward(Player plKill) {

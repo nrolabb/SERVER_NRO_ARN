@@ -20,7 +20,7 @@ public class SO1 extends Boss {
     private long st;
 
     public SO1() throws Exception {
-        super(BossID.SO_1, false, true, BossesData.SO_1);
+        super(BossID.SO_1, false, true, BossesData.get(BossID.SO_1));
     }
 
     @Override

@@ -17,7 +17,7 @@ import nro.models.utils.Util;
 public class BiMa extends Boss {
 
     public BiMa() throws Exception {
-        super(HALLOWEEN_EVENT, BossID.BIMA, true, true, BossesData.BI_MA);
+        super(HALLOWEEN_EVENT, BossID.BIMA, true, true, BossesData.get(BossID.BIMA));
     }
 
     @Override

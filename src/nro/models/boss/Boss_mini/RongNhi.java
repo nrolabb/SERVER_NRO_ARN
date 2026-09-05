@@ -28,7 +28,7 @@ public class RongNhi extends Boss {
     private long st;
 
     public RongNhi() throws Exception {
-        super(BossID.RONG_NHI, true, true, BossesData.RONG_NHI);
+        super(BossID.RONG_NHI, true, true, BossesData.get(BossID.RONG_NHI));
     }
 
     @Override

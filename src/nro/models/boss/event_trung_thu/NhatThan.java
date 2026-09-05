@@ -30,7 +30,7 @@ public class NhatThan extends Boss {
     private long lastTimeReward;
 
     public NhatThan() throws Exception {
-        super(TRUNGTHU_EVENT, BossID.NHATTHAN, true, true, BossesData.NHATTTHAN);
+        super(TRUNGTHU_EVENT, BossID.NHATTHAN, true, true, BossesData.get(BossID.NHATTHAN));
     }
 
     @Override

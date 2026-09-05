@@ -14,7 +14,7 @@ import nro.models.utils.Util;
 public class KhiDot extends Boss {
 
     public KhiDot() throws Exception {
-        super(TRUNGTHU_EVENT, BossID.KHIDOT, true, true, BossesData.KHIDOT);
+        super(TRUNGTHU_EVENT, BossID.KHIDOT, true, true, BossesData.get(BossID.KHIDOT));
     }
 
     @Override

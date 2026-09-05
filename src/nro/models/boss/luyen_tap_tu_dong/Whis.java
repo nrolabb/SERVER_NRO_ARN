@@ -16,7 +16,7 @@ import nro.models.utils.Util;
 public class Whis extends TrainingBoss {
 
     public Whis(Player player) throws Exception {
-        super(PHOBAN, BossID.WHIS, BossesData.WHIS);
+        super(PHOBAN, BossID.WHIS, BossesData.getFirst(BossID.WHIS));
         playerAtt = player;
         Service.gI().setPos0(player, 488, 360);
     }

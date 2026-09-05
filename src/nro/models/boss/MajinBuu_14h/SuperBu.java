@@ -25,7 +25,7 @@ public class SuperBu extends Boss {
     private long timeUseSkill;
 
     public SuperBu() throws Exception {
-        super(FINAL, BossID.SUPERBU, BossesData.SUPER_BU_BUNG);
+        super(FINAL, BossID.SUPERBU, BossesData.get(BossID.SUPERBU));
     }
 
     @Override

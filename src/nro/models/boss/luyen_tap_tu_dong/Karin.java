@@ -16,7 +16,7 @@ public class Karin extends TrainingBoss {
     private long lastTimeBay2;
 
     public Karin(Player player) throws Exception {
-        super(PHOBAN, BossID.KARIN, BossesData.KARIN);
+        super(PHOBAN, BossID.KARIN, BossesData.getFirst(BossID.KARIN));
         this.playerAtt = player;
     }
 

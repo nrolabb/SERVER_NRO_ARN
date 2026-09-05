@@ -18,7 +18,7 @@ public class SO2 extends Boss {
     private long st;
 
     public SO2() throws Exception {
-        super(BossID.SO_2, false, true, BossesData.SO_2);
+        super(BossID.SO_2, false, true, BossesData.get(BossID.SO_2));
     }
 
     @Override

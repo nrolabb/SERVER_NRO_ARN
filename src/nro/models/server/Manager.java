@@ -138,6 +138,7 @@ public final class Manager {
     public static final List<AchievementTemplate> ACHIEVEMENT_TEMPLATE = new ArrayList<>();
     public static final List<Intrinsic> INTRINSICS = new ArrayList<>();
     public static final List<SetKichHoatTemplate> SET_KICH_HOAT_TEMPLATES = new ArrayList<>();
+    public static final Map<Integer, nro.models.boss.template.BossTemplate> BOSS_TEMPLATES = new ConcurrentHashMap<>();
     public static final List<Intrinsic> INTRINSIC_TD = new ArrayList<>();
     public static final List<Intrinsic> INTRINSIC_NM = new ArrayList<>();
     public static final List<Intrinsic> INTRINSIC_XD = new ArrayList<>();
@@ -1237,6 +1238,11 @@ public final class Manager {
             Topmaydam = realTop(queryTopmaydam, ConnectionDatabase);
             Manager.timeRealTop = System.currentTimeMillis();
             loadSetKichHoat(ConnectionDatabase);
+
+            // Load boss templates
+            BOSS_TEMPLATES.clear();
+            BOSS_TEMPLATES.putAll(nro.models.database.BossDAO.loadBossTemplates(ConnectionDatabase));
+            Logger.success(Logger.PURPLE + "Successfully loaded boss templates (" + BOSS_TEMPLATES.size() + ")\n");
 
         } catch (Exception e) {
             Logger.logException(Manager.class, e, "Database loading error");

@@ -12,7 +12,7 @@ import nro.models.utils.Util;
 public class Yajiro extends TrainingBoss {
 
     public Yajiro(Player player) throws Exception {
-        super(PHOBAN, BossID.YAJIRO, BossesData.YAJIRO);
+        super(PHOBAN, BossID.YAJIRO, BossesData.getFirst(BossID.YAJIRO));
         this.playerAtt = player;
     }
 

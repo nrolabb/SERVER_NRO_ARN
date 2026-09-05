@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class Xinbato extends The23rdMartialArtCongress {
 
     public Xinbato(Player player) throws Exception {
-        super(PHOBAN, BossID.XINBATO, BossesData.XINBATO);
+        super(PHOBAN, BossID.XINBATO, BossesData.getFirst(BossID.XINBATO));
         this.playerAtt = player;
     }
 }

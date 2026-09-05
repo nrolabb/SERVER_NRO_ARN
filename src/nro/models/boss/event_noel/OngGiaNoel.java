@@ -21,7 +21,7 @@ public class OngGiaNoel extends Boss {
     private int timeLeave;
 
     public OngGiaNoel() throws Exception {
-        super(CHRISTMAS_EVENT, BossID.ONG_GIA_NOEL, BossesData.ONG_GIA_NOEL);
+        super(CHRISTMAS_EVENT, BossID.ONG_GIA_NOEL, BossesData.get(BossID.ONG_GIA_NOEL));
     }
 
     @Override

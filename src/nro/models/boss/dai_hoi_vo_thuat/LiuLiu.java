@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class LiuLiu extends The23rdMartialArtCongress {
 
     public LiuLiu(Player player) throws Exception {
-        super(PHOBAN, BossID.LIU_LIU, BossesData.LIU_LIU);
+        super(PHOBAN, BossID.LIU_LIU, BossesData.getFirst(BossID.LIU_LIU));
         this.playerAtt = player;
     }
 }

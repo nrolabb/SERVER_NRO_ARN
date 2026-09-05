@@ -64,6 +64,8 @@ import nro.models.utils.SkillUtil;
 import nro.models.utils.Util;
 import nro.models.interfaces.IBoss;
 import java.io.IOException;
+import nro.models.server.Manager;
+import nro.models.boss.template.BossTemplate;
 
 public class Boss extends Player implements IBoss {
 
@@ -226,13 +228,28 @@ public Player bomAttacker; // thêm dòng này
         }
         this.playerSkill.skills.clear();
         this.playerSkill.skillSelect = null;
-        int[][] skillTemps = data[this.currentLevel].getSkillTemp();
-        for (int[] skillTemp : skillTemps) {
-            Skill skill = SkillUtil.createSkill(skillTemp[0], skillTemp[1]);
-            if (skillTemp.length == 3) {
-                skill.coolDown = skillTemp[2];
+        if (this.data != null && this.currentLevel >= 0 && this.currentLevel < this.data.length) {
+            int[][] skillTemps = data[this.currentLevel].getSkillTemp();
+            if (skillTemps != null) {
+                for (int[] skillTemp : skillTemps) {
+                    Skill skill = SkillUtil.createSkill(skillTemp[0], skillTemp[1]);
+                    if (skillTemp.length == 3) {
+                        skill.coolDown = skillTemp[2];
+                    }
+                    this.playerSkill.skills.add(skill);
+                }
             }
-            this.playerSkill.skills.add(skill);
+        }
+        // Đảm bảo boss luôn có ít nhất skill tấn công, không bao giờ bị rỗng skill
+        if (this.playerSkill.skills.isEmpty()) {
+            int punchSkillId = (this.gender == 0 ? Skill.DRAGON : (this.gender == 1 ? Skill.DEMON : Skill.GALICK));
+            int blastSkillId = (this.gender == 0 ? Skill.KAMEJOKO : (this.gender == 1 ? Skill.MASENKO : Skill.ANTOMIC));
+            Skill s1 = SkillUtil.createSkill(punchSkillId, 7);
+            s1.coolDown = 1000;
+            Skill s2 = SkillUtil.createSkill(blastSkillId, 7);
+            s2.coolDown = 1500;
+            this.playerSkill.skills.add(s1);
+            this.playerSkill.skills.add(s2);
         }
     }
 
@@ -425,6 +442,9 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
 
     @Override
     public void rest() {
+        if (this.parentBoss != null) {
+            return;
+        }
         int nextLevel = this.currentLevel + 1;
         if (nextLevel >= this.data.length) {
             nextLevel = 0;
@@ -543,13 +563,42 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
         }
     }
 
+    public static final java.util.Set<String> IGNORED_LOG_SUB_TYPES = java.util.Set.of(
+            "CLAN_DUNGEON", "LUYEN_TAP", "YARDRAT", "MABU_12H", "VO_DAI_HAT_MIT", "DHVT_23"
+    );
+
+    public boolean isIgnoredLogSubType() {
+        if (Manager.BOSS_TEMPLATES != null) {
+            BossTemplate template = Manager.BOSS_TEMPLATES.get((int) this.id);
+            if (template != null && template.getSubType() != null) {
+                return IGNORED_LOG_SUB_TYPES.contains(template.getSubType().toUpperCase().trim());
+            }
+        }
+        if (this.zone != null && this.zone.map != null) {
+            if (MapService.gI().isMapMaBu(this.zone.map.mapId) || MapService.gI().isMapYardart(this.zone.map.mapId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected void notifyJoinMap() {
+        if (isIgnoredLogSubType()) {
+            return;
+        }
+        if (this.zone != null && this.zone.map != null) {
+            Logger.log(Logger.PURPLE_BOLD, "[BOSS SPAWN] Boss: " + this.name + " (ID: " + this.id + ") -> Map: "
+                    + this.zone.map.mapName + " (ID: " + this.zone.map.mapId + ") - Khu: " + this.zone.zoneId + "\n");
+        }
         if (canSendNotify()) {
             ServerNotify.gI().notify("BOSS " + this.name + " vừa xuất hiện tại " + this.zone.map.mapName);
         }
     }
 
     private boolean canSendNotify() {
+        if (isIgnoredLogSubType()) {
+            return false;
+        }
         return !(this.isNotifyDisabled || this.zone.map.mapId == 140
                 || this.zone.map.mapId == 111
                 || MapService.gI().isMapPhoBan(this.zone.map.mapId)
@@ -567,6 +616,9 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
             int prefix = Integer.parseInt(textChat.substring(1, textChat.lastIndexOf("|")));
             textChat = textChat.substring(textChat.lastIndexOf("|") + 1);
             if (!this.chat(prefix, textChat)) {
+                if (prefix == -2 && Util.canDoWithTime(this.lastTimeChatS, 2000)) {
+                    this.indexChatS++;
+                }
                 return false;
             }
             this.lastTimeChatS = System.currentTimeMillis();
@@ -620,6 +672,20 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
             try {
                 Player pl = getPlayerAttack();
                 if (pl == null || pl.isDie()) {
+                    if (Util.isTrue(1, 30) && this.zone != null && this.location != null) {
+                        int randX = this.location.x + Util.nextInt(-100, 100);
+                        if (randX < 50) randX = 50;
+                        if (randX > this.zone.map.mapWidth - 50) randX = this.zone.map.mapWidth - 50;
+                        int randY = this.zone.map.yPhysicInTop(randX, this.location.y);
+                        this.moveTo(randX, randY);
+                    }
+                    return;
+                }
+                if (this.playerSkill.skills.isEmpty()) {
+                    this.initSkill();
+                }
+                if (this.playerSkill.skills.isEmpty()) {
+                    this.moveToPlayer(pl);
                     return;
                 }
                 this.playerSkill.skillSelect = this.playerSkill.skills.get(Util.nextInt(0, this.playerSkill.skills.size() - 1));
@@ -636,9 +702,7 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
                     SkillService.gI().useSkill(this, pl, null, -1, null);
                     checkPlayerDie(pl);
                 } else {
-                    if (Util.isTrue(1, 2)) {
-                        this.moveToPlayer(pl);
-                    }
+                    this.moveToPlayer(pl);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -701,6 +765,9 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
             int prefix = Integer.parseInt(textChat.substring(1, textChat.lastIndexOf("|")));
             textChat = textChat.substring(textChat.lastIndexOf("|") + 1);
             if (!this.chat(prefix, textChat)) {
+                if (prefix == -2 && Util.canDoWithTime(this.lastTimeChatS, 2000)) {
+                    this.indexChatS++;
+                }
                 return false;
             }
             this.lastTimeChatE = System.currentTimeMillis();
@@ -728,6 +795,13 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
             this.lastZone = null;
             this.lastTimeRest = System.currentTimeMillis();
             this.changeStatus(BossStatus.REST);
+            if (this.bossAppearTogether != null && this.currentLevel < this.bossAppearTogether.length && this.bossAppearTogether[this.currentLevel] != null) {
+                for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
+                    if (boss != null && boss.zone != null) {
+                        boss.leaveMap();
+                    }
+                }
+            }
         }
         this.wakeupAnotherBossWhenDisappear();
     }
@@ -811,10 +885,13 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
 
     @Override
     public void wakeupAnotherBossWhenAppear() {
-        if (this.bossAppearTogether == null || this.bossAppearTogether[this.currentLevel] == null) {
+        if (this.bossAppearTogether == null || this.currentLevel >= this.bossAppearTogether.length || this.bossAppearTogether[this.currentLevel] == null) {
             return;
         }
         for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
+            if (boss == null) {
+                continue;
+            }
             int nextLevelBoss = boss.currentLevel + 1;
             if (nextLevelBoss >= boss.data.length) {
                 nextLevelBoss = 0;
@@ -823,11 +900,11 @@ if (prepareBom && Util.canDoWithTime(lastBomTime, 2500)) {
                 if (boss.zone != null) {
                     boss.leaveMap();
                 }
-            }
-            if (boss.data[nextLevelBoss].getTypeAppear() == AppearType.APPEAR_WITH_ANOTHER) {
+            } else {
                 if (boss.zone != null) {
                     boss.leaveMap();
                 }
+                boss.zone = this.zone;
                 boss.changeStatus(BossStatus.RESPAWN);
             }
         }

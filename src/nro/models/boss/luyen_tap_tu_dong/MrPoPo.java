@@ -15,7 +15,7 @@ public class MrPoPo extends TrainingBoss {
     private long lastTimeBay2;
 
     public MrPoPo(Player player) throws Exception {
-        super(PHOBAN, BossID.MRPOPO, BossesData.MRPOPO);
+        super(PHOBAN, BossID.MRPOPO, BossesData.getFirst(BossID.MRPOPO));
         this.playerAtt = player;
     }
 

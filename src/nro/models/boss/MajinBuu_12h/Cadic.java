@@ -42,7 +42,7 @@ public class Cadic extends Boss {
     private boolean ttnl;
 
     public Cadic() throws Exception {
-        super(FINAL, BossID.CADIC, BossesData.CADIC);
+        super(FINAL, BossID.CADIC, BossesData.get(BossID.CADIC));
     }
 
     @Override

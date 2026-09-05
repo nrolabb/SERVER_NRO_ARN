@@ -17,7 +17,7 @@ public class Ku extends Boss {
     private long st;
 
     public Ku() throws Exception {
-        super(BossID.KU, false, true, BossesData.KU);
+        super(BossID.KU, false, true, BossesData.get(BossID.KU));
     }
 
     @Override

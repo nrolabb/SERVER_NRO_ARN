@@ -24,7 +24,7 @@ public class Cumber extends Boss {
     private int timeLeaveMap;
 
     public Cumber() throws Exception {
-        super(BossID.CUMBER, false, true, BossesData.CUMBER, BossesData.SUPER_CUMBER);
+        super(BossID.CUMBER, false, true, BossesData.get(BossID.CUMBER));
     }
 
  @Override

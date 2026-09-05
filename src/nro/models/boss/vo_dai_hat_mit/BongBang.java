@@ -14,7 +14,7 @@ import nro.models.utils.Util;
 public class BongBang extends DeathOrAliveArena {
 
     public BongBang(Player player) throws Exception {
-        super(PHOBAN, BossID.BONG_BANG, BossesData.BONG_BANG);
+        super(PHOBAN, BossID.BONG_BANG, BossesData.getFirst(BossID.BONG_BANG));
         this.playerAtt = player;
     }
     @Override

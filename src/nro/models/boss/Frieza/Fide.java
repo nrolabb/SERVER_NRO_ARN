@@ -20,7 +20,7 @@ public class Fide extends Boss {
     private long st;
 
     public Fide() throws Exception {
-        super(BossID.FIDE, BossesData.FIDE_DAI_CA_1, BossesData.FIDE_DAI_CA_2, BossesData.FIDE_DAI_CA_3);
+        super(BossID.FIDE, BossesData.get(BossID.FIDE));
     }
 
    @Override

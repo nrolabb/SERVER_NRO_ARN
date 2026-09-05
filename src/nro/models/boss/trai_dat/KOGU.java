@@ -18,7 +18,7 @@ public class KOGU extends Boss {
     private long st;
 
     public KOGU() throws Exception {
-        super(BossID.KOGU, false, true, BossesData.KOGU);
+        super(BossID.KOGU, false, true, BossesData.get(BossID.KOGU));
     }
 
     @Override

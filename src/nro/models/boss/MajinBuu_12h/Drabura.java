@@ -37,7 +37,7 @@ public class Drabura extends Boss {
     private int timeChat;
 
     public Drabura() throws Exception {
-        super(FINAL, BossID.DRABURA, BossesData.DRABURA);
+        super(FINAL, BossID.DRABURA, BossesData.get(BossID.DRABURA));
     }
 
     @Override

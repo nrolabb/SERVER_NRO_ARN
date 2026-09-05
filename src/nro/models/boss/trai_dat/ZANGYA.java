@@ -18,7 +18,7 @@ public class ZANGYA extends Boss {
     private long st;
 
     public ZANGYA() throws Exception {
-        super(BossID.ZANGYA, false, true, BossesData.ZANGYA);
+        super(BossID.ZANGYA, false, true, BossesData.get(BossID.ZANGYA));
     }
 
     @Override

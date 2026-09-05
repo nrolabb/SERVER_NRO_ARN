@@ -18,7 +18,7 @@ public class ThuongDe extends TrainingBoss {
     public long lastTimeJoinMap = System.currentTimeMillis();
 
     public ThuongDe(Player player) throws Exception {
-        super(PHOBAN, BossID.THUONG_DE, BossesData.THUONG_DE);
+        super(PHOBAN, BossID.THUONG_DE, BossesData.getFirst(BossID.THUONG_DE));
         this.playerAtt = player;
     }
 

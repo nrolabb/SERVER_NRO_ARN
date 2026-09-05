@@ -21,7 +21,7 @@ import nro.models.map.service.MapService;
 public class TauPayPay extends TrainingBoss {
 
     public TauPayPay(Player player) throws Exception {
-        super(PHOBAN, BossID.TAUPAYPAY, BossesData.TAUPAYPAY);
+        super(PHOBAN, BossID.TAUPAYPAY, BossesData.getFirst(BossID.TAUPAYPAY));
         this.playerAtt = player;
     }
 

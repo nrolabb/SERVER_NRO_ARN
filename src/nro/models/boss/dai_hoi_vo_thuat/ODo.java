@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class ODo extends The23rdMartialArtCongress {
 
     public ODo(Player player) throws Exception {
-        super(PHOBAN, BossID.O_DO, BossesData.O_DO);
+        super(PHOBAN, BossID.O_DO, BossesData.getFirst(BossID.O_DO));
         this.playerAtt = player;
     }
 }

@@ -16,7 +16,7 @@ public class Android15 extends Boss {
     public boolean callApk13;
 
     public Android15() throws Exception {
-        super(BossID.ANDROID_15, BossesData.ANDROID_15);
+        super(BossID.ANDROID_15, BossesData.get(BossID.ANDROID_15));
     }
 
 @Override

@@ -25,7 +25,7 @@ public class XenBoHung extends Boss {
     private int timeHapThu;
 
     public XenBoHung() throws Exception {
-        super(BossID.XEN_BO_HUNG, BossesData.XEN_BO_HUNG_1, BossesData.XEN_BO_HUNG_2, BossesData.XEN_BO_HUNG_3);
+        super(BossID.XEN_BO_HUNG, BossesData.get(BossID.XEN_BO_HUNG));
     }
 
  @Override

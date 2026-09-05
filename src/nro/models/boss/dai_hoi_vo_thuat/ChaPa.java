@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class ChaPa extends The23rdMartialArtCongress {
 
     public ChaPa(Player player) throws Exception {
-        super(PHOBAN, BossID.CHA_PA, BossesData.CHA_PA);
+        super(PHOBAN, BossID.CHA_PA, BossesData.getFirst(BossID.CHA_PA));
         this.playerAtt = player;
     }
 }

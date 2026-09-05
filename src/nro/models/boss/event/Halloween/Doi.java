@@ -17,7 +17,7 @@ import nro.models.utils.Util;
 public class Doi extends Boss {
 
     public Doi() throws Exception {
-        super(HALLOWEEN_EVENT, BossID.DOI, true, true, BossesData.DOI);
+        super(HALLOWEEN_EVENT, BossID.DOI, true, true, BossesData.get(BossID.DOI));
     }
 
     @Override

@@ -11,7 +11,7 @@ import nro.models.utils.Util;
 public class KhiBubbles extends TrainingBoss {
 
     public KhiBubbles(Player player) throws Exception {
-        super(PHOBAN, BossID.KHI_BUBBLES, BossesData.KHI_BUBBLES);
+        super(PHOBAN, BossID.KHI_BUBBLES, BossesData.getFirst(BossID.KHI_BUBBLES));
         playerAtt = player;
     }
 

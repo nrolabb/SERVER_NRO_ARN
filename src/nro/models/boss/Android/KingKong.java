@@ -19,7 +19,7 @@ import nro.models.utils.Util;
 public class KingKong extends Boss {
 
     public KingKong() throws Exception {
-        super(BossID.KING_KONG, BossesData.KING_KONG);
+        super(BossID.KING_KONG, BossesData.get(BossID.KING_KONG));
     }
 @Override
 public synchronized int injured(Player plAtt, long damage, boolean piercing, boolean isMobAttack) {

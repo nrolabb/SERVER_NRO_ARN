@@ -39,14 +39,14 @@ public class Broly extends Boss {
                     "|-1|Sức mạnh của ta là tuyệt đối",
                     "|-1|Vào hết đây!!!",}, //text chat 2
                 new String[]{"|-1|Các ngươi giỏi lắm. Ta sẽ quay lại."}, //text chat 3
-                600//type appear
+                60 //secondsRest (1 phút)
         ));
     }
 
     @Override
     public void active() {
         super.active();
-        if (this.nPoint.hpMax == 1_000_000) {
+        if (this.nPoint.hpMax >= 1_000_000) {
             this.leaveMap();
         }
     }
@@ -74,28 +74,23 @@ public class Broly extends Boss {
         }
         if (this.zone != null) {
             try {
+                int totalZones = this.zone.map.zones.size();
+                int minZone = totalZones > 2 ? 2 : 0;
+                int maxZone = Math.max(minZone, totalZones - 1);
+                int zoneid = Util.nextInt(minZone, maxZone);
 
-                int zoneid = Util.nextInt(2, this.zone.map.zones.size() - 1);
-
-                while (zoneid < this.zone.map.zones.size() && this.zone.map.zones.get(zoneid).getBosses().size() > 0) {
-                    zoneid++;
-                }
-
-                if (zoneid < this.zone.map.zones.size()) {
-                    this.zone = this.zone.map.zones.get(zoneid);
-                } else {
-                    if (this.id == BossID.BROLY) {
-                        this.changeStatus(BossStatus.DIE);
-                        return;
+                for (int i = 0; i < totalZones; i++) {
+                    int checkZone = (zoneid + i) % totalZones;
+                    if (checkZone >= minZone && this.zone.map.zones.get(checkZone).getBosses().isEmpty()) {
+                        zoneid = checkZone;
+                        break;
                     }
-                    this.zone = this.zone.map.zones.get(Util.nextInt(2, this.zone.map.zones.size() - 1));
                 }
 
-                if (this.zone.zoneId < 2) {
-                    this.leaveMap();
-                }
-
-                ChangeMapService.gI().changeMap(this, this.zone, -1, -1);
+                this.zone = this.zone.map.zones.get(zoneid);
+                int x = this.zone.map.mapWidth > 100 ? Util.nextInt(100, this.zone.map.mapWidth - 100) : Util.nextInt(100);
+                int y = this.zone.map.yPhysicInTop(x, 100);
+                ChangeMapService.gI().changeMap(this, this.zone, x, y);
                 this.changeStatus(BossStatus.CHAT_S);
             } catch (Exception e) {
                 this.changeStatus(BossStatus.REST);

@@ -16,7 +16,7 @@ public class VuaQuySaTang extends DeathOrAliveArena {
     private long lastTimeBay;
 
     public VuaQuySaTang(Player player) throws Exception {
-        super(PHOBAN, BossID.VUA_QUY_SA_TANG, BossesData.VUA_QUY_SA_TANG);
+        super(PHOBAN, BossID.VUA_QUY_SA_TANG, BossesData.getFirst(BossID.VUA_QUY_SA_TANG));
         this.playerAtt = player;
     }
 

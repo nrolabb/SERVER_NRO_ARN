@@ -23,7 +23,7 @@ public class Cooler extends Boss {
     private long st;
 
     public Cooler() throws Exception {
-        super(BossID.COOLER, BossesData.COOLER, BossesData.COOLER_2);
+        super(BossID.COOLER, BossesData.get(BossID.COOLER));
     }
 
  @Override

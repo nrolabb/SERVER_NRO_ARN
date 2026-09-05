@@ -18,7 +18,7 @@ import nro.models.utils.Util;
 public class B extends Boss {
 
     public B() throws Exception {
-        super(BossID.B, BossesData.B, BossesData.B2, BossesData.B3);
+        super(BossID.B, BossesData.get(BossID.B));
     }
 
     @Override

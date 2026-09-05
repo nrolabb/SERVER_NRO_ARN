@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class JackyChun extends The23rdMartialArtCongress {
 
     public JackyChun(Player player) throws Exception {
-        super(PHOBAN, BossID.JACKY_CHUN, BossesData.JACKY_CHUN);
+        super(PHOBAN, BossID.JACKY_CHUN, BossesData.getFirst(BossID.JACKY_CHUN));
         this.playerAtt = player;
     }
 }

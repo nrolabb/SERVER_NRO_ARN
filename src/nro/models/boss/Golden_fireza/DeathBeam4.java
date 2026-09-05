@@ -30,7 +30,7 @@ public class DeathBeam4 extends Boss {
     private long lastTimeUpdate;
 
     public DeathBeam4() throws Exception {
-        super(SKILLSUMMONED, BossID.DEATH_BEAM_4, BossesData.DEATH_BEAM);
+        super(SKILLSUMMONED, BossID.DEATH_BEAM_4, BossesData.getFirst(BossID.DEATH_BEAM_4));
     }
 
     @Override

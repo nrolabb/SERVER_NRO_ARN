@@ -33,7 +33,7 @@ public class Yacon extends Boss {
     private int timeChat;
 
     public Yacon() throws Exception {
-        super(FINAL, BossID.YA_CON, BossesData.YACON);
+        super(FINAL, BossID.YA_CON, BossesData.get(BossID.YA_CON));
     }
 
 @Override

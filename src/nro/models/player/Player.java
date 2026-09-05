@@ -1346,6 +1346,13 @@ public class Player implements Runnable {
                 this.effectSkin.isVoHinh = false;
                 this.effectSkin.lastTimeVoHinh = System.currentTimeMillis();
             }
+            long bonusDameBoss = 0;
+            if (plAtt != null && plAtt.isBoss && (this.isPl() || this.isPet)) {
+                if (this.nPoint != null && this.nPoint.hpMax >= 1_000_000L) {
+                    bonusDameBoss = this.nPoint.hpMax * 5L / 100L;
+                    damage += bonusDameBoss;
+                }
+            }
             if (plAtt != null && plAtt.effectSkill != null && plAtt.effectSkill.isBinh
                     && !Util.canDoWithTime(plAtt.effectSkill.lastTimeUpBinh, 3000)) {
                 return 0;
@@ -1472,6 +1479,8 @@ public class Player implements Runnable {
                 if (MapService.gI().isMapPhoBan(this.zone.map.mapId)) {
                     damage = 10;
                 }
+            } else if (bonusDameBoss > 0) {
+                damage = Math.max(damage, bonusDameBoss);
             }
             damage = Math.min(damage, 2_147_483_647);
             if (isMobAttack && this.charms.tdBatTu > System.currentTimeMillis() && damage >= this.nPoint.hp) {

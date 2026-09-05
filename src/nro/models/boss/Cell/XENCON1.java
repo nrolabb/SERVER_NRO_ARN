@@ -20,7 +20,7 @@ public class XENCON1 extends Boss {
     private long st;
 
     public XENCON1() throws Exception {
-        super(BossID.XEN_CON_1, BossesData.XEN_CON_1);
+        super(BossID.XEN_CON_1, BossesData.get(BossID.XEN_CON_1));
     }
 
     @Override

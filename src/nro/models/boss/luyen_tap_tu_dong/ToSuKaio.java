@@ -16,7 +16,7 @@ public class ToSuKaio extends TrainingBoss {
     private long lastTimeLuyenTap;
 
     public ToSuKaio(Player player) throws Exception {
-        super(PHOBAN, BossID.TO_SU_KAIO, BossesData.TO_SU_KAIO);
+        super(PHOBAN, BossID.TO_SU_KAIO, BossesData.getFirst(BossID.TO_SU_KAIO));
         this.playerAtt = player;
     }
 

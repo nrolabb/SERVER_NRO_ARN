@@ -6,6 +6,6 @@ import nro.models.map.phoban.ClanDungeon;
 public class GanosClanDungeonBoss extends ClanDungeonBoss {
 
     public GanosClanDungeonBoss(ClanDungeon clanDungeon, int id) throws Exception {
-        super(clanDungeon, id, GANOS, cloneData(BossesData.GANOS));
+        super(clanDungeon, id, GANOS, BossesData.getFirst(-929));
     }
 }

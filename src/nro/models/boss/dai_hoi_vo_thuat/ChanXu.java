@@ -17,7 +17,7 @@ public class ChanXu extends The23rdMartialArtCongress {
     private long timeChoang;
 
     public ChanXu(Player player) throws Exception {
-        super(PHOBAN, BossID.CHAN_XU, BossesData.CHAN_XU);
+        super(PHOBAN, BossID.CHAN_XU, BossesData.getFirst(BossID.CHAN_XU));
         this.playerAtt = player;
     }
 

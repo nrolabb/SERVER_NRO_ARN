@@ -41,7 +41,7 @@ public class Goku extends Boss {
     private boolean ttnl;
 
     public Goku() throws Exception {
-        super(FINAL, BossID.GOKU, BossesData.GOKU);
+        super(FINAL, BossID.GOKU, BossesData.get(BossID.GOKU));
     }
 
     @Override

@@ -13,7 +13,7 @@ import nro.models.utils.Util;
 public class TaoPaiPai extends Boss {
 
     public TaoPaiPai() throws Exception {
-        super(FINAL, Util.randomBossId(), BossesData.TAU_PAY_PAY_DONG_NAM_KARIN);
+        super(FINAL, Util.randomBossId(), BossesData.getFirst(BossID.TAU_PAY_PAY_DONG_NAM_KARIN));
     }
 
     @Override

@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class PonPut extends The23rdMartialArtCongress {
 
     public PonPut(Player player) throws Exception {
-        super(PHOBAN, BossID.PON_PUT, BossesData.PON_PUT);
+        super(PHOBAN, BossID.PON_PUT, BossesData.getFirst(BossID.PON_PUT));
         this.playerAtt = player;
     }
 }

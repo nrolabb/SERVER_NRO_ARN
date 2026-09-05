@@ -17,7 +17,7 @@ public class Rambo extends Boss {
     private long st;
 
     public Rambo() throws Exception {
-        super(BossID.RAMBO, false, true, BossesData.RAMBO);
+        super(BossID.RAMBO, false, true, BossesData.get(BossID.RAMBO));
     }
 
     @Override

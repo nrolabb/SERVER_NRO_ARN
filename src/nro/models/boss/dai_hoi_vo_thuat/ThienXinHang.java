@@ -13,7 +13,7 @@ public class ThienXinHang extends The23rdMartialArtCongress {
     private long lastTimePhanThan = System.currentTimeMillis();
 
     public ThienXinHang(Player player) throws Exception {
-        super(PHOBAN, BossID.THIEN_XIN_HANG, BossesData.THIEN_XIN_HANG);
+        super(PHOBAN, BossID.THIEN_XIN_HANG, BossesData.getFirst(BossID.THIEN_XIN_HANG));
         this.playerAtt = player;
     }
 

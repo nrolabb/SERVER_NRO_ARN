@@ -15,7 +15,7 @@ import nro.models.utils.Util;
 public class DrKore extends Boss {
 
     public DrKore() throws Exception {
-        super(BossID.DR_KORE, BossesData.DR_KORE);
+        super(BossID.DR_KORE, BossesData.get(BossID.DR_KORE));
     }
 
 @Override

@@ -17,7 +17,7 @@ import nro.models.utils.Util;
 public class MaTroi extends Boss {
 
     public MaTroi() throws Exception {
-        super(HALLOWEEN_EVENT, BossID.MATROI, true, true, BossesData.MA_TROI);
+        super(HALLOWEEN_EVENT, BossID.MATROI, true, true, BossesData.get(BossID.MATROI));
     }
 
     @Override

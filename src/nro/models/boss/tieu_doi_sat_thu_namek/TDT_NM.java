@@ -17,7 +17,7 @@ public class TDT_NM extends Boss {
     private long st;
 
     public TDT_NM() throws Exception {
-        super(BossID.TIEU_DOI_TRUONG_NM, false, true, BossesData.TIEU_DOI_TRUONG_NM);
+        super(BossID.TIEU_DOI_TRUONG_NM, false, true, BossesData.get(BossID.TIEU_DOI_TRUONG_NM));
     }
 
     @Override

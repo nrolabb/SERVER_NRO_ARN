@@ -34,7 +34,7 @@ public class GoldenFrieza extends Boss {
     private boolean callDeathBeam;
 
     public GoldenFrieza() throws Exception {
-        super(BossID.GOLDEN_FRIEZA, BossesData.GOLDEN_FRIEZA);
+        super(BossID.GOLDEN_FRIEZA, BossesData.get(BossID.GOLDEN_FRIEZA));
     }
 
     @Override

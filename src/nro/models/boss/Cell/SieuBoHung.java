@@ -38,7 +38,7 @@ public class SieuBoHung extends Boss {
     };
 
     public SieuBoHung() throws Exception {
-        super(BossID.SIEU_BO_HUNG, BossesData.SIEU_BO_HUNG_1, BossesData.SIEU_BO_HUNG_2);
+        super(BossID.SIEU_BO_HUNG, BossesData.get(BossID.SIEU_BO_HUNG));
     }
 
     @Override

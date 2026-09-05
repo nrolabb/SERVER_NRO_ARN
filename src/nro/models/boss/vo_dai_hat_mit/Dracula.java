@@ -17,7 +17,7 @@ public class Dracula extends DeathOrAliveArena {
     private long lastTimeHutMau = System.currentTimeMillis();
 
     public Dracula(Player player) throws Exception {
-        super(PHOBAN, BossID.DRACULA, BossesData.DRACULA);
+        super(PHOBAN, BossID.DRACULA, BossesData.getFirst(BossID.DRACULA));
         this.playerAtt = player;
     }
 

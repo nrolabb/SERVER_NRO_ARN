@@ -17,7 +17,7 @@ public class Kuku extends Boss {
     private long st;
 
     public Kuku() throws Exception {
-        super(BossID.KUKU, false, true, BossesData.KUKU);
+        super(BossID.KUKU, false, true, BossesData.get(BossID.KUKU));
     }
 
     @Override

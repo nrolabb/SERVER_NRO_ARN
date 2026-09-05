@@ -32,7 +32,7 @@ public class Mabu2H extends Boss {
     public List<Player> maBuEat = new ArrayList<>();
 
     public Mabu2H() throws Exception {
-        super(FINAL, BossID.MABU, BossesData.MABU, BossesData.SUPER_BU, BossesData.BU_TENK, BossesData.BU_HAN, BossesData.KID_BU);
+        super(FINAL, BossID.MABU, BossesData.get(BossID.MABU));
     }
 
     @Override

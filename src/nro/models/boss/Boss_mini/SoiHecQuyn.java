@@ -27,7 +27,7 @@ public class SoiHecQuyn extends Boss {
     private long lastTimRestPawn;
 
     public SoiHecQuyn() throws Exception {
-        super(BossID.SOI_HEC_QUYN1, BossesData.SOI_HEC_QUYN);
+        super(BossID.SOI_HEC_QUYN1, BossesData.getFirst(BossID.SOI_HEC_QUYN));
     }
 
     @Override

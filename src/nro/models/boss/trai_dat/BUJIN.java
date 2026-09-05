@@ -18,7 +18,7 @@ public class BUJIN extends Boss {
     private long st;
 
     public BUJIN() throws Exception {
-        super(BossID.BUJIN, false, true, BossesData.BUJIN);
+        super(BossID.BUJIN, false, true, BossesData.get(BossID.BUJIN));
     }
 
     @Override

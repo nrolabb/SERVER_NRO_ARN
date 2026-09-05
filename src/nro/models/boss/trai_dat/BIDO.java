@@ -17,7 +17,7 @@ public class BIDO extends Boss {
     private long st;
 
     public BIDO() throws Exception {
-        super(BossID.BIDO, false, true, BossesData.BIDO);
+        super(BossID.BIDO, false, true, BossesData.get(BossID.BIDO));
     }
 
     @Override

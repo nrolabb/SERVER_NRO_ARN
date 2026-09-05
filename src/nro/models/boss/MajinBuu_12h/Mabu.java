@@ -31,7 +31,7 @@ public class Mabu extends Boss {
     private int percent;
 
     public Mabu() throws Exception {
-        super(FINAL, BossID.MABU_12H, BossesData.MABU_12H);
+        super(FINAL, BossID.MABU_12H, BossesData.get(BossID.MABU_12H));
     }
 
 @Override
@@ -218,8 +218,12 @@ public void reward(Player plKill) {
         this.lastZone = null;
         this.lastTimeRest = System.currentTimeMillis();
         this.changeStatus(BossStatus.REST);
-        for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
-            boss.changeStatus(BossStatus.RESPAWN);
+        if (this.bossAppearTogether != null && this.bossAppearTogether.length > this.currentLevel && this.bossAppearTogether[this.currentLevel] != null) {
+            for (Boss boss : this.bossAppearTogether[this.currentLevel]) {
+                if (boss != null) {
+                    boss.changeStatus(BossStatus.RESPAWN);
+                }
+            }
         }
     }
 }

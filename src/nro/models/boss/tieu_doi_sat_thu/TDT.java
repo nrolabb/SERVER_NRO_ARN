@@ -21,7 +21,7 @@ public class TDT extends Boss {
     private long lastBodyChangeTime;
 
     public TDT() throws Exception {
-        super(BossID.TIEU_DOI_TRUONG, false, true, BossesData.TIEU_DOI_TRUONG);
+        super(BossID.TIEU_DOI_TRUONG, false, true, BossesData.get(BossID.TIEU_DOI_TRUONG));
     }
 
     private void bodyChangePlayerInMap() {

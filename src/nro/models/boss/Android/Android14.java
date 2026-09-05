@@ -20,7 +20,7 @@ public class Android14 extends Boss {
     public boolean callApk13;
 
     public Android14() throws Exception {
-        super(BossID.ANDROID_14, BossesData.ANDROID_14);
+        super(BossID.ANDROID_14, BossesData.get(BossID.ANDROID_14));
     }
 @Override
 public void reward(Player plKill) {

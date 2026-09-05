@@ -17,7 +17,7 @@ import nro.models.utils.Util;
 public class Android19 extends Boss {
 
     public Android19() throws Exception {
-        super(BossID.ANDROID_19, BossesData.ANDROID_19);
+        super(BossID.ANDROID_19, BossesData.get(BossID.ANDROID_19));
     }
 
 @Override

@@ -23,7 +23,7 @@ public class BlackGoku extends Boss {
     private int timeLeaveMap;
 
     public BlackGoku() throws Exception {
-        super(BossID.BLACK_GOKU, false, true, BossesData.BLACK_GOKU, BossesData.SUPER_BLACK_GOKU);
+        super(BossID.BLACK_GOKU, false, true, BossesData.get(BossID.BLACK_GOKU));
     }
 
     // @Override

@@ -9,7 +9,7 @@ import nro.models.player.Player;
 public class Pocolo extends The23rdMartialArtCongress {
 
     public Pocolo(Player player) throws Exception {
-        super(PHOBAN, BossID.PO_CO_LO, BossesData.POCOLO);
+        super(PHOBAN, BossID.PO_CO_LO, BossesData.getFirst(BossID.PO_CO_LO));
         this.playerAtt = player;
     }
 }
