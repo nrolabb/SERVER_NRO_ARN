@@ -1270,7 +1270,7 @@ public class NPoint {
     }
 
     private void setDef() {
-        this.def = this.defg * 4;
+        this.def = this.defg;
         this.def += this.defAdd;
 
         if (this.player.itemTime != null && this.player.itemTime.isUseNuocMia3) {
