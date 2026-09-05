@@ -37,7 +37,7 @@ public class Cui extends Npc {
                     NpcService.gI().createTutorial(pl, this.avartar, "Hãy lên đường cứu đứa bé nhà tôi\nChắc bây giờ nó đang sợ hãi lắm rồi");
                 } else {
                     switch (this.mapId) {
-                        case 19 -> {
+                        case 19, 194 -> {
                             int taskId = TaskService.gI().getIdTask(pl);
                             switch (taskId) {
                                 case ConstTask.TASK_19_0 ->
@@ -87,7 +87,7 @@ public class Cui extends Npc {
                     }
                 }
             }
-            if (this.mapId == 19) {
+            if (this.mapId == 19 || this.mapId == 194) {
                 if (player.idMark.isBaseMenu()) {
                     switch (select) {
                         case 0 ->
